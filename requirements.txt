@@ -1,4 +1,6 @@
 streamlit
-plotly
-beautifulsoup4
 openai
+pandas
+plotly
+requests
+beautifulsoup4
