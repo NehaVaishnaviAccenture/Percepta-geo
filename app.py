@@ -245,38 +245,45 @@ Convert to score: avg<=1.0→100, avg<=2.0→75, avg<=3.0→50, avg<=4.0→25, a
 
 STEP 3 — SENTIMENT (only from YES responses):
 For each YES response, classify language about "{brand}":
-Positive (recommended, best, great, top, excellent, leading) = 100
-Neutral (also available, one option, listed alongside) = 50
-Negative (avoid, problems, worse, criticized) = 0
+- EXPLICITLY recommended as top/best choice, strong praise = 80-100
+- Mentioned positively but alongside many other options = 50-70
+- Neutral listing, "also available", no clear praise or criticism = 30-50
+- Negative language, criticism, problems mentioned = 0-30
 Average across YES responses only. V=0 means sentiment=0.
+IMPORTANT: Being mentioned does NOT automatically mean positive sentiment. Most brands score 40-65 here. Only score 80+ if the AI genuinely recommended the brand as a top choice with clear enthusiasm.
 
 STEP 4 — CITATION SHARE:
-Count every brand name mentioned across ALL 5 responses. List them with counts.
-Count how many times "{brand}" appears total. Call this B.
-Count ALL brand mentions total. Call this T.
-Citation share = round((B / T) * 100) if T>0 else 0. Cap at 100.
-NOTE: If V=2, brand only appeared in 2 responses, so B will be small, so citation share will naturally be small. This is mathematically correct.
+Count every brand name mentioned across ALL 5 responses. List them ALL with counts.
+Count how many times "{brand}" appears total across all 5 responses. Call this B.
+Count the total of ALL brand name mentions across all 5 responses. Call this T.
+Citation share = round((B / T) * 100). Cap at 100.
+IMPORTANT: In a typical response with 5-10 brands mentioned, if your brand appears in 2 of 5 responses, B is probably 2-4, T is probably 20-40, so citation share is 5-15. NOT 92. Be realistic.
 
 STEP 5 — SHARE OF VOICE:
-Same as Step 4. Share of voice = citation share.
+Same calculation as Step 4. These should be identical or within 1-2 points.
 
 STEP 6 — AVG RANK:
 From Step 2, average position rounded to nearest integer. Format as "#1", "#2", "#3".
 V=0 → "N/A"
 
 STEP 7 — SEO SCORE:
-Depth of knowledge AI showed about "{brand}" specifically:
-Rich specific detail = 70-100, Some detail but vague = 40-69, Very little = 10-39, Never mentioned = 0-20
+Depth of factual knowledge AI showed about "{brand}" specifically (not competitors):
+- Detailed specific products, features, history, numbers = 60-80
+- Some general knowledge, mostly vague = 35-59
+- Very surface level or barely mentioned = 15-34
+- Never mentioned or unknown = 0-14
+Most brands score 30-60. Only well-known dominant brands score above 70.
 
 STEP 8 — STRENGTHS (exactly 3): Based only on what you observed above.
 STEP 9 — IMPROVEMENTS (exactly 5): Based only on what you observed above.
-STEP 10 — ACTIONS (exactly 5 prioritized fixes): Concrete and actionable.
+STEP 10 — ACTIONS (exactly 5 prioritized fixes): Concrete, specific, actionable.
 
-FINAL SANITY CHECK before writing JSON:
-- visibility = (V/5)*100. If V=2, visibility MUST equal 40. Non-negotiable.
-- citation_share = (B/T)*100. If brand rarely appeared, this is a small number like 8-15%. NOT 92.
-- sentiment only reflects responses where brand appeared. Cannot be high if brand never appeared positively.
-- All numbers must follow from your counting steps above.
+FINAL SANITY CHECK — verify every number before writing JSON:
+- visibility = (V/5)*100. V=2 → 40. V=3 → 60. V=5 → 100. Non-negotiable.
+- citation_share: if brand appeared in 2/5 responses among ~5-8 competing brands per response, realistic range is 5-20. NOT 80+.
+- sentiment: most brands score 40-65. Only score 75+ if the AI clearly recommended this brand as the best option multiple times.
+- prominence: if brand was mentioned 2nd or 3rd on average, score is 50-75. Not 100 unless it led every response.
+- All scores must be realistic and defensible from the actual text above.
 
 Return ONLY valid JSON, no text before or after:
 {{"visibility":0,"citation_share":0,"sentiment":0,"prominence":0,"share_of_voice":0,"seo_score":0,"avg_rank":"#3","strengths":["1. ...","2. ...","3. ..."],"improvements":["1. ...","2. ...","3. ...","4. ...","5. ..."],"actions":[{{"priority":"High","action":"..."}},{{"priority":"High","action":"..."}},{{"priority":"Medium","action":"..."}},{{"priority":"Medium","action":"..."}},{{"priority":"Low","action":"..."}}]}}"""
@@ -645,7 +652,7 @@ elif page == "GEO Dashboard":
     <div class="hero" style="padding:52px 60px;">
         <div class="hero-badge">✦ Real GEO Scoring</div>
         <h1 style="font-size:2.6rem;">GEO <span>Scorecard</span></h1>
-        <div class="hero-sub">Enter any brand URL · Scores calculated by counting actual AI mentions</div>
+        <div class="hero-sub">Enter any brand URL · Get your AI brand visibility score</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -732,20 +739,13 @@ elif page == "GEO Dashboard":
                     st.plotly_chart(fig_g, use_container_width=True)
 
                 with info_col:
-                    top_strength_note = result.get("strengths_list", [""])[0] if result.get("strengths_list") else ""
-                    top_improve_note  = result.get("improvements_list", [""])[0] if result.get("improvements_list") else ""
-                    note1_html = f'<div style="font-size:0.82rem;color:#374151;line-height:1.6;border-top:1px solid #F3F4F6;padding-top:12px;">{top_strength_note}</div>' if top_strength_note else ""
-                    note2_html = f'<div style="font-size:0.82rem;color:#6B7280;line-height:1.6;margin-top:6px;">{top_improve_note}</div>' if top_improve_note else ""
                     url_display = brand_url[:70] + ("..." if len(brand_url) > 70 else "")
                     st.markdown(
                         f'<div style="background:white;border-radius:14px;border:1px solid #E5E7EB;padding:22px 26px;box-shadow:0 1px 4px rgba(0,0,0,0.06);">'
                         f'<div style="font-size:1.3rem;font-weight:800;color:#111827;">{brand}</div>'
                         f'<div style="margin:4px 0 14px 0;"><a href="{brand_url}" target="_blank" style="color:#7C3AED;font-size:0.82rem;">{url_display}</a></div>'
-                        f'<div style="margin-bottom:14px;">'
                         f'<div style="font-size:0.7rem;color:#9CA3AF;font-weight:600;text-transform:uppercase;margin-bottom:6px;">Status</div>'
                         f'<div style="background:{badge_bg};color:{badge_color};padding:4px 14px;border-radius:50px;font-size:0.82rem;font-weight:700;display:inline-block;">{label}</div>'
-                        f'</div>'
-                        f'{note1_html}{note2_html}'
                         f'</div>',
                         unsafe_allow_html=True
                     )
