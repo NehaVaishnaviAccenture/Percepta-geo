@@ -294,6 +294,19 @@ Return ONLY valid JSON, no text before or after:
     sentiment      = sc.get("sentiment", 0)
     prominence     = sc.get("prominence", 0)
     sov            = sc.get("share_of_voice", 0)
+
+    # Hard math enforcement: if brand appeared in V/5 responses,
+    # citation share is mathematically bounded. Cap it.
+    # e.g. visibility=40 means brand in 2/5 responses → citation share max ~40
+    citation_share = min(citation_share, visibility)
+    sov            = min(sov, visibility)
+    # Sentiment only applies where brand appeared; if visibility is 0, zero it out
+    if visibility == 0:
+        sentiment  = 0
+        prominence = 0
+        citation_share = 0
+        sov        = 0
+
     mentions       = sum(1 for p in qa_pairs if brand_l in p["a"].lower())
 
     geo_score = round(
@@ -719,18 +732,21 @@ elif page == "GEO Dashboard":
                     st.plotly_chart(fig_g, use_container_width=True)
 
                 with info_col:
+                    top_strength_note = result.get("strengths_list", [""])[0] if result.get("strengths_list") else ""
+                    top_improve_note  = result.get("improvements_list", [""])[0] if result.get("improvements_list") else ""
+                    note1_html = f'<div style="font-size:0.82rem;color:#374151;line-height:1.6;border-top:1px solid #F3F4F6;padding-top:12px;">{top_strength_note}</div>' if top_strength_note else ""
+                    note2_html = f'<div style="font-size:0.82rem;color:#6B7280;line-height:1.6;margin-top:6px;">{top_improve_note}</div>' if top_improve_note else ""
+                    url_display = brand_url[:70] + ("..." if len(brand_url) > 70 else "")
                     st.markdown(
                         f'<div style="background:white;border-radius:14px;border:1px solid #E5E7EB;padding:22px 26px;box-shadow:0 1px 4px rgba(0,0,0,0.06);">'
                         f'<div style="font-size:1.3rem;font-weight:800;color:#111827;">{brand}</div>'
-                        f'<div style="margin:4px 0 14px 0;"><a href="{brand_url}" target="_blank" style="color:#7C3AED;font-size:0.82rem;">{brand_url[:70]}{"..." if len(brand_url)>70 else ""}</a></div>'
-                        f'<div style="display:flex;gap:28px;flex-wrap:wrap;">'
-                        f'<div><div style="font-size:0.7rem;color:#9CA3AF;font-weight:600;text-transform:uppercase;">SEO Score</div>'
-                        f'<div style="font-size:1.3rem;font-weight:800;color:#374151;">{result.get("seo_score",0)}<span style="font-size:0.78rem;color:#9CA3AF;">/100</span></div></div>'
-                        f'<div><div style="font-size:0.7rem;color:#9CA3AF;font-weight:600;text-transform:uppercase;">Mentioned In</div>'
-                        f'<div style="font-size:1.3rem;font-weight:800;color:#374151;">{mentions}<span style="font-size:0.78rem;color:#9CA3AF;">/5 AI responses</span></div></div>'
-                        f'<div><div style="font-size:0.7rem;color:#9CA3AF;font-weight:600;text-transform:uppercase;">Status</div>'
-                        f'<div style="background:{badge_bg};color:{badge_color};padding:4px 14px;border-radius:50px;font-size:0.78rem;font-weight:700;">{label}</div></div>'
-                        f'</div></div>',
+                        f'<div style="margin:4px 0 14px 0;"><a href="{brand_url}" target="_blank" style="color:#7C3AED;font-size:0.82rem;">{url_display}</a></div>'
+                        f'<div style="margin-bottom:14px;">'
+                        f'<div style="font-size:0.7rem;color:#9CA3AF;font-weight:600;text-transform:uppercase;margin-bottom:6px;">Status</div>'
+                        f'<div style="background:{badge_bg};color:{badge_color};padding:4px 14px;border-radius:50px;font-size:0.82rem;font-weight:700;display:inline-block;">{label}</div>'
+                        f'</div>'
+                        f'{note1_html}{note2_html}'
+                        f'</div>',
                         unsafe_allow_html=True
                     )
 
@@ -739,10 +755,10 @@ elif page == "GEO Dashboard":
                 # ── METRIC CARDS ──
                 mc1, mc2, mc3, mc4 = st.columns(4)
                 cards = [
-                    (mc1, "linear-gradient(135deg,#3B82F6,#06B6D4)",  "👁️", vis,       "Visibility Score",  f"Brand in {mentions}/5 responses"),
-                    (mc2, "linear-gradient(135deg,#8B5CF6,#A855F7)",  "🏅", f"{cit}%", "Citation Share",    "% of all brand mentions"),
-                    (mc3, "linear-gradient(135deg,#10B981,#34D399)",  "📈", sent,      "Sentiment Score",   "Tone where brand appeared"),
-                    (mc4, "linear-gradient(135deg,#F59E0B,#FBBF24)",  "🎯", avg_rank,  "Avg. Rank",         "Position when mentioned"),
+                    (mc1, "linear-gradient(135deg,#3B82F6,#06B6D4)",  "👁️", vis,     "Visibility Score",  "Out of 100"),
+                    (mc2, "linear-gradient(135deg,#8B5CF6,#A855F7)",  "🏅", cit,     "Citation Score",    "Brand mention share"),
+                    (mc3, "linear-gradient(135deg,#10B981,#34D399)",  "📈", sent,    "Sentiment Score",   "Tone where brand appeared"),
+                    (mc4, "linear-gradient(135deg,#F59E0B,#FBBF24)",  "🎯", avg_rank,"Avg. Rank",         "AI mention position"),
                 ]
                 for col, grad, icon, val, lbl, sub in cards:
                     with col:
@@ -768,44 +784,44 @@ elif page == "GEO Dashboard":
                 if any(x in domain_lower2 for x in fin_kws2):
                     top10_title = "Financial Services"
                     top10 = [
-                        {"Brand":"American Express","GEO":91,"Vis":80,"Cit":"18%","Sen":92,"Rank":"#1"},
-                        {"Brand":"Chase",           "GEO":82,"Vis":80,"Cit":"15%","Sen":85,"Rank":"#2"},
-                        {"Brand":"Citi",            "GEO":75,"Vis":60,"Cit":"12%","Sen":76,"Rank":"#3"},
-                        {"Brand":"Discover",        "GEO":71,"Vis":60,"Cit":"10%","Sen":79,"Rank":"#4"},
-                        {"Brand":"Wells Fargo",     "GEO":68,"Vis":60,"Cit":"9%", "Sen":72,"Rank":"#5"},
-                        {"Brand":"Bank of America", "GEO":66,"Vis":60,"Cit":"8%", "Sen":70,"Rank":"#6"},
-                        {"Brand":brand,             "GEO":geo,"Vis":vis,"Cit":f"{cit}%","Sen":sent,"Rank":avg_rank},
-                        {"Brand":"Synchrony",       "GEO":58,"Vis":40,"Cit":"6%", "Sen":62,"Rank":"#7"},
-                        {"Brand":"Barclays",        "GEO":54,"Vis":40,"Cit":"5%", "Sen":58,"Rank":"#8"},
-                        {"Brand":"USAA",            "GEO":52,"Vis":40,"Cit":"4%", "Sen":60,"Rank":"#9"},
+                        {"Brand":"American Express","GEO":91,"Vis":80,"Cit":18,"Sen":92,"Rank":"#1"},
+                        {"Brand":"Chase",           "GEO":82,"Vis":80,"Cit":15,"Sen":85,"Rank":"#2"},
+                        {"Brand":"Citi",            "GEO":75,"Vis":60,"Cit":12,"Sen":76,"Rank":"#3"},
+                        {"Brand":"Discover",        "GEO":71,"Vis":60,"Cit":10,"Sen":79,"Rank":"#4"},
+                        {"Brand":"Wells Fargo",     "GEO":68,"Vis":60,"Cit":9, "Sen":72,"Rank":"#5"},
+                        {"Brand":"Bank of America", "GEO":66,"Vis":60,"Cit":8, "Sen":70,"Rank":"#6"},
+                        {"Brand":brand,             "GEO":geo,"Vis":vis,"Cit":cit,"Sen":sent,"Rank":avg_rank},
+                        {"Brand":"Synchrony",       "GEO":58,"Vis":40,"Cit":6, "Sen":62,"Rank":"#7"},
+                        {"Brand":"Barclays",        "GEO":54,"Vis":40,"Cit":5, "Sen":58,"Rank":"#8"},
+                        {"Brand":"USAA",            "GEO":52,"Vis":40,"Cit":4, "Sen":60,"Rank":"#9"},
                     ]
                 elif any(x in domain_lower2 for x in auto_kws2):
                     top10_title = "Automotive"
                     top10 = [
-                        {"Brand":"Tesla",    "GEO":94,"Vis":100,"Cit":"22%","Sen":89,"Rank":"#1"},
-                        {"Brand":"Toyota",   "GEO":88,"Vis":80, "Cit":"18%","Sen":87,"Rank":"#2"},
-                        {"Brand":"BMW",      "GEO":83,"Vis":80, "Cit":"15%","Sen":84,"Rank":"#3"},
-                        {"Brand":"Honda",    "GEO":79,"Vis":80, "Cit":"13%","Sen":81,"Rank":"#4"},
-                        {"Brand":"Ford",     "GEO":73,"Vis":60, "Cit":"11%","Sen":72,"Rank":"#5"},
-                        {"Brand":"Mercedes", "GEO":71,"Vis":60, "Cit":"10%","Sen":75,"Rank":"#6"},
-                        {"Brand":"Hyundai",  "GEO":68,"Vis":60, "Cit":"8%", "Sen":67,"Rank":"#7"},
-                        {"Brand":brand,      "GEO":geo,"Vis":vis,"Cit":f"{cit}%","Sen":sent,"Rank":avg_rank},
-                        {"Brand":"Kia",      "GEO":60,"Vis":40, "Cit":"6%", "Sen":63,"Rank":"#8"},
-                        {"Brand":"Nissan",   "GEO":56,"Vis":40, "Cit":"5%", "Sen":60,"Rank":"#9"},
+                        {"Brand":"Tesla",    "GEO":94,"Vis":100,"Cit":22,"Sen":89,"Rank":"#1"},
+                        {"Brand":"Toyota",   "GEO":88,"Vis":80, "Cit":18,"Sen":87,"Rank":"#2"},
+                        {"Brand":"BMW",      "GEO":83,"Vis":80, "Cit":15,"Sen":84,"Rank":"#3"},
+                        {"Brand":"Honda",    "GEO":79,"Vis":80, "Cit":13,"Sen":81,"Rank":"#4"},
+                        {"Brand":"Ford",     "GEO":73,"Vis":60, "Cit":11,"Sen":72,"Rank":"#5"},
+                        {"Brand":"Mercedes", "GEO":71,"Vis":60, "Cit":10,"Sen":75,"Rank":"#6"},
+                        {"Brand":"Hyundai",  "GEO":68,"Vis":60, "Cit":8, "Sen":67,"Rank":"#7"},
+                        {"Brand":brand,      "GEO":geo,"Vis":vis,"Cit":cit,"Sen":sent,"Rank":avg_rank},
+                        {"Brand":"Kia",      "GEO":60,"Vis":40, "Cit":6, "Sen":63,"Rank":"#8"},
+                        {"Brand":"Nissan",   "GEO":56,"Vis":40, "Cit":5, "Sen":60,"Rank":"#9"},
                     ]
                 else:
                     top10_title = "General"
                     top10 = [
-                        {"Brand":"Leader A",    "GEO":92,"Vis":100,"Cit":"20%","Sen":91,"Rank":"#1"},
-                        {"Brand":"Leader B",    "GEO":85,"Vis":80, "Cit":"16%","Sen":84,"Rank":"#2"},
-                        {"Brand":"Leader C",    "GEO":80,"Vis":80, "Cit":"13%","Sen":79,"Rank":"#3"},
-                        {"Brand":brand,         "GEO":geo,"Vis":vis,"Cit":f"{cit}%","Sen":sent,"Rank":avg_rank},
-                        {"Brand":"Competitor D","GEO":72,"Vis":60, "Cit":"10%","Sen":71,"Rank":"#5"},
-                        {"Brand":"Competitor E","GEO":68,"Vis":60, "Cit":"9%", "Sen":67,"Rank":"#6"},
-                        {"Brand":"Competitor F","GEO":63,"Vis":60, "Cit":"7%", "Sen":62,"Rank":"#7"},
-                        {"Brand":"Competitor G","GEO":59,"Vis":40, "Cit":"6%", "Sen":58,"Rank":"#8"},
-                        {"Brand":"Competitor H","GEO":54,"Vis":40, "Cit":"5%", "Sen":53,"Rank":"#9"},
-                        {"Brand":"Competitor I","GEO":50,"Vis":40, "Cit":"4%", "Sen":49,"Rank":"#10"},
+                        {"Brand":"Leader A",    "GEO":92,"Vis":100,"Cit":20,"Sen":91,"Rank":"#1"},
+                        {"Brand":"Leader B",    "GEO":85,"Vis":80, "Cit":16,"Sen":84,"Rank":"#2"},
+                        {"Brand":"Leader C",    "GEO":80,"Vis":80, "Cit":13,"Sen":79,"Rank":"#3"},
+                        {"Brand":brand,         "GEO":geo,"Vis":vis,"Cit":cit,"Sen":sent,"Rank":avg_rank},
+                        {"Brand":"Competitor D","GEO":72,"Vis":60, "Cit":10,"Sen":71,"Rank":"#5"},
+                        {"Brand":"Competitor E","GEO":68,"Vis":60, "Cit":9, "Sen":67,"Rank":"#6"},
+                        {"Brand":"Competitor F","GEO":63,"Vis":60, "Cit":7, "Sen":62,"Rank":"#7"},
+                        {"Brand":"Competitor G","GEO":59,"Vis":40, "Cit":6, "Sen":58,"Rank":"#8"},
+                        {"Brand":"Competitor H","GEO":54,"Vis":40, "Cit":5, "Sen":53,"Rank":"#9"},
+                        {"Brand":"Competitor I","GEO":50,"Vis":40, "Cit":4, "Sen":49,"Rank":"#10"},
                     ]
 
                 top10_sorted = sorted(top10, key=lambda x: x["GEO"], reverse=True)
