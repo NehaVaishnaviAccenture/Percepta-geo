@@ -11,8 +11,8 @@ import json
 import re
 from urllib.parse import urlparse
 
-# ── HARDCODED API KEY (internal) ─────────────────────────────
-INTERNAL_API_KEY = "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"
+# ── API KEY via Streamlit Secrets ─────────────────────────────
+INTERNAL_API_KEY = st.secrets["OPENROUTER_API_KEY"]
 
 # ── PAGE CONFIG ──────────────────────────────────────────────
 st.set_page_config(
@@ -918,7 +918,7 @@ elif page == "AI Comparison":
 
     st.markdown('<div class="score-section">', unsafe_allow_html=True)
 
-    DEFAULT_KEY = "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"
+    DEFAULT_KEY = st.secrets["OPENROUTER_API_KEY"]
 
     with st.expander("🔑 OpenRouter API Key", expanded=False):
         st.caption("A default key is pre-loaded. Paste your own key below to override it.")
@@ -978,7 +978,7 @@ elif page == "AI Comparison":
 
 
 # ════════════════════════════════════════════════════════════
-# GEO DASHBOARD PAGE  (API key hardcoded — no user input)
+# GEO DASHBOARD PAGE  (API key via Streamlit Secrets)
 # ════════════════════════════════════════════════════════════
 elif page == "GEO Dashboard":
 
