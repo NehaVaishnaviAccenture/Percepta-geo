@@ -1,2 +1,3 @@
-plotly
 streamlit
+plotly
+beautifulsoup4
