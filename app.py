@@ -12,7 +12,7 @@ import re
 from urllib.parse import urlparse
 
 # ── HARDCODED API KEY (internal) ─────────────────────────────
-INTERNAL_API_KEY = "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"
+INTERNAL_API_KEY = "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"
 
 # ── PAGE CONFIG ──────────────────────────────────────────────
 st.set_page_config(
@@ -918,7 +918,7 @@ elif page == "AI Comparison":
 
     st.markdown('<div class="score-section">', unsafe_allow_html=True)
 
-    DEFAULT_KEY = "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"
+    DEFAULT_KEY = "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"
 
     with st.expander("🔑 OpenRouter API Key", expanded=False):
         st.caption("A default key is pre-loaded. Paste your own key below to override it.")
