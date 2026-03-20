@@ -251,133 +251,242 @@ def fetch_page_content(url: str) -> dict:
 
 def analyze_geo_with_ai(page_data: dict) -> dict:
     """
-    Accurate Profound-style scoring:
-    - GPT answers 5 real consumer queries naturally (no brand bias)
-    - Separate objective scoring call measures what actually happened
-    - Each metric has a clear, honest calculation
+    TRUE Profound-style methodology:
+    - Detects industry from domain
+    - Asks 20 GENERIC consumer questions with NO brand name in them
+    - Measures whether the brand naturally appears in AI responses
+    - That is real visibility — not prompted mentions
     """
     # Extract brand name
     brand = page_data.get("title", "").split("|")[0].split("-")[0].strip()
     if not brand or len(brand) < 2:
         domain = page_data.get("domain", "brand")
         brand = domain.replace("www.", "").split(".")[0].title()
-    domain = page_data.get("domain", "")
-    client = get_client()
+    domain   = page_data.get("domain", "").lower()
+    brand_l  = brand.lower()
+    client   = get_client()
 
-    # 20 diverse queries across 4 intent categories (5 per batch)
-    queries = [
-        f"Tell me about {brand} — is it a good company?",
-        f"How does {brand} compare to its main competitors?",
-        f"What are the best products or services {brand} offers?",
-        f"What are the pros and cons of {brand}?",
-        f"What do experts recommend instead of or alongside {brand}?",
-        f"Is {brand} a trusted brand in its industry?",
-        f"What makes {brand} different from other companies?",
-        f"Would you recommend {brand} to a first-time customer?",
-        f"What are common complaints or issues with {brand}?",
-        f"How does {brand} rank among the top brands in its category?",
-        f"What is {brand} best known for?",
-        f"Has {brand} won any awards or industry recognition?",
-        f"What type of customer is {brand} best suited for?",
-        f"How has {brand} performed compared to competitors recently?",
-        f"What are the top reasons to choose {brand} over alternatives?",
-        f"Are there better alternatives to {brand}?",
-        f"What do industry experts say about {brand}?",
-        f"How does {brand} handle customer service and support?",
-        f"Is {brand} considered a leader or follower in its market?",
-        f"What should someone know before choosing {brand}?"
-    ]
+    # ── STEP 1: Detect industry from domain ──────────────────────────────
+    fin_kws   = ["capital","chase","amex","citi","discover","bank","credit","card","finance","fargo","visa","master","barclays","synchrony","usaa","wellsfargo"]
+    auto_kws  = ["toyota","ford","honda","bmw","tesla","vw","volkswagen","auto","car","motor","hyundai","kia","nissan","mercedes","audi"]
+    hotel_kws = ["marriott","hilton","hyatt","holiday","airbnb","booking","hotel","resort","expedia"]
+    tech_kws  = ["apple","google","microsoft","amazon","samsung","meta","netflix","spotify","adobe","salesforce","software","tech","cloud","saas"]
+    retail_kws= ["walmart","target","amazon","costco","bestbuy","nike","adidas","retail","shop","store"]
 
-    # Run 4 batches of 5 queries each
+    if any(x in domain for x in fin_kws):
+        industry = "financial services / credit cards"
+        queries = [
+            "What is the best credit card for travel rewards in 2025?",
+            "Which bank offers the best rewards checking account?",
+            "What credit card should I get for everyday cash back?",
+            "Best credit cards with no annual fee right now",
+            "Which bank is best for first-time credit card applicants?",
+            "Top credit cards recommended by financial experts",
+            "What is the best bank for online banking and mobile app?",
+            "Which credit card has the best sign-up bonus?",
+            "Best credit cards for people with good credit scores",
+            "What bank should I choose for savings and checking?",
+            "Which credit card is best for dining and restaurants?",
+            "Top recommended credit cards for business expenses",
+            "What are the most trusted banks in the US?",
+            "Best credit cards for balance transfers with low interest",
+            "Which bank has the lowest fees for everyday banking?",
+            "What credit card do financial advisors recommend most?",
+            "Best cards for earning points on groceries and gas",
+            "Which banks are best for customer service?",
+            "Top credit cards for international travelers with no foreign fees",
+            "What is the best overall credit card for 2025?"
+        ]
+    elif any(x in domain for x in auto_kws):
+        industry = "automotive"
+        queries = [
+            "What is the best car to buy in 2025?",
+            "Which electric vehicle has the longest range?",
+            "Best SUV for families right now",
+            "What car brand is most reliable long term?",
+            "Top recommended cars under $40,000",
+            "Best cars for fuel efficiency in 2025",
+            "Which car brand has the best safety ratings?",
+            "What is the best luxury car for the money?",
+            "Top car brands recommended by consumer experts",
+            "Best hybrid cars available today",
+            "Which car manufacturer has the best warranty?",
+            "What cars are best for first-time buyers?",
+            "Top rated trucks for towing and hauling",
+            "Best car brands for resale value",
+            "Which electric car brand leads in technology?",
+            "What cars do mechanics recommend for reliability?",
+            "Best compact cars for city driving",
+            "Which car brands have the fewest recalls?",
+            "Top recommended cars for long road trips",
+            "What is the most popular car brand in America?"
+        ]
+    elif any(x in domain for x in hotel_kws):
+        industry = "hotels / hospitality"
+        queries = [
+            "What is the best hotel loyalty program in 2025?",
+            "Which hotel chain offers the best value for money?",
+            "Best hotels for business travelers",
+            "Top recommended hotel brands for family vacations",
+            "Which hotel chain has the best customer service?",
+            "Best hotel rewards programs for frequent travelers",
+            "What are the most trusted hotel brands globally?",
+            "Top luxury hotel chains recommended by travel experts",
+            "Which hotels have the best amenities?",
+            "Best budget hotel chains with good quality",
+            "What hotel brand is best for points redemption?",
+            "Top rated hotel chains for cleanliness and comfort",
+            "Which hotel chain has the most locations worldwide?",
+            "Best hotel brands for weekend getaways",
+            "What hotels do travel experts recommend most?",
+            "Which hotel loyalty program is easiest to earn points?",
+            "Best hotels for romantic getaways",
+            "Top hotel chains with best breakfast included",
+            "Which hotel brand is best for international travel?",
+            "What is the most recommended hotel chain for 2025?"
+        ]
+    elif any(x in domain for x in tech_kws):
+        industry = "technology"
+        queries = [
+            "What is the best smartphone to buy in 2025?",
+            "Which tech company makes the most reliable products?",
+            "Best laptop brands recommended by experts",
+            "Top cloud computing platforms for businesses",
+            "Which streaming service has the best content library?",
+            "Best software tools for productivity in 2025",
+            "What tech brands do IT professionals trust most?",
+            "Top recommended CRM platforms for sales teams",
+            "Which companies lead in AI and machine learning?",
+            "Best antivirus and cybersecurity software",
+            "What are the top project management tools?",
+            "Which tech brands have the best customer support?",
+            "Best video conferencing tools for remote teams",
+            "Top recommended smart home device brands",
+            "Which companies are leading in cloud storage?",
+            "Best e-commerce platforms for online sellers",
+            "What tech companies are most innovative right now?",
+            "Top rated email marketing platforms",
+            "Which brands make the best wireless headphones?",
+            "What is the most trusted tech brand in 2025?"
+        ]
+    else:
+        # Generic consumer brand queries
+        industry = "consumer brands"
+        queries = [
+            "What are the most trusted brands in the US right now?",
+            "Which companies are known for the best customer service?",
+            "Top recommended brands for quality and value",
+            "What brands do consumers recommend most in 2025?",
+            "Best companies for online shopping and delivery",
+            "Which brands are leading in sustainability and ethics?",
+            "Top rated consumer brands by customer satisfaction",
+            "What companies have the best return and refund policies?",
+            "Best brands recommended by consumer advocacy groups",
+            "Which companies are growing fastest in their industry?",
+            "Top brands for loyalty programs and rewards",
+            "What brands are considered industry leaders right now?",
+            "Best companies for quality products at fair prices",
+            "Which brands have the most loyal customer base?",
+            "Top consumer brands with the best warranties",
+            "What companies do financial analysts recommend?",
+            "Best brands for first-time buyers in their category",
+            "Which companies are most recommended by experts?",
+            "Top rated brands for innovation and technology",
+            "What is the most trusted brand in this space right now?"
+        ]
+
+    # ── STEP 2: Run 4 batches of 5 generic queries ───────────────────────
     all_qa_pairs = []
     for batch_start in range(0, 20, 5):
         batch_q = queries[batch_start:batch_start+5]
-        q_list = "\n\n".join([f"Q{i+1}: {q}" for i, q in enumerate(batch_q)])
+        q_list  = "\n\n".join([f"Q{i+1}: {q}" for i, q in enumerate(batch_q)])
         batch_prompt = (
-            "Answer each question below as a knowledgeable consumer advisor. "
-            "Be specific, name real brands and products. Answer naturally - do not avoid or force any brand.\n\n"
+            "You are a knowledgeable consumer advisor. Answer each question naturally and specifically. "
+            "Name real brands and companies. Do not favour or avoid any brand — just answer honestly.\n\n"
             + q_list
             + "\n\nRespond with exactly:\nA1: [answer]\nA2: [answer]\nA3: [answer]\nA4: [answer]\nA5: [answer]"
         )
         rb = client.chat.completions.create(
             model="openai/gpt-5.4",
             messages=[{"role": "user", "content": batch_prompt}],
-            temperature=0.5, max_tokens=700
+            temperature=0.6, max_tokens=800
         )
         bt = rb.choices[0].message.content
         for i in range(1, 6):
             marker = f"A{i}:"
-            nxt = f"A{i+1}:"
-            ans = ""
+            nxt    = f"A{i+1}:"
+            ans    = ""
             if marker in bt:
-                s = bt.index(marker) + len(marker)
-                e = bt.index(nxt) if nxt in bt else len(bt)
+                s   = bt.index(marker) + len(marker)
+                e   = bt.index(nxt) if nxt in bt else len(bt)
                 ans = bt[s:e].strip()
             all_qa_pairs.append({"q": batch_q[i-1], "a": ans})
 
     qa_pairs = all_qa_pairs
-    brand_l  = brand.lower()
 
-    # Build formatted text for scoring
+    # ── STEP 3: Count exact mentions ─────────────────────────────────────
+    mentions = sum(1 for p in qa_pairs if brand_l in p["a"].lower())
+    visibility = round((mentions / 20) * 100)
+
+    # ── STEP 4: Score all metrics from actual responses ──────────────────
     qa_parts = []
     for i, p in enumerate(qa_pairs):
         qa_parts.append(f"Q{i+1}: {p['q']}\nA{i+1}: {p['a']}")
     qa_formatted = "\n\n".join(qa_parts)
 
+    scoring_prompt = f"""You are an objective GEO analyst measuring AI brand visibility for "{brand}" in the {industry} industry.
 
-    scoring_prompt = f"""You are an objective GEO measurement analyst. Read these 20 AI responses about "{brand}" and score each metric ACCURATELY based ONLY on what the responses actually say.
+These are 20 GENERIC consumer questions with NO brand name in them. A neutral AI answered each one.
+Your job: measure how "{brand}" performed in these answers — did it appear? How prominently? How positively?
 
-=== AI RESPONSES ===
+=== RESPONSES ===
 {qa_formatted}
-===================
+=================
 
-Score each metric from 0 to 100. Be honest — do NOT cluster scores in the 50-70 range. Use the full range.
+Brand "{brand}" appeared in {mentions} out of 20 responses.
 
-VISIBILITY (0-100):
-Count how many of the 20 responses mention "{brand}" by name.
-- 20/20 = 100
-- 16/20 = 80
-- 12/20 = 60
-- 8/20 = 40
-- 4/20 = 20
-- 0/20 = 0
+CALCULATE EACH METRIC:
+
+VISIBILITY = already calculated = {visibility} (do not change this)
 
 CITATION_SHARE (0-100):
-In the responses where {brand} IS mentioned, how prominently/authoritatively is it cited?
-- Mentioned as the top/primary recommendation = 80-100
-- Mentioned as a strong, named option = 55-75
-- Mentioned briefly or in passing = 25-45
-- Not mentioned at all = 0
+Of ALL brand names mentioned across all 20 responses, what % are "{brand}"?
+Count every brand name across all 20 answers. Count "{brand}" occurrences. Divide.
+If brand appeared in {mentions}/20 responses with ~5-8 brands per response, realistic range is 3-20%.
+Only score above 30 if brand dominated responses clearly.
 
 SENTIMENT (0-100):
-What is the overall tone when {brand} is described?
-- Clearly positive, recommended, praised = 75-100
-- Mixed, balanced, some pros/cons = 45-70
-- Negative, criticized, problems flagged = 0-40
+For responses where "{brand}" appeared — what was the tone?
+- Recommended as top pick, praised specifically = 75-100
+- Listed alongside others without special praise = 40-65
+- Mentioned critically or with concerns = 0-35
+- Not mentioned = 0
+Be realistic. Most brands score 40-70 here.
 
 PROMINENCE (0-100):
-When {brand} appears in ranked lists or comparisons, what position?
-- First or top mention = 85-100
-- Second or third = 60-80
-- Middle of pack = 35-55
-- Last or barely mentioned = 10-30
-- Not in any ranked context = 0
+When "{brand}" appeared, was it first or among the first brands mentioned?
+- Consistently first/top recommendation = 80-100
+- Usually 2nd or 3rd = 55-75
+- Middle of a long list = 30-50
+- Rarely/last mentioned = 10-25
+- Not mentioned = 0
 
 SHARE_OF_VOICE (0-100):
-Of ALL brand names mentioned across all 5 responses, what % are "{brand}"?
-Count total brand mentions. {brand} mentions / total * 100. Cap at 100.
+Same as citation share. Total "{brand}" mentions / total all-brand mentions * 100.
 
-AVG_RANK: Format as "#1", "#2", "#3" etc — where does {brand} typically rank?
+SEO_SCORE (0-100):
+How much factual depth did AI show about "{brand}" specifically?
+Most brands score 30-65. Only dominant category leaders score above 70.
 
-SEO_SCORE (0-100): How well-known and authoritative does AI seem to consider {brand}? Based on knowledge depth shown.
+AVG_RANK: "#1", "#2", "#3" etc — typical position when brand appeared in ranked lists.
+If never appeared in a ranked list: "N/A"
 
-Now provide:
-strengths: Exactly 3 specific things working well for {brand} AI visibility (numbered 1-3, concrete, based on responses)
-improvements: Exactly 5 specific gaps or problems (numbered 1-5, concrete, actionable)
-actions: 5 prioritized fixes
+strengths: Exactly 3 numbered findings — what went well for {brand} in these responses
+improvements: Exactly 5 numbered gaps — where {brand} failed to appear or underperformed
+actions: 5 prioritized GEO improvements [{{"priority":"High/Medium/Low","action":"specific fix"}}]
 
 Return ONLY valid JSON:
-{{"visibility":0,"citation_share":0,"sentiment":0,"prominence":0,"share_of_voice":0,"seo_score":0,"avg_rank":"#2",
+{{"citation_share":0,"sentiment":0,"prominence":0,"share_of_voice":0,"seo_score":0,"avg_rank":"#3",
 "strengths":["1. ...","2. ...","3. ..."],
 "improvements":["1. ...","2. ...","3. ...","4. ...","5. ..."],
 "actions":[{{"priority":"High","action":"..."}},{{"priority":"High","action":"..."}},{{"priority":"Medium","action":"..."}},{{"priority":"Medium","action":"..."}},{{"priority":"Low","action":"..."}}]}}"""
@@ -390,16 +499,15 @@ Return ONLY valid JSON:
     raw = re.sub(r"```json|```", "", r2.choices[0].message.content.strip())
     sc  = json.loads(raw)
 
-    visibility     = sc.get("visibility", 0)
     citation_share = sc.get("citation_share", 0)
-    sentiment      = sc.get("sentiment", 50)
+    sentiment      = sc.get("sentiment", 0)
     prominence     = sc.get("prominence", 0)
     sov            = sc.get("share_of_voice", 0)
 
-    # Count actual brand mentions for display
-    mentions = sum(1 for p in qa_pairs if brand_l in p["a"].lower())
+    # If brand never appeared, zero out dependent scores
+    if visibility == 0:
+        sentiment = citation_share = prominence = sov = 0
 
-    # GEO Score = Profound weighted formula
     geo_score = round(
         visibility     * 0.30 +
         sentiment      * 0.20 +
@@ -407,12 +515,6 @@ Return ONLY valid JSON:
         citation_share * 0.15 +
         sov            * 0.15
     )
-
-    avg_rank_raw = sc.get("avg_rank", "#?")
-    try:
-        avg_rank_num = int(avg_rank_raw.replace("#","").strip())
-    except:
-        avg_rank_num = 3
 
     return {
         "brand_name":           brand,
@@ -422,8 +524,8 @@ Return ONLY valid JSON:
         "citation_share":       citation_share,
         "share_of_voice":       sov,
         "overall_geo_score":    geo_score,
-        "seo_score":            sc.get("seo_score", 60),
-        "avg_rank":             avg_rank_raw,
+        "seo_score":            sc.get("seo_score", 0),
+        "avg_rank":             sc.get("avg_rank", "N/A"),
         "top_strength":         sc.get("strengths", [""])[0] if sc.get("strengths") else "",
         "top_weakness":         sc.get("improvements", [""])[0] if sc.get("improvements") else "",
         "queries_tested":       [p["q"] for p in qa_pairs],
