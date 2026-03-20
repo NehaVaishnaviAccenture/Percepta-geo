@@ -1249,6 +1249,18 @@ elif page == "GEO Dashboard":
                 brand = result.get("brand_name", page_data["domain"])
                 label, badge_color, badge_bg = score_badge(geo)
 
+                # Must compute vis/cit/sent/geo here for score explanation
+                _vis  = result.get("context", 0)
+                _cit  = result.get("reliability", 0)
+                _sent = result.get("exclusivity", 0)
+                # Find the single weakest metric to explain the score
+                metrics = {"Visibility": _vis, "Citation": _cit, "Sentiment": _sent}
+                weakest = min(metrics, key=metrics.get)
+                if _vis == 0:
+                    score_explain_text = "Score is low because brand was not mentioned in any AI response."
+                else:
+                    score_explain_text = f"Score is held back mainly by low {weakest} ({metrics[weakest]}) - the weakest metric in this analysis."
+
                 # ── GEO GAUGE (top) ──
                 gauge_col, info_col = st.columns([1, 2])
                 with gauge_col:
@@ -1283,6 +1295,7 @@ elif page == "GEO Dashboard":
                         f'<div><div style="font-size:0.7rem;color:#9CA3AF;font-weight:600;text-transform:uppercase;margin-bottom:6px;">Status</div>'
                         f'<div style="background:{badge_bg};color:{badge_color};padding:4px 14px;border-radius:50px;font-size:0.78rem;font-weight:700;">{label}</div></div>'
                         f'</div>'
+                        f'<div style="margin-top:14px;padding-top:12px;border-top:1px solid #F3F4F6;font-size:0.82rem;color:#6B7280;">' + score_explain_text + '</div>'
                         f'</div>',
                         unsafe_allow_html=True
                     )
@@ -1298,27 +1311,7 @@ elif page == "GEO Dashboard":
                 avg_rank = "N/A" if vis == 0 else avg_rank_raw
 
                 # Score explanation sentence
-                if vis == 0:
-                    score_explain = (
-                        f"GEO Score is <strong>{geo}</strong> because brand did not appear in any of the 20 AI queries. "
-                        f"All sub-scores are 0 — Visibility, Citation, Sentiment and Prominence all require brand presence to register."
-                    )
-                elif vis >= 60 and cit < 50:
-                    score_explain = (
-                        f"GEO Score is <strong>{geo}</strong> despite {vis}% Visibility because Citation Score is only {cit}. "
-                        f"Brand appears in AI responses but is listed among many options — not specifically endorsed. "
-                        f"Prominence and Share of Voice are dragging the weighted average down."
-                    )
-                elif geo >= 70:
-                    score_explain = (
-                        f"GEO Score is <strong>{geo}</strong> — driven by {vis}% Visibility and {sent} Sentiment. "
-                        f"Brand is frequently appearing and positively described in AI responses."
-                    )
-                else:
-                    score_explain = (
-                        f"GEO Score is <strong>{geo}</strong> — Visibility is {vis}% but Citation ({cit}) and Sentiment ({sent}) "
-                        f"are pulling the weighted average down. Brand appears occasionally but isn't being consistently recommended."
-                    )
+
 
                 mc1, mc2, mc3, mc4 = st.columns(4)
                 cards = [
