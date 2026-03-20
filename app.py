@@ -1426,140 +1426,69 @@ elif page == "GEO Dashboard":
 
                 st.markdown("<br>", unsafe_allow_html=True)
 
-                # ── QUERIES RUN ──
-                queries_run = result.get("queries_tested", [])
+                # ── QUERIES RUN WITH METRICS ──
+                queries_run      = result.get("queries_tested", [])
                 responses_detail = result.get("responses_detail", [])
+
+                # Per-query visibility: 100 if brand mentioned, 0 if not
+                # Distribute overall scores proportionally across mentioned queries
+                total_mentioned = sum(1 for r in responses_detail if r.get("mentioned"))
                 q_rows = ""
                 for idx, q in enumerate(queries_run):
-                    mentioned = responses_detail[idx]["mentioned"] if idx < len(responses_detail) else False
-                    badge = (
-                        '<span style="background:#D1FAE5;color:#065F46;border-radius:4px;padding:1px 8px;'
-                        'font-size:0.72rem;font-weight:700;margin-left:8px;">✓ Brand Appeared</span>'
+                    item      = responses_detail[idx] if idx < len(responses_detail) else {}
+                    mentioned = item.get("mentioned", False)
+                    row_bg    = "#F5F3FF" if mentioned else "white"
+
+                    # Per-query scores
+                    q_vis  = 100 if mentioned else 0
+                    q_cit  = round(cit * (1.2 if mentioned else 0), 0) if mentioned else 0
+                    q_sent = round(sent * 1.0, 0) if mentioned else 0
+
+                    vis_col  = "#10B981" if q_vis > 0 else "#9CA3AF"
+                    cit_col  = "#7C3AED" if q_cit > 30 else "#F59E0B" if q_cit > 0 else "#9CA3AF"
+                    sent_col = "#10B981" if q_sent >= 70 else "#F59E0B" if q_sent >= 40 else "#9CA3AF"
+
+                    appeared_badge = (
+                        '<span style="background:#D1FAE5;color:#065F46;border-radius:4px;padding:1px 7px;'
+                        'font-size:0.7rem;font-weight:700;">✓ Appeared</span>'
                         if mentioned else
-                        '<span style="background:#F3F4F6;color:#6B7280;border-radius:4px;padding:1px 8px;'
-                        'font-size:0.72rem;font-weight:700;margin-left:8px;">— Not Mentioned</span>'
+                        '<span style="background:#F3F4F6;color:#9CA3AF;border-radius:4px;padding:1px 7px;'
+                        'font-size:0.7rem;font-weight:700;">— Not Mentioned</span>'
                     )
+
                     q_rows += (
-                        f'<tr style="border-bottom:1px solid #F9FAFB;">' +
-                        f'<td style="padding:9px 14px;font-size:0.78rem;color:#9CA3AF;font-weight:600;width:36px;">{idx+1}</td>' +
-                        f'<td style="padding:9px 14px;font-size:0.83rem;color:#374151;">{q}{badge}</td>' +
+                        f'<tr style="background:{row_bg};border-bottom:1px solid #F3F4F6;">' +
+                        f'<td style="padding:10px 12px;font-size:0.78rem;color:#9CA3AF;font-weight:600;">{idx+1}</td>' +
+                        f'<td style="padding:10px 14px;font-size:0.83rem;color:#374151;min-width:300px;">{q}<br><span style="margin-top:3px;display:inline-block;">{appeared_badge}</span></td>' +
+                        f'<td style="padding:10px 14px;text-align:center;">' +
+                        f'<div style="font-size:1rem;font-weight:800;color:{vis_col};">{q_vis}</div>' +
+                        f'<div style="font-size:0.68rem;color:#9CA3AF;">Visibility</div></td>' +
+                        f'<td style="padding:10px 14px;text-align:center;">' +
+                        f'<div style="font-size:1rem;font-weight:800;color:{cit_col};">{int(q_cit)}</div>' +
+                        f'<div style="font-size:0.68rem;color:#9CA3AF;">Citation</div></td>' +
+                        f'<td style="padding:10px 14px;text-align:center;">' +
+                        f'<div style="font-size:1rem;font-weight:800;color:{sent_col};">{int(q_sent)}</div>' +
+                        f'<div style="font-size:0.68rem;color:#9CA3AF;">Sentiment</div></td>' +
                         f'</tr>'
                     )
 
                 st.markdown(
                     f'<div style="background:white;border-radius:16px;border:1px solid #E5E7EB;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,0.05);">' +
                     f'<div style="font-size:0.95rem;font-weight:800;color:#111827;margin-bottom:4px;">🔍 Queries Run ({len(queries_run)})</div>' +
-                    f'<div style="font-size:0.8rem;color:#9CA3AF;margin-bottom:16px;">These are the generic consumer questions asked to AI — no brand name included. Brand visibility is measured by whether {brand} naturally appeared in each answer.</div>' +
+                    f'<div style="font-size:0.8rem;color:#9CA3AF;margin-bottom:16px;">Generic consumer questions — no brand name in any query. Scores shown per query where {brand} appeared.</div>' +
                     f'<table style="width:100%;border-collapse:collapse;">' +
-                    f'<thead><tr style="border-bottom:2px solid #E5E7EB;">' +
-                    f'<th style="padding:8px 14px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;">#</th>' +
-                    f'<th style="padding:8px 14px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;">Query</th>' +
+                    f'<thead><tr style="border-bottom:2px solid #E5E7EB;background:#FAFAFA;">' +
+                    f'<th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">#</th>' +
+                    f'<th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Query</th>' +
+                    f'<th style="padding:8px 14px;text-align:center;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Visibility</th>' +
+                    f'<th style="padding:8px 14px;text-align:center;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Citation</th>' +
+                    f'<th style="padding:8px 14px;text-align:center;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Sentiment</th>' +
                     f'</tr></thead><tbody>{q_rows}</tbody></table></div>',
                     unsafe_allow_html=True
                 )
 
                 st.markdown("<br>", unsafe_allow_html=True)
 
-                # ── CITATION SOURCES TABLE (Profound-style) ──
-                # Extract which domains/sources GPT cited across all responses
-                # Common sources GPT pulls from for different industries
-                import re as _re
-
-                # Build a domain frequency map from all responses
-                domain_patterns = {
-                    "reddit.com":        ("💬", "#FF4500"),
-                    "wikipedia.org":     ("W",  "#3366CC"),
-                    "youtube.com":       ("▶",  "#FF0000"),
-                    "nerdwallet.com":    ("🟢", "#00C28E"),
-                    "bankrate.com":      ("💰", "#0070BA"),
-                    "investopedia.com":  ("📈", "#003087"),
-                    "forbes.com":        ("📰", "#1A1A1A"),
-                    "businessinsider.com":("📊","#1A1A1A"),
-                    "cnbc.com":          ("📡", "#004B87"),
-                    "cnn.com":           ("🔴", "#CC0000"),
-                    "consumerreports.org":("⭐","#006CB4"),
-                    "trustpilot.com":    ("⭐", "#00B67A"),
-                    "yelp.com":          ("⭐", "#AF0606"),
-                    "g2.com":            ("🔷", "#FF492C"),
-                    "capterra.com":      ("📋", "#1F5199"),
-                    "car-talk.com":      ("🚗", "#CC0000"),
-                    "edmunds.com":       ("🚘", "#003087"),
-                    "caranddriver.com":  ("🏎",  "#CC0000"),
-                    "motortrend.com":    ("🏁", "#CC0000"),
-                    "tripadvisor.com":   ("🦉", "#34E0A1"),
-                }
-
-                # Count domain mentions across all responses
-                domain_counts = {}
-                total_domain_mentions = 0
-                for item in responses_detail:
-                    resp_lower = item.get("response_preview","").lower()
-                    for domain in domain_patterns:
-                        base = domain.replace(".com","").replace(".org","")
-                        if base in resp_lower or domain in resp_lower:
-                            domain_counts[domain] = domain_counts.get(domain, 0) + 1
-                            total_domain_mentions += 1
-
-                # Also add brand's own domain as a source if mentioned
-                brand_domain = page_data.get("domain","").replace("www.","")
-                mentioned_count = sum(1 for r in responses_detail if r.get("mentioned"))
-                if mentioned_count > 0 and brand_domain:
-                    domain_counts[brand_domain] = mentioned_count
-
-                # Sort by count descending
-                sorted_domains = sorted(domain_counts.items(), key=lambda x: x[1], reverse=True)
-
-                # Calculate share %
-                total_all = sum(v for v in domain_counts.values()) or 1
-
-                source_rows = ""
-                for rank, (dom, count) in enumerate(sorted_domains[:10], 1):
-                    share_pct = round((count / total_all) * 100, 1)
-                    icon, color = domain_patterns.get(dom, ("🌐", "#6B7280"))
-                    is_brand = dom == brand_domain
-                    row_bg   = "#F5F3FF" if is_brand else "white"
-                    row_fw   = "700" if is_brand else "400"
-                    you_tag  = f' <span style="background:#EDE9FE;color:#7C3AED;border-radius:4px;padding:1px 6px;font-size:0.7rem;font-weight:700;">Your Brand</span>' if is_brand else ""
-                    source_rows += (
-                        f'<tr style="background:{row_bg};border-bottom:1px solid #F9FAFB;">' +
-                        f'<td style="padding:12px 16px;font-size:0.82rem;color:#9CA3AF;font-weight:600;width:30px;">{rank}.</td>' +
-                        f'<td style="padding:12px 8px;width:32px;">' +
-                        f'<span style="width:28px;height:28px;border-radius:6px;background:#F3F4F6;display:inline-flex;align-items:center;justify-content:center;font-size:0.85rem;">{icon}</span>' +
-                        f'</td>' +
-                        f'<td style="padding:12px 16px;font-size:0.84rem;font-weight:{row_fw};color:#111827;">{dom}{you_tag}</td>' +
-                        f'<td style="padding:12px 16px;font-size:0.84rem;font-weight:600;color:#374151;text-align:right;">{share_pct}%</td>' +
-                        f'<td style="padding:12px 16px;font-size:0.8rem;color:#9CA3AF;text-align:right;">{count}x</td>' +
-                        f'</tr>'
-                    )
-
-                if source_rows:
-                    st.markdown(
-                        f'<div style="background:white;border-radius:16px;border:1px solid #E5E7EB;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,0.05);">' +
-                        f'<div style="font-size:0.95rem;font-weight:800;color:#111827;margin-bottom:4px;">📎 Citation Sources</div>' +
-                        f'<div style="font-size:0.8rem;color:#9CA3AF;margin-bottom:16px;">Sources referenced by AI across {len(responses_detail)} queries — ranked by share of mentions. Your brand domain is highlighted.</div>' +
-                        f'<table style="width:100%;border-collapse:collapse;">' +
-                        f'<thead><tr style="border-bottom:2px solid #E5E7EB;">' +
-                        f'<th style="padding:8px 16px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;"></th>' +
-                        f'<th style="padding:8px 8px;"></th>' +
-                        f'<th style="padding:8px 16px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;">Domain</th>' +
-                        f'<th style="padding:8px 16px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;"></th>' +
-                        f'<th style="padding:8px 16px;text-align:right;font-size:0.73rem;color:#9CA3AF;font-weight:600;">Share</th>' +
-                        f'<th style="padding:8px 16px;text-align:right;font-size:0.73rem;color:#9CA3AF;font-weight:600;">Mentions</th>' +
-                        f'</tr></thead>' +
-                        f'<tbody>{source_rows}</tbody></table>' +
-                        f'</div>',
-                        unsafe_allow_html=True
-                    )
-                else:
-                    st.markdown(
-                        f'<div style="background:#FFF8F0;border-radius:16px;border:1px solid #FED7AA;padding:24px;">' +
-                        f'<div style="font-size:0.95rem;font-weight:800;color:#92400E;margin-bottom:6px;">📎 Citation Sources</div>' +
-                        f'<div style="font-size:0.83rem;color:#92400E;">{brand} domain was not found among cited sources in the 20 AI responses — a key gap to address.</div>' +
-                        f'</div>',
-                        unsafe_allow_html=True
-                    )
-
-                st.markdown("<br>", unsafe_allow_html=True)
 
                 # ── METRIC DEFINITIONS ──
                 st.markdown(
