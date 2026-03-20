@@ -486,90 +486,99 @@ def analyze_geo_with_ai(page_data: dict) -> dict:
     mentions = sum(1 for p in qa_pairs if brand_l in p["a"].lower())
     visibility = round((mentions / 20) * 100)
 
-    # ── STEP 4: Score all metrics from actual responses ──────────────────
-    qa_parts = []
-    for i, p in enumerate(qa_pairs):
-        qa_parts.append(f"Q{i+1}: {p['q']}\nA{i+1}: {p['a']}")
-    qa_formatted = "\n\n".join(qa_parts)
+    # ── STEP 4: Score all metrics ────────────────────────────────────────
+    # If brand never appeared in any response, all scores are 0 — no GPT needed
+    if mentions == 0:
+        citation_share = sentiment = prominence = sov = 0
+        sc = {
+            "citation_share": 0, "sentiment": 0, "prominence": 0,
+            "share_of_voice": 0, "avg_rank": "N/A", "seo_score": 0,
+            "strengths": [
+                "1. Brand is not yet appearing in AI-generated responses for industry queries.",
+                "2. This is a baseline measurement — there is clear room to grow AI visibility.",
+                "3. Competitor brands are present, confirming the category is AI-discoverable."
+            ],
+            "improvements": [
+                "1. Brand was not mentioned in any of the 20 generic industry queries.",
+                "2. AI models are not associating this brand with key consumer questions in the category.",
+                "3. No citation authority established — brand is invisible to AI recommendation engines.",
+                "4. Competitors are appearing instead, taking all the AI-driven share of voice.",
+                "5. Content is not structured in a way that AI can discover and cite it."
+            ],
+            "actions": [
+                {"priority": "High", "action": "Create dedicated FAQ and comparison pages targeting the exact queries run in this analysis."},
+                {"priority": "High", "action": "Publish LLM-ready content: 'Best X for Y' guides that position brand as a top recommendation."},
+                {"priority": "Medium", "action": "Add structured data (schema markup) to key product and service pages so AI can parse and cite them."},
+                {"priority": "Medium", "action": "Build authoritative brand presence on sites AI frequently cites: Reddit, Wikipedia, industry review sites."},
+                {"priority": "Low", "action": "Audit backlink profile and create content hubs that reinforce brand authority in this category."}
+            ]
+        }
+    else:
+        # Only call GPT scoring when brand actually appeared
+        qa_parts = []
+        for i, p in enumerate(qa_pairs):
+            qa_parts.append(f"Q{i+1}: {p['q']}\nA{i+1}: {p['a']}")
+        qa_formatted = "\n\n".join(qa_parts)
 
-    scoring_prompt = f"""You are an objective GEO analyst measuring AI brand visibility for "{brand}" in the {industry} industry.
+        # Only include responses where brand appeared to keep prompt focused
+        appeared_responses = [p for p in qa_pairs if brand_l in p["a"].lower()]
+        appeared_text = "\n\n".join([f"Response: {p['a'][:300]}" for p in appeared_responses])
 
-These are 20 GENERIC consumer questions with NO brand name in them. A neutral AI answered each one.
-Your job: measure how "{brand}" performed in these answers — did it appear? How prominently? How positively?
+        scoring_prompt = f"""You are an objective GEO analyst. Brand "{brand}" appeared in {mentions} out of 20 AI responses.
 
-=== RESPONSES ===
-{qa_formatted}
-=================
+Here are ONLY the {mentions} responses where "{brand}" appeared:
+{appeared_text}
 
-Brand "{brand}" appeared in {mentions} out of 20 responses.
-
-CALCULATE EACH METRIC:
-
-VISIBILITY = already calculated = {visibility} (do not change this)
+Score ONLY based on these responses. Every score must be derivable from the text above.
 
 CITATION_SHARE (0-100):
-Measures how authoritatively "{brand}" is cited when it appears — not raw share of all brand mentions.
-Look at the responses where "{brand}" appeared and score based on HOW it was cited:
-- Cited as the primary/top recommendation, specifically endorsed = 65-85
-- Cited as a strong named option with specific reasons = 45-60
-- Mentioned as one option in a list without specific endorsement = 20-40
-- Barely mentioned, no context = 5-15
-Average this score across the {mentions} responses where brand appeared.
-If brand appeared in {mentions}/20 responses with strong recommendations, realistic range is 30-60.
-If brand appeared but always in generic lists, realistic range is 15-35.
+How authoritatively was "{brand}" cited in each response?
+- Primary/top recommendation with specific praise = 65-85
+- Strong named option with reasons = 45-60
+- One option in a generic list = 20-40
+- Barely mentioned = 5-15
+Average across all {mentions} responses.
 
 SENTIMENT (0-100):
-For responses where "{brand}" appeared — what was the tone?
-- Recommended as top pick, praised specifically = 75-100
-- Listed alongside others without special praise = 40-65
-- Mentioned critically or with concerns = 0-35
-- Not mentioned = 0
-Be realistic. Most brands score 40-70 here.
+What was the tone when "{brand}" appeared?
+- Clearly positive, praised, recommended = 75-100
+- Neutral, listed alongside others = 40-65
+- Critical or negative = 0-35
 
 PROMINENCE (0-100):
-When "{brand}" appeared, was it first or among the first brands mentioned?
-- Consistently first/top recommendation = 80-100
-- Usually 2nd or 3rd = 55-75
-- Middle of a long list = 30-50
-- Rarely/last mentioned = 10-25
-- Not mentioned = 0
+Was "{brand}" first or early in responses?
+- First brand named = 80-100
+- 2nd or 3rd = 55-75
+- Middle of list = 30-50
+- Last or late = 10-25
 
 SHARE_OF_VOICE (0-100):
-Same as citation share. Total "{brand}" mentions / total all-brand mentions * 100.
+Estimate "{brand}" mentions as % of all brand mentions across these responses only.
 
-SEO_SCORE (0-100):
-How much factual depth did AI show about "{brand}" specifically?
-Most brands score 30-65. Only dominant category leaders score above 70.
+AVG_RANK: "#1", "#2", "#3" — typical list position. Must be based on actual text. If not in any list: "N/A"
 
-AVG_RANK: "#1", "#2", "#3" etc — typical position when brand appeared in ranked lists.
-If never appeared in a ranked list: "N/A"
-
-strengths: Exactly 3 numbered findings — what went well for {brand} in these responses
-improvements: Exactly 5 numbered gaps — where {brand} failed to appear or underperformed
-actions: 5 prioritized GEO improvements [{{"priority":"High/Medium/Low","action":"specific fix"}}]
+strengths: Exactly 3 specific positives observed in the actual responses above (numbered 1-3)
+improvements: Exactly 5 specific gaps (numbered 1-5) — include queries where brand did NOT appear
+actions: 5 prioritized fixes [{{"priority":"High/Medium/Low","action":"..."}}]
 
 Return ONLY valid JSON:
-{{"citation_share":0,"sentiment":0,"prominence":0,"share_of_voice":0,"seo_score":0,"avg_rank":"#3",
+{{"citation_share":0,"sentiment":0,"prominence":0,"share_of_voice":0,"avg_rank":"N/A",
 "strengths":["1. ...","2. ...","3. ..."],
 "improvements":["1. ...","2. ...","3. ...","4. ...","5. ..."],
 "actions":[{{"priority":"High","action":"..."}},{{"priority":"High","action":"..."}},{{"priority":"Medium","action":"..."}},{{"priority":"Medium","action":"..."}},{{"priority":"Low","action":"..."}}]}}"""
 
-    r2 = client.chat.completions.create(
-        model="openai/gpt-5.4",
-        messages=[{"role": "user", "content": scoring_prompt}],
-        temperature=0.0, max_tokens=1000
-    )
-    raw = re.sub(r"```json|```", "", r2.choices[0].message.content.strip())
-    sc  = json.loads(raw)
+        r2 = client.chat.completions.create(
+            model="openai/gpt-5.4",
+            messages=[{"role": "user", "content": scoring_prompt}],
+            temperature=0.0, max_tokens=900
+        )
+        raw = re.sub(r"```json|```", "", r2.choices[0].message.content.strip())
+        sc  = json.loads(raw)
 
-    citation_share = sc.get("citation_share", 0)
-    sentiment      = sc.get("sentiment", 0)
-    prominence     = sc.get("prominence", 0)
-    sov            = sc.get("share_of_voice", 0)
-
-    # If brand never appeared, zero out dependent scores
-    if visibility == 0:
-        sentiment = citation_share = prominence = sov = 0
+        citation_share = sc.get("citation_share", 0)
+        sentiment      = sc.get("sentiment", 0)
+        prominence     = sc.get("prominence", 0)
+        sov            = sc.get("share_of_voice", 0)
 
     geo_score = round(
         visibility     * 0.30 +
@@ -1284,14 +1293,15 @@ elif page == "GEO Dashboard":
                 cit   = result.get("reliability", 0)
                 sent  = result.get("exclusivity", 0)
                 org   = result.get("organization", 0)
-                avg_rank = max(1, round(6 - (geo / 20)))  # derive rank from score (1-5)
+                avg_rank_raw = result.get("avg_rank", "N/A")
+                avg_rank = "N/A" if vis == 0 else avg_rank_raw
 
                 mc1, mc2, mc3, mc4 = st.columns(4)
                 cards = [
                     (mc1, "linear-gradient(135deg,#3B82F6,#06B6D4)",   "👁️", vis,      "Visibility Score", "AI response presence"),
                     (mc2, "linear-gradient(135deg,#8B5CF6,#A855F7)",   "🏅", cit,      "Citation Score",   "Source authority"),
                     (mc3, "linear-gradient(135deg,#10B981,#34D399)",   "📈", sent,     "Sentiment Score",  "Brand perception"),
-                    (mc4, "linear-gradient(135deg,#F59E0B,#FBBF24)",   "🎯", f"#{avg_rank}", "Avg. Rank", "AI mention position"),
+                    (mc4, "linear-gradient(135deg,#F59E0B,#FBBF24)",   "🎯", avg_rank, "Avg. Rank", "AI mention position"),
                 ]
                 for col, grad, icon, val, lbl, sub in cards:
                     with col:
@@ -1324,7 +1334,7 @@ elif page == "GEO Dashboard":
                         {"Brand":"Discover",        "GEO":71,"Vis":68,"Cit":75,"Sen":79,"Rank":"#4"},
                         {"Brand":"Wells Fargo",     "GEO":68,"Vis":65,"Cit":71,"Sen":72,"Rank":"#5"},
                         {"Brand":"Bank of America", "GEO":66,"Vis":63,"Cit":69,"Sen":70,"Rank":"#6"},
-                        {"Brand":brand,             "GEO":geo,"Vis":vis,"Cit":cit,"Sen":sent,"Rank":f"#{avg_rank}"},
+                        {"Brand":brand,             "GEO":geo,"Vis":vis,"Cit":cit,"Sen":sent,"Rank":avg_rank},
                         {"Brand":"Synchrony",       "GEO":58,"Vis":55,"Cit":60,"Sen":62,"Rank":"#8"},
                         {"Brand":"Barclays",        "GEO":54,"Vis":51,"Cit":56,"Sen":58,"Rank":"#9"},
                         {"Brand":"USAA",            "GEO":52,"Vis":49,"Cit":54,"Sen":60,"Rank":"#10"},
@@ -1339,7 +1349,7 @@ elif page == "GEO Dashboard":
                         {"Brand":"Ford",       "GEO":73,"Vis":70,"Cit":75,"Sen":72,"Rank":"#5"},
                         {"Brand":"Mercedes",   "GEO":71,"Vis":68,"Cit":73,"Sen":75,"Rank":"#6"},
                         {"Brand":"Hyundai",    "GEO":68,"Vis":65,"Cit":70,"Sen":67,"Rank":"#7"},
-                        {"Brand":brand,        "GEO":geo,"Vis":vis,"Cit":cit,"Sen":sent,"Rank":f"#{avg_rank}"},
+                        {"Brand":brand,        "GEO":geo,"Vis":vis,"Cit":cit,"Sen":sent,"Rank":avg_rank},
                         {"Brand":"Kia",        "GEO":60,"Vis":57,"Cit":62,"Sen":63,"Rank":"#9"},
                         {"Brand":"Nissan",     "GEO":56,"Vis":53,"Cit":58,"Sen":60,"Rank":"#10"},
                     ]
@@ -1349,7 +1359,7 @@ elif page == "GEO Dashboard":
                         {"Brand":"Leader A",    "GEO":92,"Vis":89,"Cit":94,"Sen":91,"Rank":"#1"},
                         {"Brand":"Leader B",    "GEO":85,"Vis":82,"Cit":87,"Sen":84,"Rank":"#2"},
                         {"Brand":"Leader C",    "GEO":80,"Vis":77,"Cit":82,"Sen":79,"Rank":"#3"},
-                        {"Brand":brand,         "GEO":geo,"Vis":vis,"Cit":cit,"Sen":sent,"Rank":f"#{avg_rank}"},
+                        {"Brand":brand,         "GEO":geo,"Vis":vis,"Cit":cit,"Sen":sent,"Rank":avg_rank},
                         {"Brand":"Competitor D","GEO":72,"Vis":69,"Cit":74,"Sen":71,"Rank":"#5"},
                         {"Brand":"Competitor E","GEO":68,"Vis":65,"Cit":70,"Sen":67,"Rank":"#6"},
                         {"Brand":"Competitor F","GEO":63,"Vis":60,"Cit":65,"Sen":62,"Rank":"#7"},
