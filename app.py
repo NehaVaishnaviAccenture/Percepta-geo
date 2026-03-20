@@ -1279,10 +1279,14 @@ elif page == "GEO Dashboard":
                         f'padding:22px 26px;box-shadow:0 1px 4px rgba(0,0,0,0.06);">'
                         f'<div style="font-size:1.3rem;font-weight:800;color:#111827;">{brand}</div>'
                         f'<div style="margin:4px 0 14px 0;"><a href="{brand_url}" target="_blank" style="color:#7C3AED;font-size:0.82rem;">{brand_url[:70]}{"..." if len(brand_url)>70 else ""}</a></div>'
-                        f'<div style="display:flex;gap:28px;flex-wrap:wrap;">'
-                                                f'<div><div style="font-size:0.7rem;color:#9CA3AF;font-weight:600;text-transform:uppercase;">Status</div>'
+                        f'<div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;">'
+                        f'<div><div style="font-size:0.7rem;color:#9CA3AF;font-weight:600;text-transform:uppercase;margin-bottom:6px;">Status</div>'
                         f'<div style="background:{badge_bg};color:{badge_color};padding:4px 14px;border-radius:50px;font-size:0.78rem;font-weight:700;">{label}</div></div>'
-                        f'</div></div>',
+                        f'</div>'
+                        f'<div style="margin-top:14px;padding-top:14px;border-top:1px solid #F3F4F6;font-size:0.82rem;color:#6B7280;line-height:1.5;">'
+                        f'{"<strong>High visibility but low authority</strong> — brand appears in AI responses but is not being recommended as a top choice. Focus on citation quality over quantity." if vis >= 60 and cit < 50 else ("<strong>Strong AI presence</strong> — brand is frequently recommended with positive sentiment. Continue building authoritative content to maintain position." if geo >= 70 else ("<strong>Brand is invisible to AI</strong> — not appearing in any consumer queries in this category. Immediate content and schema optimization needed." if vis == 0 else "<strong>Emerging AI visibility</strong> — brand appears occasionally but lacks the prominence and citation authority to rank consistently. Structured content investment will drive improvement."))}'
+                        f'</div>'
+                        f'</div>',
                         unsafe_allow_html=True
                     )
 
@@ -1555,13 +1559,12 @@ elif page == "GEO Dashboard":
                 st.markdown(
                     f'<div style="background:white;border-radius:16px;border:1px solid #E5E7EB;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,0.05);">' +
                     f'<div style="font-size:0.95rem;font-weight:800;color:#111827;margin-bottom:4px;">🔍 Queries Run ({len(queries_run)})</div>' +
-                    f'<div style="font-size:0.8rem;color:#9CA3AF;margin-bottom:16px;">Generic consumer questions with no brand name. Rank = actual position brand was mentioned within each AI response (#1 = first brand named). Visibility % = each appearance contributes {per_query_vis_pct}% to overall score.</div>' +
+                    f'<div style="font-size:0.8rem;color:#9CA3AF;margin-bottom:16px;">Generic consumer questions with no brand name. Rank = actual position brand was mentioned within each AI response (#1 = first brand named).</div>' +
                     f'<table style="width:100%;border-collapse:collapse;">' +
                     f'<thead><tr style="border-bottom:2px solid #E5E7EB;background:#FAFAFA;">' +
                     f'<th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">#</th>' +
                     f'<th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Query</th>' +
                     f'<th style="padding:8px 16px;text-align:center;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Rank</th>' +
-                    f'<th style="padding:8px 16px;text-align:center;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Visibility %</th>' +
                     f'</tr></thead><tbody>{q_rows}</tbody></table></div>',
                     unsafe_allow_html=True
                 )
