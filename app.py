@@ -1249,17 +1249,25 @@ elif page == "GEO Dashboard":
                 brand = result.get("brand_name", page_data["domain"])
                 label, badge_color, badge_bg = score_badge(geo)
 
-                # Must compute vis/cit/sent/geo here for score explanation
+                # Compute metrics for score explanation
                 _vis  = result.get("context", 0)
                 _cit  = result.get("reliability", 0)
                 _sent = result.get("exclusivity", 0)
-                # Find the single weakest metric to explain the score
-                metrics = {"Visibility": _vis, "Citation": _cit, "Sentiment": _sent}
-                weakest = min(metrics, key=metrics.get)
+                _prom = result.get("organization", 0)
+                _sov  = result.get("share_of_voice", 0)
+
                 if _vis == 0:
-                    score_explain_text = "Score is low because brand was not mentioned in any AI response."
+                    score_explain_text = "Score is 0 because brand was not mentioned in any of the 20 AI queries."
                 else:
-                    score_explain_text = f"Score is held back mainly by low {weakest} ({metrics[weakest]}) - the weakest metric in this analysis."
+                    detail_parts = []
+                    if _cit  < 40: detail_parts.append(f"Citation ({_cit}), brand appears in lists but rarely as the top pick")
+                    if _prom < 40: detail_parts.append(f"Prominence ({_prom}), typically mentioned mid-list not first")
+                    if _sov  < 20: detail_parts.append(f"Share of Voice ({_sov}), competitors are capturing more of the AI conversation")
+                    if _sent < 50: detail_parts.append(f"Sentiment ({_sent}), AI responses lack strong positive endorsement")
+                    if detail_parts:
+                        score_explain_text = f"GEO Score of {geo} reflects {_vis}% Visibility but is held back by " + "; ".join(detail_parts) + "."
+                    else:
+                        score_explain_text = f"GEO Score of {geo} reflects strong performance: Visibility {_vis}%, Citation {_cit}, Sentiment {_sent}, Prominence {_prom}."
 
                 # ── GEO GAUGE (top) ──
                 gauge_col, info_col = st.columns([1, 2])
