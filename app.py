@@ -493,10 +493,15 @@ CALCULATE EACH METRIC:
 VISIBILITY = already calculated = {visibility} (do not change this)
 
 CITATION_SHARE (0-100):
-Of ALL brand names mentioned across all 20 responses, what % are "{brand}"?
-Count every brand name across all 20 answers. Count "{brand}" occurrences. Divide.
-If brand appeared in {mentions}/20 responses with ~5-8 brands per response, realistic range is 3-20%.
-Only score above 30 if brand dominated responses clearly.
+Measures how authoritatively "{brand}" is cited when it appears — not raw share of all brand mentions.
+Look at the responses where "{brand}" appeared and score based on HOW it was cited:
+- Cited as the primary/top recommendation, specifically endorsed = 65-85
+- Cited as a strong named option with specific reasons = 45-60
+- Mentioned as one option in a list without specific endorsement = 20-40
+- Barely mentioned, no context = 5-15
+Average this score across the {mentions} responses where brand appeared.
+If brand appeared in {mentions}/20 responses with strong recommendations, realistic range is 30-60.
+If brand appeared but always in generic lists, realistic range is 15-35.
 
 SENTIMENT (0-100):
 For responses where "{brand}" appeared — what was the tone?
