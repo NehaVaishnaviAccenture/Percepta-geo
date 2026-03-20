@@ -1283,9 +1283,6 @@ elif page == "GEO Dashboard":
                         f'<div><div style="font-size:0.7rem;color:#9CA3AF;font-weight:600;text-transform:uppercase;margin-bottom:6px;">Status</div>'
                         f'<div style="background:{badge_bg};color:{badge_color};padding:4px 14px;border-radius:50px;font-size:0.78rem;font-weight:700;">{label}</div></div>'
                         f'</div>'
-                        f'<div style="margin-top:14px;padding-top:14px;border-top:1px solid #F3F4F6;font-size:0.82rem;color:#6B7280;line-height:1.5;">'
-                        f'{"<strong>High visibility but low authority</strong> — brand appears in AI responses but is not being recommended as a top choice. Focus on citation quality over quantity." if vis >= 60 and cit < 50 else ("<strong>Strong AI presence</strong> — brand is frequently recommended with positive sentiment. Continue building authoritative content to maintain position." if geo >= 70 else ("<strong>Brand is invisible to AI</strong> — not appearing in any consumer queries in this category. Immediate content and schema optimization needed." if vis == 0 else "<strong>Emerging AI visibility</strong> — brand appears occasionally but lacks the prominence and citation authority to rank consistently. Structured content investment will drive improvement."))}'
-                        f'</div>'
                         f'</div>',
                         unsafe_allow_html=True
                     )
@@ -1299,6 +1296,16 @@ elif page == "GEO Dashboard":
                 org   = result.get("organization", 0)
                 avg_rank_raw = result.get("avg_rank", "N/A")
                 avg_rank = "N/A" if vis == 0 else avg_rank_raw
+
+                # Score explanation sentence
+                if vis == 0:
+                    score_explain = "<strong>Brand is invisible to AI</strong> — not appearing in any consumer queries in this category. Immediate content and schema optimization needed."
+                elif geo >= 70:
+                    score_explain = "<strong>Strong AI presence</strong> — brand is frequently recommended with positive sentiment. Continue building authoritative content to maintain position."
+                elif vis >= 60 and cit < 50:
+                    score_explain = "<strong>High visibility but low authority</strong> — brand appears in AI responses but is not being recommended as a top choice. Focus on citation quality over quantity."
+                else:
+                    score_explain = "<strong>Emerging AI visibility</strong> — brand appears occasionally but lacks the prominence and citation authority to rank consistently. Structured content investment will drive improvement."
 
                 mc1, mc2, mc3, mc4 = st.columns(4)
                 cards = [
