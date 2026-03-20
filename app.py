@@ -1527,11 +1527,6 @@ elif page == "GEO Dashboard":
                         f'<span style="width:28px;height:28px;border-radius:6px;background:#F3F4F6;display:inline-flex;align-items:center;justify-content:center;font-size:0.85rem;">{icon}</span>' +
                         f'</td>' +
                         f'<td style="padding:12px 16px;font-size:0.84rem;font-weight:{row_fw};color:#111827;">{dom}{you_tag}</td>' +
-                        f'<td style="padding:12px 16px;">' +
-                        f'<div style="display:flex;align-items:center;gap:10px;">' +
-                        f'<div style="background:#E5E7EB;border-radius:4px;height:6px;width:100px;overflow:hidden;">' +
-                        f'<div style="background:#7C3AED;height:6px;border-radius:4px;width:{bar_w}%;"></div></div>' +
-                        f'</div></td>' +
                         f'<td style="padding:12px 16px;font-size:0.84rem;font-weight:600;color:#374151;text-align:right;">{share_pct}%</td>' +
                         f'<td style="padding:12px 16px;font-size:0.8rem;color:#9CA3AF;text-align:right;">{count}x</td>' +
                         f'</tr>'
