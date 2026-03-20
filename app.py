@@ -249,6 +249,49 @@ def fetch_page_content(url: str) -> dict:
     except Exception as e:
         return {"ok": False, "error": str(e)}
 
+def get_brand_position_in_response(response_text: str, brand: str) -> int:
+    """
+    Find the actual position of brand within an AI response.
+    Counts how many OTHER brands are mentioned before it.
+    Returns 1 if brand is mentioned first, 2 if second, etc.
+    Returns 0 if not mentioned.
+    """
+    import re
+    brand_l = brand.lower()
+    text_l  = response_text.lower()
+
+    if brand_l not in text_l:
+        return 0
+
+    # Extract all brand-like proper nouns (capitalized words/phrases)
+    # Split response into sentences/lines and find first brand mention positions
+    words   = response_text.split()
+    # Find position index of brand
+    brand_idx = text_l.find(brand_l)
+
+    # Count capital-letter words/phrases that appear BEFORE the brand
+    # These are likely other brand names
+    text_before = response_text[:brand_idx]
+    # Find capitalized words (likely brand names) in text before brand
+    other_brands = re.findall(r'\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\b', text_before)
+    # Filter out common non-brand capitalized words
+    stop_words = {"The", "A", "An", "In", "On", "At", "For", "With", "By", "From",
+                  "This", "That", "These", "Those", "Some", "Many", "Most", "All",
+                  "When", "Where", "What", "Which", "Who", "How", "Why", "If",
+                  "Here", "There", "However", "Also", "Additionally", "Furthermore",
+                  "First", "Second", "Third", "Finally", "Overall", "Generally"}
+    real_brands_before = [b for b in other_brands if b not in stop_words and len(b) > 2]
+    # Deduplicate
+    seen = set()
+    unique_before = []
+    for b in real_brands_before:
+        if b.lower() not in seen:
+            seen.add(b.lower())
+            unique_before.append(b)
+
+    return len(unique_before) + 1  # position = brands before + 1
+
+
 def analyze_geo_with_ai(page_data: dict) -> dict:
     """
     TRUE Profound-style methodology:
@@ -529,7 +572,7 @@ Return ONLY valid JSON:
         "top_strength":         sc.get("strengths", [""])[0] if sc.get("strengths") else "",
         "top_weakness":         sc.get("improvements", [""])[0] if sc.get("improvements") else "",
         "queries_tested":       [p["q"] for p in qa_pairs],
-        "responses_detail":     [{"query": p["q"], "mentioned": brand_l in p["a"].lower(), "response_preview": p["a"][:250]} for p in qa_pairs],
+        "responses_detail":     [{"query": p["q"], "mentioned": brand_l in p["a"].lower(), "response_preview": p["a"][:250], "position": get_brand_position_in_response(p["a"], brand)} for p in qa_pairs],
         "responses_with_brand": mentions,
         "total_responses":      20,
         "insights":             sc.get("improvements", []),
@@ -1429,60 +1472,66 @@ elif page == "GEO Dashboard":
                 # ── QUERIES RUN WITH METRICS ──
                 queries_run      = result.get("queries_tested", [])
                 responses_detail = result.get("responses_detail", [])
+                total_mentioned  = sum(1 for r in responses_detail if r.get("mentioned"))
 
-                # Per-query visibility: 100 if brand mentioned, 0 if not
-                # Distribute overall scores proportionally across mentioned queries
-                total_mentioned = sum(1 for r in responses_detail if r.get("mentioned"))
+                # Calculate per-query visibility %:
+                # Each query that mentioned brand contributes equally to overall visibility
+                # e.g. brand in 8/20 → each mention = 5% of total visibility
+                per_query_vis_pct = round(100 / len(queries_run)) if queries_run else 5  # e.g. 5% per query out of 20
+
+                # Track rank# — cumulative count of brand appearances so far
+                appearance_rank = 0
                 q_rows = ""
                 for idx, q in enumerate(queries_run):
                     item      = responses_detail[idx] if idx < len(responses_detail) else {}
                     mentioned = item.get("mentioned", False)
                     row_bg    = "#F5F3FF" if mentioned else "white"
 
-                    # Per-query scores
-                    q_vis  = 100 if mentioned else 0
-                    q_cit  = round(cit * (1.2 if mentioned else 0), 0) if mentioned else 0
-                    q_sent = round(sent * 1.0, 0) if mentioned else 0
-
-                    vis_col  = "#10B981" if q_vis > 0 else "#9CA3AF"
-                    cit_col  = "#7C3AED" if q_cit > 30 else "#F59E0B" if q_cit > 0 else "#9CA3AF"
-                    sent_col = "#10B981" if q_sent >= 70 else "#F59E0B" if q_sent >= 40 else "#9CA3AF"
-
-                    appeared_badge = (
-                        '<span style="background:#D1FAE5;color:#065F46;border-radius:4px;padding:1px 7px;'
-                        'font-size:0.7rem;font-weight:700;">✓ Appeared</span>'
-                        if mentioned else
-                        '<span style="background:#F3F4F6;color:#9CA3AF;border-radius:4px;padding:1px 7px;'
-                        'font-size:0.7rem;font-weight:700;">— Not Mentioned</span>'
-                    )
+                    if mentioned:
+                        appearance_rank += 1
+                        # Get real position within this response
+                        real_pos = item.get("position", 0)
+                        rank_display = f"#{real_pos}" if real_pos > 0 else f"#{appearance_rank}"
+                        vis_pct      = f"{per_query_vis_pct}%"
+                        rank_color   = "#10B981" if real_pos == 1 else "#7C3AED" if real_pos <= 3 else "#F59E0B"
+                        pct_color    = "#10B981"
+                        appeared_badge = (
+                            '<span style="background:#D1FAE5;color:#065F46;border-radius:4px;padding:1px 7px;'
+                            'font-size:0.7rem;font-weight:700;">✓ Appeared</span>'
+                        )
+                    else:
+                        rank_display   = "—"
+                        vis_pct        = "0%"
+                        rank_color     = "#9CA3AF"
+                        pct_color      = "#9CA3AF"
+                        appeared_badge = (
+                            '<span style="background:#F3F4F6;color:#9CA3AF;border-radius:4px;padding:1px 7px;'
+                            'font-size:0.7rem;font-weight:700;">— Not Mentioned</span>'
+                        )
 
                     q_rows += (
                         f'<tr style="background:{row_bg};border-bottom:1px solid #F3F4F6;">' +
                         f'<td style="padding:10px 12px;font-size:0.78rem;color:#9CA3AF;font-weight:600;">{idx+1}</td>' +
-                        f'<td style="padding:10px 14px;font-size:0.83rem;color:#374151;min-width:300px;">{q}<br><span style="margin-top:3px;display:inline-block;">{appeared_badge}</span></td>' +
-                        f'<td style="padding:10px 14px;text-align:center;">' +
-                        f'<div style="font-size:1rem;font-weight:800;color:{vis_col};">{q_vis}</div>' +
+                        f'<td style="padding:10px 14px;font-size:0.83rem;color:#374151;">{q}<br><span style="margin-top:3px;display:inline-block;">{appeared_badge}</span></td>' +
+                        f'<td style="padding:10px 16px;text-align:center;">' +
+                        f'<div style="font-size:1.1rem;font-weight:800;color:{rank_color};">{rank_display}</div>' +
+                        f'<div style="font-size:0.68rem;color:#9CA3AF;">Rank</div></td>' +
+                        f'<td style="padding:10px 16px;text-align:center;">' +
+                        f'<div style="font-size:1.1rem;font-weight:800;color:{pct_color};">{vis_pct}</div>' +
                         f'<div style="font-size:0.68rem;color:#9CA3AF;">Visibility</div></td>' +
-                        f'<td style="padding:10px 14px;text-align:center;">' +
-                        f'<div style="font-size:1rem;font-weight:800;color:{cit_col};">{int(q_cit)}</div>' +
-                        f'<div style="font-size:0.68rem;color:#9CA3AF;">Citation</div></td>' +
-                        f'<td style="padding:10px 14px;text-align:center;">' +
-                        f'<div style="font-size:1rem;font-weight:800;color:{sent_col};">{int(q_sent)}</div>' +
-                        f'<div style="font-size:0.68rem;color:#9CA3AF;">Sentiment</div></td>' +
                         f'</tr>'
                     )
 
                 st.markdown(
                     f'<div style="background:white;border-radius:16px;border:1px solid #E5E7EB;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,0.05);">' +
                     f'<div style="font-size:0.95rem;font-weight:800;color:#111827;margin-bottom:4px;">🔍 Queries Run ({len(queries_run)})</div>' +
-                    f'<div style="font-size:0.8rem;color:#9CA3AF;margin-bottom:16px;">Generic consumer questions — no brand name in any query. Scores shown per query where {brand} appeared.</div>' +
+                    f'<div style="font-size:0.8rem;color:#9CA3AF;margin-bottom:16px;">Generic consumer questions with no brand name. Rank = actual position brand was mentioned within each AI response (#1 = first brand named). Visibility % = each appearance contributes {per_query_vis_pct}% to overall score.</div>' +
                     f'<table style="width:100%;border-collapse:collapse;">' +
                     f'<thead><tr style="border-bottom:2px solid #E5E7EB;background:#FAFAFA;">' +
                     f'<th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">#</th>' +
                     f'<th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Query</th>' +
-                    f'<th style="padding:8px 14px;text-align:center;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Visibility</th>' +
-                    f'<th style="padding:8px 14px;text-align:center;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Citation</th>' +
-                    f'<th style="padding:8px 14px;text-align:center;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Sentiment</th>' +
+                    f'<th style="padding:8px 16px;text-align:center;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Rank</th>' +
+                    f'<th style="padding:8px 16px;text-align:center;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Visibility %</th>' +
                     f'</tr></thead><tbody>{q_rows}</tbody></table></div>',
                     unsafe_allow_html=True
                 )
