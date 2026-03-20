@@ -1460,42 +1460,106 @@ elif page == "GEO Dashboard":
 
                 st.markdown("<br>", unsafe_allow_html=True)
 
-                # ── CITATION PAGES ──
-                cit_rows = ""
-                for idx, item in enumerate(responses_detail):
-                    if item.get("mentioned"):
-                        preview = item.get("response_preview", "")
-                        # Highlight brand name in preview
-                        highlighted = preview.replace(
-                            brand, f'<strong style="color:#7C3AED;">{brand}</strong>'
-                        ).replace(
-                            brand.lower(), f'<strong style="color:#7C3AED;">{brand.lower()}</strong>'
-                        )
-                        cit_rows += (
-                            f'<div style="border:1px solid #E5E7EB;border-radius:10px;padding:16px 18px;margin-bottom:10px;">' +
-                            f'<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">' +
-                            f'<span style="background:#EDE9FE;color:#7C3AED;border-radius:4px;padding:2px 8px;font-size:0.72rem;font-weight:700;">Q{idx+1}</span>' +
-                            f'<span style="font-size:0.83rem;font-weight:600;color:#111827;">{item["query"]}</span>' +
-                            f'</div>' +
-                            f'<div style="font-size:0.8rem;color:#6B7280;line-height:1.6;border-left:3px solid #7C3AED;padding-left:12px;">{highlighted}...</div>' +
-                            f'</div>'
-                        )
+                # ── CITATION SOURCES TABLE (Profound-style) ──
+                # Extract which domains/sources GPT cited across all responses
+                # Common sources GPT pulls from for different industries
+                import re as _re
 
+                # Build a domain frequency map from all responses
+                domain_patterns = {
+                    "reddit.com":        ("💬", "#FF4500"),
+                    "wikipedia.org":     ("W",  "#3366CC"),
+                    "youtube.com":       ("▶",  "#FF0000"),
+                    "nerdwallet.com":    ("🟢", "#00C28E"),
+                    "bankrate.com":      ("💰", "#0070BA"),
+                    "investopedia.com":  ("📈", "#003087"),
+                    "forbes.com":        ("📰", "#1A1A1A"),
+                    "businessinsider.com":("📊","#1A1A1A"),
+                    "cnbc.com":          ("📡", "#004B87"),
+                    "cnn.com":           ("🔴", "#CC0000"),
+                    "consumerreports.org":("⭐","#006CB4"),
+                    "trustpilot.com":    ("⭐", "#00B67A"),
+                    "yelp.com":          ("⭐", "#AF0606"),
+                    "g2.com":            ("🔷", "#FF492C"),
+                    "capterra.com":      ("📋", "#1F5199"),
+                    "car-talk.com":      ("🚗", "#CC0000"),
+                    "edmunds.com":       ("🚘", "#003087"),
+                    "caranddriver.com":  ("🏎",  "#CC0000"),
+                    "motortrend.com":    ("🏁", "#CC0000"),
+                    "tripadvisor.com":   ("🦉", "#34E0A1"),
+                }
+
+                # Count domain mentions across all responses
+                domain_counts = {}
+                total_domain_mentions = 0
+                for item in responses_detail:
+                    resp_lower = item.get("response_preview","").lower()
+                    for domain in domain_patterns:
+                        base = domain.replace(".com","").replace(".org","")
+                        if base in resp_lower or domain in resp_lower:
+                            domain_counts[domain] = domain_counts.get(domain, 0) + 1
+                            total_domain_mentions += 1
+
+                # Also add brand's own domain as a source if mentioned
+                brand_domain = page_data.get("domain","").replace("www.","")
                 mentioned_count = sum(1 for r in responses_detail if r.get("mentioned"))
-                if cit_rows:
+                if mentioned_count > 0 and brand_domain:
+                    domain_counts[brand_domain] = mentioned_count
+
+                # Sort by count descending
+                sorted_domains = sorted(domain_counts.items(), key=lambda x: x[1], reverse=True)
+
+                # Calculate share %
+                total_all = sum(v for v in domain_counts.values()) or 1
+
+                source_rows = ""
+                for rank, (dom, count) in enumerate(sorted_domains[:10], 1):
+                    share_pct = round((count / total_all) * 100, 1)
+                    icon, color = domain_patterns.get(dom, ("🌐", "#6B7280"))
+                    is_brand = dom == brand_domain
+                    row_bg   = "#F5F3FF" if is_brand else "white"
+                    row_fw   = "700" if is_brand else "400"
+                    you_tag  = f' <span style="background:#EDE9FE;color:#7C3AED;border-radius:4px;padding:1px 6px;font-size:0.7rem;font-weight:700;">Your Brand</span>' if is_brand else ""
+                    source_rows += (
+                        f'<tr style="background:{row_bg};border-bottom:1px solid #F9FAFB;">' +
+                        f'<td style="padding:12px 16px;font-size:0.82rem;color:#9CA3AF;font-weight:600;width:30px;">{rank}.</td>' +
+                        f'<td style="padding:12px 8px;width:32px;">' +
+                        f'<span style="width:28px;height:28px;border-radius:6px;background:#F3F4F6;display:inline-flex;align-items:center;justify-content:center;font-size:0.85rem;">{icon}</span>' +
+                        f'</td>' +
+                        f'<td style="padding:12px 16px;font-size:0.84rem;font-weight:{row_fw};color:#111827;">{dom}{you_tag}</td>' +
+                        f'<td style="padding:12px 16px;">' +
+                        f'<div style="display:flex;align-items:center;gap:10px;">' +
+                        f'<div style="background:#E5E7EB;border-radius:4px;height:6px;width:100px;overflow:hidden;">' +
+                        f'<div style="background:#7C3AED;height:6px;border-radius:4px;width:{bar_w}%;"></div></div>' +
+                        f'</div></td>' +
+                        f'<td style="padding:12px 16px;font-size:0.84rem;font-weight:600;color:#374151;text-align:right;">{share_pct}%</td>' +
+                        f'<td style="padding:12px 16px;font-size:0.8rem;color:#9CA3AF;text-align:right;">{count}x</td>' +
+                        f'</tr>'
+                    )
+
+                if source_rows:
                     st.markdown(
                         f'<div style="background:white;border-radius:16px;border:1px solid #E5E7EB;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,0.05);">' +
-                        f'<div style="font-size:0.95rem;font-weight:800;color:#111827;margin-bottom:4px;">📎 Citation Pages — Where {brand} Appeared</div>' +
-                        f'<div style="font-size:0.8rem;color:#9CA3AF;margin-bottom:16px;">{mentioned_count} of {len(responses_detail)} queries resulted in a brand citation. Citation Share: {cit:.0f}%</div>' +
-                        cit_rows +
+                        f'<div style="font-size:0.95rem;font-weight:800;color:#111827;margin-bottom:4px;">📎 Citation Sources</div>' +
+                        f'<div style="font-size:0.8rem;color:#9CA3AF;margin-bottom:16px;">Sources referenced by AI across {len(responses_detail)} queries — ranked by share of mentions. Your brand domain is highlighted.</div>' +
+                        f'<table style="width:100%;border-collapse:collapse;">' +
+                        f'<thead><tr style="border-bottom:2px solid #E5E7EB;">' +
+                        f'<th style="padding:8px 16px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;"></th>' +
+                        f'<th style="padding:8px 8px;"></th>' +
+                        f'<th style="padding:8px 16px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;">Domain</th>' +
+                        f'<th style="padding:8px 16px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;"></th>' +
+                        f'<th style="padding:8px 16px;text-align:right;font-size:0.73rem;color:#9CA3AF;font-weight:600;">Share</th>' +
+                        f'<th style="padding:8px 16px;text-align:right;font-size:0.73rem;color:#9CA3AF;font-weight:600;">Mentions</th>' +
+                        f'</tr></thead>' +
+                        f'<tbody>{source_rows}</tbody></table>' +
                         f'</div>',
                         unsafe_allow_html=True
                     )
                 else:
                     st.markdown(
                         f'<div style="background:#FFF8F0;border-radius:16px;border:1px solid #FED7AA;padding:24px;">' +
-                        f'<div style="font-size:0.95rem;font-weight:800;color:#92400E;margin-bottom:6px;">📎 Citation Pages</div>' +
-                        f'<div style="font-size:0.83rem;color:#92400E;">{brand} did not appear in any of the 20 AI responses. This means AI models are not currently citing your brand for industry queries — a key area to improve.</div>' +
+                        f'<div style="font-size:0.95rem;font-weight:800;color:#92400E;margin-bottom:6px;">📎 Citation Sources</div>' +
+                        f'<div style="font-size:0.83rem;color:#92400E;">{brand} domain was not found among cited sources in the 20 AI responses — a key gap to address.</div>' +
                         f'</div>',
                         unsafe_allow_html=True
                     )
