@@ -300,11 +300,26 @@ def analyze_geo_with_ai(page_data: dict) -> dict:
     - Measures whether the brand naturally appears in AI responses
     - That is real visibility — not prompted mentions
     """
-    # Extract brand name
-    brand = page_data.get("title", "").split("|")[0].split("-")[0].strip()
+    # Extract brand name — map known domains to proper brand names
+    domain_to_brand = {
+        "vw": "Volkswagen", "volkswagen": "Volkswagen",
+        "gm": "General Motors", "bmw": "BMW",
+        "jll": "JLL", "pwc": "PwC", "kpmg": "KPMG", "ey": "EY",
+        "accenture": "Accenture", "mckinsey": "McKinsey",
+        "amex": "American Express", "americanexpress": "American Express",
+        "bofа": "Bank of America", "bankofamerica": "Bank of America",
+        "wellsfargo": "Wells Fargo", "usaa": "USAA",
+    }
+    title_raw = page_data.get("title", "").split("|")[0].split("-")[0].split("–")[0].strip()
+    # Clean up common suffixes from page titles
+    for suffix in [" Official Site", " Homepage", " Home", " Official", " | Home", ".com", ".net", ".org"]:
+        title_raw = title_raw.replace(suffix, "").strip()
+    brand = title_raw if title_raw and len(title_raw) >= 2 else ""
+
     if not brand or len(brand) < 2:
         domain = page_data.get("domain", "brand")
-        brand = domain.replace("www.", "").split(".")[0].title()
+        domain_key = domain.replace("www.", "").split(".")[0].lower()
+        brand = domain_to_brand.get(domain_key, domain_key.title())
     domain   = page_data.get("domain", "").lower()
     brand_l  = brand.lower()
     client   = get_client()
@@ -573,7 +588,7 @@ Return ONLY valid JSON:
         "share_of_voice":       sov,
         "overall_geo_score":    geo_score,
         "seo_score":            sc.get("seo_score", 0),
-        "avg_rank":             sc.get("avg_rank", "N/A"),
+        "avg_rank":             "N/A" if visibility == 0 else sc.get("avg_rank", "N/A"),
         "top_strength":         sc.get("strengths", [""])[0] if sc.get("strengths") else "",
         "top_weakness":         sc.get("improvements", [""])[0] if sc.get("improvements") else "",
         "queries_tested":       [p["q"] for p in qa_pairs],
