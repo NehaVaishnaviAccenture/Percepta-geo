@@ -1299,13 +1299,26 @@ elif page == "GEO Dashboard":
 
                 # Score explanation sentence
                 if vis == 0:
-                    score_explain = "<strong>Brand is invisible to AI</strong> — not appearing in any consumer queries in this category. Immediate content and schema optimization needed."
-                elif geo >= 70:
-                    score_explain = "<strong>Strong AI presence</strong> — brand is frequently recommended with positive sentiment. Continue building authoritative content to maintain position."
+                    score_explain = (
+                        f"GEO Score is <strong>{geo}</strong> because brand did not appear in any of the 20 AI queries. "
+                        f"All sub-scores are 0 — Visibility, Citation, Sentiment and Prominence all require brand presence to register."
+                    )
                 elif vis >= 60 and cit < 50:
-                    score_explain = "<strong>High visibility but low authority</strong> — brand appears in AI responses but is not being recommended as a top choice. Focus on citation quality over quantity."
+                    score_explain = (
+                        f"GEO Score is <strong>{geo}</strong> despite {vis}% Visibility because Citation Score is only {cit}. "
+                        f"Brand appears in AI responses but is listed among many options — not specifically endorsed. "
+                        f"Prominence and Share of Voice are dragging the weighted average down."
+                    )
+                elif geo >= 70:
+                    score_explain = (
+                        f"GEO Score is <strong>{geo}</strong> — driven by {vis}% Visibility and {sent} Sentiment. "
+                        f"Brand is frequently appearing and positively described in AI responses."
+                    )
                 else:
-                    score_explain = "<strong>Emerging AI visibility</strong> — brand appears occasionally but lacks the prominence and citation authority to rank consistently. Structured content investment will drive improvement."
+                    score_explain = (
+                        f"GEO Score is <strong>{geo}</strong> — Visibility is {vis}% but Citation ({cit}) and Sentiment ({sent}) "
+                        f"are pulling the weighted average down. Brand appears occasionally but isn't being consistently recommended."
+                    )
 
                 mc1, mc2, mc3, mc4 = st.columns(4)
                 cards = [
@@ -1515,11 +1528,6 @@ elif page == "GEO Dashboard":
                 responses_detail = result.get("responses_detail", [])
                 total_mentioned  = sum(1 for r in responses_detail if r.get("mentioned"))
 
-                # Calculate per-query visibility %:
-                # Each query that mentioned brand contributes equally to overall visibility
-                # e.g. brand in 8/20 → each mention = 5% of total visibility
-                per_query_vis_pct = round(100 / len(queries_run)) if queries_run else 5  # e.g. 5% per query out of 20
-
                 # Track rank# — cumulative count of brand appearances so far
                 appearance_rank = 0
                 q_rows = ""
@@ -1533,18 +1541,14 @@ elif page == "GEO Dashboard":
                         # Get real position within this response
                         real_pos = item.get("position", 0)
                         rank_display = f"#{real_pos}" if real_pos > 0 else f"#{appearance_rank}"
-                        vis_pct      = f"{per_query_vis_pct}%"
                         rank_color   = "#10B981" if real_pos == 1 else "#7C3AED" if real_pos <= 3 else "#F59E0B"
-                        pct_color    = "#10B981"
                         appeared_badge = (
                             '<span style="background:#D1FAE5;color:#065F46;border-radius:4px;padding:1px 7px;'
                             'font-size:0.7rem;font-weight:700;">✓ Appeared</span>'
                         )
                     else:
                         rank_display   = "—"
-                        vis_pct        = "0%"
                         rank_color     = "#9CA3AF"
-                        pct_color      = "#9CA3AF"
                         appeared_badge = (
                             '<span style="background:#F3F4F6;color:#9CA3AF;border-radius:4px;padding:1px 7px;'
                             'font-size:0.7rem;font-weight:700;">— Not Mentioned</span>'
@@ -1557,9 +1561,6 @@ elif page == "GEO Dashboard":
                         f'<td style="padding:10px 16px;text-align:center;">' +
                         f'<div style="font-size:1.1rem;font-weight:800;color:{rank_color};">{rank_display}</div>' +
                         f'<div style="font-size:0.68rem;color:#9CA3AF;">Rank</div></td>' +
-                        f'<td style="padding:10px 16px;text-align:center;">' +
-                        f'<div style="font-size:1.1rem;font-weight:800;color:{pct_color};">{vis_pct}</div>' +
-                        f'<div style="font-size:0.68rem;color:#9CA3AF;">Visibility</div></td>' +
                         f'</tr>'
                     )
 
