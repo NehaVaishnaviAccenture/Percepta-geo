@@ -192,7 +192,7 @@ def score_competitor_from_responses(comp_name: str, responses: list) -> dict:
     mentions  = sum(1 for r in responses if any(t in r.get("response_preview","").lower() for t in search_terms))
     live_vis  = round((mentions / 20) * 100)
 
-    # Awareness floors — realistic baseline per brand
+    # Realistic awareness baseline per brand
     awareness_floor = {
         "american express": 68, "chase": 72, "citi": 52, "discover": 48,
         "wells fargo": 45, "bank of america": 45, "capital one": 42,
@@ -201,10 +201,11 @@ def score_competitor_from_responses(comp_name: str, responses: list) -> dict:
         "ford": 52, "mercedes": 50, "hyundai": 42, "kia": 36,
         "nissan": 33, "volkswagen": 38,
     }
-    # GEO caps — prevents brands from floating above their realistic ceiling
-    # regardless of how often they appear in a URL-biased run
+
+    # Hard GEO ceilings — Capital One capped at 54 so it always lands #3 or lower,
+    # below American Express (~56+) and Chase (~72+)
     geo_caps = {
-        "capital one":      54,  # always below Amex (~56+) so never ranks #2
+        "capital one":      54,
         "bank of america":  58,
         "wells fargo":      56,
         "synchrony":        35,
@@ -244,7 +245,7 @@ def score_competitor_from_responses(comp_name: str, responses: list) -> dict:
             "Cit": comp_cit, "Sen": comp_sent, "Rank": rank_str}
 
 
-# ── SCORE BADGE (fixed thresholds) ───────────────────────────
+# ── SCORE BADGE ───────────────────────────────────────────────
 def score_badge(score):
     if score >= 80:   return "Excellent", "#065F46", "#D1FAE5"
     elif score >= 70: return "Good",      "#1E40AF", "#DBEAFE"
@@ -858,7 +859,6 @@ elif page == "GEO Dashboard":
                     except Exception as e:
                         st.error(f"❌ AI analysis failed: {e}"); st.stop()
 
-    # ── Render from session state — persists across tab switches ──
     if st.session_state.geo_result is not None:
         result    = st.session_state.geo_result
         brand_url = st.session_state.geo_url
@@ -888,7 +888,6 @@ elif page == "GEO Dashboard":
                 f"GEO Score of {geo} reflects strong performance: Visibility {_vis}%, Citation {_cit}, Sentiment {_sent}, Prominence {_prom}, Share of Voice {_sov}."
             )
 
-        # ── GAUGE ──
         gauge_col, info_col = st.columns([1, 2])
         with gauge_col:
             fig_g = go.Figure(go.Indicator(
@@ -924,7 +923,6 @@ elif page == "GEO Dashboard":
 
         st.markdown("<br>", unsafe_allow_html=True)
 
-        # ── METRIC CARDS ──
         vis      = result.get("context", 0)
         cit      = result.get("reliability", 0)
         sent     = result.get("exclusivity", 0)
@@ -948,7 +946,6 @@ elif page == "GEO Dashboard":
 
         st.markdown("<br>", unsafe_allow_html=True)
 
-        # ── TOP 10 COMPETITOR TABLE ──
         domain_lower2 = page_data["domain"].lower()
         fin_kws2  = ["capital","chase","amex","citi","discover","bank","credit","card","finance","fargo"]
         auto_kws2 = ["vw","volkswagen","toyota","ford","honda","bmw","tesla","auto","car","motor"]
@@ -1009,7 +1006,6 @@ elif page == "GEO Dashboard":
 
         st.markdown("<br>", unsafe_allow_html=True)
 
-        # ── 🔍 QUERIES RUN ──
         queries_run     = result.get("queries_tested", [])
         appearance_rank = 0
         q_rows = ""
@@ -1049,7 +1045,6 @@ elif page == "GEO Dashboard":
 
         st.markdown("<br>", unsafe_allow_html=True)
 
-        # ── 💡 GEO HEALTH SUMMARY ──
         strengths    = result.get("strengths_list", [])[:3]
         weaknesses   = result.get("improvements_list", [])[:5]
         all_insights = result.get("insights", [])
@@ -1080,7 +1075,6 @@ elif page == "GEO Dashboard":
 
         st.markdown("<br>", unsafe_allow_html=True)
 
-        # ── ⚡ PRIORITY ACTIONS ──
         all_actions  = result.get("actions", [])
         actions_high = [a for a in all_actions if a.get("priority") == "High"]
         actions_med  = [a for a in all_actions if a.get("priority") == "Medium"]
@@ -1118,7 +1112,6 @@ elif page == "GEO Dashboard":
 
         st.markdown("<br>", unsafe_allow_html=True)
 
-        # ── METRIC DEFINITIONS ──
         st.markdown(
             '<div style="background:white;border-radius:16px;border:1px solid #E5E7EB;padding:28px 32px;">'
             '<div style="font-size:0.95rem;font-weight:800;color:#111827;margin-bottom:20px;">Metric Definitions</div>'
