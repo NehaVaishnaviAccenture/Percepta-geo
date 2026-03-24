@@ -12,7 +12,6 @@ import re
 import random
 from urllib.parse import urlparse
 
-# ── HARDCODED API KEY (internal) ─────────────────────────────
 INTERNAL_API_KEY = st.secrets["OPENROUTER_API_KEY"]
 
 st.set_page_config(page_title="Percepta | GEO Insights", page_icon="🧠", layout="wide")
@@ -192,32 +191,65 @@ def score_competitor_from_responses(comp_name: str, responses: list) -> dict:
     search_terms = aliases.get(comp_l, [comp_l])
     mentions  = sum(1 for r in responses if any(t in r.get("response_preview","").lower() for t in search_terms))
     live_vis  = round((mentions / 20) * 100)
+
+    # Awareness floors — realistic baseline per brand
     awareness_floor = {
         "american express": 68, "chase": 72, "citi": 52, "discover": 48,
-        "wells fargo": 45, "bank of america": 45, "capital one": 50,
+        "wells fargo": 45, "bank of america": 45, "capital one": 42,
         "synchrony": 26, "barclays": 22, "usaa": 28,
         "tesla": 70, "toyota": 65, "bmw": 58, "honda": 55,
         "ford": 52, "mercedes": 50, "hyundai": 42, "kia": 36,
         "nissan": 33, "volkswagen": 38,
     }
+    # GEO caps — prevents brands from floating above their realistic ceiling
+    # regardless of how often they appear in a URL-biased run
+    geo_caps = {
+        "capital one":      65,
+        "bank of america":  68,
+        "wells fargo":      66,
+        "synchrony":        45,
+        "barclays":         40,
+        "usaa":             38,
+        "kia":              48,
+        "nissan":           45,
+        "hyundai":          55,
+    }
+
     floor_vis = awareness_floor.get(comp_l, 18)
     if mentions == 0:
         random.seed(hash(comp_name) % 9999)
         blended_vis = max(10, min(80, floor_vis + random.randint(-4, 4)))
     else:
         blended_vis = round(live_vis * 0.80 + floor_vis * 0.20)
+
     comp_vis  = blended_vis
     comp_cit  = min(92, round(comp_vis * 0.93 + mentions * 1.8))
     comp_sent = min(92, round(comp_vis * 0.88 + mentions * 1.4))
     comp_prom = min(92, round(comp_vis * 0.78))
     comp_sov  = min(92, round(comp_vis * 0.63))
     comp_geo  = round(comp_vis*0.30 + comp_sent*0.20 + comp_prom*0.20 + comp_cit*0.15 + comp_sov*0.15)
+
+    # Apply cap
+    cap = geo_caps.get(comp_l)
+    if cap and comp_geo > cap:
+        comp_geo = cap
+
     positions = [get_brand_position_in_response(r.get("response_preview",""), comp_name)
                  for r in responses if any(t in r.get("response_preview","").lower() for t in search_terms)]
     valid_pos = [p for p in positions if p > 0]
     avg_pos   = round(sum(valid_pos) / len(valid_pos)) if valid_pos else 0
     rank_str  = f"#{avg_pos}" if avg_pos > 0 else "N/A"
-    return {"Brand": comp_name, "GEO": comp_geo, "Vis": comp_vis, "Cit": comp_cit, "Sen": comp_sent, "Rank": rank_str}
+
+    return {"Brand": comp_name, "GEO": comp_geo, "Vis": comp_vis,
+            "Cit": comp_cit, "Sen": comp_sent, "Rank": rank_str}
+
+
+# ── SCORE BADGE (fixed thresholds) ───────────────────────────
+def score_badge(score):
+    if score >= 80:   return "Excellent", "#065F46", "#D1FAE5"
+    elif score >= 70: return "Good",      "#1E40AF", "#DBEAFE"
+    elif score >= 45: return "Needs Work","#92400E", "#FEF3C7"
+    else:             return "Poor",      "#991B1B", "#FEE2E2"
 
 
 # ── MAIN GEO ANALYSIS ─────────────────────────────────────────
@@ -471,20 +503,13 @@ Return ONLY valid JSON:
         "reliability": citation_share, "exclusivity": sentiment,
     }
 
-def score_badge(score):
-    if score >= 80:   return "Excellent", "#065F46", "#D1FAE5"
-    elif score >= 60: return "Good",      "#1E40AF", "#DBEAFE"
-    elif score >= 40: return "Needs Work","#92400E", "#FEF3C7"
-    else:             return "Poor",      "#991B1B", "#FEE2E2"
-
 
 # ── SESSION STATE ─────────────────────────────────────────────
-# Persist page, analysis result, and AI chat history across tab switches
-if "page"         not in st.session_state: st.session_state.page         = "Overview"
-if "geo_result"   not in st.session_state: st.session_state.geo_result   = None
-if "geo_url"      not in st.session_state: st.session_state.geo_url      = ""
-if "geo_page_data"not in st.session_state: st.session_state.geo_page_data= None
-if "ai_history"   not in st.session_state: st.session_state.ai_history   = []
+if "page"          not in st.session_state: st.session_state.page          = "Overview"
+if "geo_result"    not in st.session_state: st.session_state.geo_result    = None
+if "geo_url"       not in st.session_state: st.session_state.geo_url       = ""
+if "geo_page_data" not in st.session_state: st.session_state.geo_page_data = None
+if "ai_history"    not in st.session_state: st.session_state.ai_history    = []
 
 active = st.session_state.page
 
@@ -648,7 +673,7 @@ if page == "Overview":
                 <div style="font-size:0.85rem;font-weight:800;color:#111827;border-bottom:1px solid #E5E7EB;padding-bottom:8px;margin-bottom:12px;">Activities</div>
                 <ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.7;">
                     <li>Develop LLM-ready content: FAQs, Top 10 lists, Buying guides</li>
-                    <li>Strengthen product-attribute associations</li><li>Optimize content structure for agent ingestion</li><li>Create Content Influence Blueprint</li>
+                    <li>Strengthen product-attribute associations</li><li>Optimize content for agent ingestion</li><li>Create Content Influence Blueprint</li>
                 </ul>
             </div>
             <div style="border:1px solid #E5E7EB;border-radius:10px;padding:18px;">
@@ -734,7 +759,7 @@ elif page == "AI Comparison":
     DEFAULT_KEY = st.secrets["OPENROUTER_API_KEY"]
     with st.expander("🔑 OpenRouter API Key", expanded=False):
         st.caption("A default key is pre-loaded. Paste your own key below to override it.")
-        custom_key = st.text_input("Use your own API Key (optional)", type="password", placeholder="sk-or-v1-...")
+        custom_key     = st.text_input("Use your own API Key (optional)", type="password", placeholder="sk-or-v1-...")
         openrouter_key = custom_key.strip() if custom_key.strip() else DEFAULT_KEY
         if custom_key.strip(): st.success("✅ Using your custom API key")
 
@@ -755,7 +780,6 @@ elif page == "AI Comparison":
                     elif "404" in err: st.error("❌ Model unavailable")
                     else: st.error(f"❌ Error: {e}")
 
-    # ai_history persists in session_state — won't clear on tab switch
     for item in reversed(st.session_state.ai_history):
         st.markdown(
             '<div style="display:flex;justify-content:flex-end;margin:20px 0 10px 0;">'
@@ -799,9 +823,9 @@ elif page == "GEO Dashboard":
     sc1, sc2, sc3, sc4 = st.columns(4)
     for col, (rng, lbl, tc, bg, desc) in zip([sc1,sc2,sc3,sc4],[
         ("80–100","Excellent","#065F46","#D1FAE5","Well optimized for AI citation"),
-        ("60–79","Good","#1E40AF","#DBEAFE","Minor improvements recommended"),
-        ("40–59","Needs Work","#92400E","#FEF3C7","Several issues to address"),
-        ("0–39","Poor","#991B1B","#FEE2E2","Major optimization needed")
+        ("70–79", "Good",     "#1E40AF","#DBEAFE","Minor improvements recommended"),
+        ("45–69", "Needs Work","#92400E","#FEF3C7","Several issues to address"),
+        ("0–44",  "Poor",     "#991B1B","#FEE2E2","Major optimization needed")
     ]):
         with col:
             st.markdown(f"""<div style="background:{bg};border-radius:12px;padding:16px 18px;text-align:center;">
@@ -811,10 +835,9 @@ elif page == "GEO Dashboard":
             </div>""", unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
-    brand_url = st.text_input("🔗 Brand URL", value=st.session_state.geo_url,
-                               placeholder="https://www.chase.com/",
-                               help="Enter any brand URL to analyze its AI visibility score")
-
+    brand_url    = st.text_input("🔗 Brand URL", value=st.session_state.geo_url,
+                                  placeholder="https://www.chase.com/",
+                                  help="Enter any brand URL to analyze its AI visibility score")
     run_analysis = st.button("🔍 Run Live AI Analysis", use_container_width=True)
 
     if run_analysis:
@@ -829,14 +852,13 @@ elif page == "GEO Dashboard":
                 with st.spinner("🤖 Running live AI queries..."):
                     try:
                         result = analyze_geo_with_ai(page_data)
-                        # ── PERSIST result in session state ──
                         st.session_state.geo_result    = result
                         st.session_state.geo_url       = brand_url
                         st.session_state.geo_page_data = page_data
                     except Exception as e:
                         st.error(f"❌ AI analysis failed: {e}"); st.stop()
 
-    # ── RENDER from session state — survives tab switches ──
+    # ── Render from session state — persists across tab switches ──
     if st.session_state.geo_result is not None:
         result    = st.session_state.geo_result
         brand_url = st.session_state.geo_url
@@ -878,9 +900,9 @@ elif page == "GEO Dashboard":
                     'axis': {'range': [0,100], 'tickcolor': "#9CA3AF"},
                     'bar': {'color': "#7C3AED"}, 'bgcolor': "white",
                     'steps': [
-                        {'range': [0,40],  'color': '#FEE2E2'},
-                        {'range': [40,60], 'color': '#FEF3C7'},
-                        {'range': [60,80], 'color': '#EDE9FE'},
+                        {'range': [0,44],  'color': '#FEE2E2'},
+                        {'range': [44,69], 'color': '#FEF3C7'},
+                        {'range': [69,80], 'color': '#DBEAFE'},
                         {'range': [80,100],'color': '#D1FAE5'}
                     ],
                     'threshold': {'line': {'color': "#7C3AED", 'width': 4}, 'thickness': 0.75, 'value': geo}
@@ -926,7 +948,7 @@ elif page == "GEO Dashboard":
 
         st.markdown("<br>", unsafe_allow_html=True)
 
-        # ── LIVE COMPETITOR TOP 10 ──
+        # ── TOP 10 COMPETITOR TABLE ──
         domain_lower2 = page_data["domain"].lower()
         fin_kws2  = ["capital","chase","amex","citi","discover","bank","credit","card","finance","fargo"]
         auto_kws2 = ["vw","volkswagen","toyota","ford","honda","bmw","tesla","auto","car","motor"]
@@ -987,7 +1009,7 @@ elif page == "GEO Dashboard":
 
         st.markdown("<br>", unsafe_allow_html=True)
 
-        # ── 🔍 QUERIES RUN (moved up — before health summary) ──
+        # ── 🔍 QUERIES RUN ──
         queries_run     = result.get("queries_tested", [])
         appearance_rank = 0
         q_rows = ""
@@ -1027,7 +1049,7 @@ elif page == "GEO Dashboard":
 
         st.markdown("<br>", unsafe_allow_html=True)
 
-        # ── 💡 GEO HEALTH SUMMARY (moved after queries) ──
+        # ── 💡 GEO HEALTH SUMMARY ──
         strengths    = result.get("strengths_list", [])[:3]
         weaknesses   = result.get("improvements_list", [])[:5]
         all_insights = result.get("insights", [])
@@ -1058,7 +1080,7 @@ elif page == "GEO Dashboard":
 
         st.markdown("<br>", unsafe_allow_html=True)
 
-        # ── ⚡ PRIORITY ACTIONS (moved after health summary) ──
+        # ── ⚡ PRIORITY ACTIONS ──
         all_actions  = result.get("actions", [])
         actions_high = [a for a in all_actions if a.get("priority") == "High"]
         actions_med  = [a for a in all_actions if a.get("priority") == "Medium"]
