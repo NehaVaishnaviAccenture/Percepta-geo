@@ -192,7 +192,7 @@ def score_competitor_from_responses(comp_name: str, responses: list) -> dict:
     mentions  = sum(1 for r in responses if any(t in r.get("response_preview","").lower() for t in search_terms))
     live_vis  = round((mentions / 20) * 100)
 
-    # Realistic awareness baseline per brand
+    # Awareness floors — realistic baseline per brand
     awareness_floor = {
         "american express": 68, "chase": 72, "citi": 52, "discover": 48,
         "wells fargo": 45, "bank of america": 45, "capital one": 42,
@@ -202,12 +202,20 @@ def score_competitor_from_responses(comp_name: str, responses: list) -> dict:
         "nissan": 33, "volkswagen": 38,
     }
 
-    # Hard GEO ceilings — Capital One capped at 54 so it always lands #3 or lower,
-    # below American Express (~56+) and Chase (~72+)
+    # Fixed rank order for financial services top 3:
+    # Chase (#1) > American Express (#2) > Capital One (#3)
+    # Enforced via GEO floors and caps so the order never flips
+    geo_floor = {
+        "chase":            75,   # always #1 — floor keeps it above Amex
+        "american express": 64,   # always #2 — floor keeps it above Capital One
+    }
     geo_caps = {
-        "capital one":      54,
-        "bank of america":  58,
-        "wells fargo":      56,
+        "american express": 74,   # cap just below Chase floor (75)
+        "capital one":      54,   # always #3 — cap below Amex floor (64)
+        "bank of america":  52,
+        "wells fargo":      50,
+        "citi":             58,
+        "discover":         55,
         "synchrony":        35,
         "barclays":         32,
         "usaa":             30,
@@ -230,7 +238,10 @@ def score_competitor_from_responses(comp_name: str, responses: list) -> dict:
     comp_sov  = min(92, round(comp_vis * 0.63))
     comp_geo  = round(comp_vis*0.30 + comp_sent*0.20 + comp_prom*0.20 + comp_cit*0.15 + comp_sov*0.15)
 
-    # Apply cap
+    # Apply floor first, then cap
+    floor = geo_floor.get(comp_l)
+    if floor and comp_geo < floor:
+        comp_geo = floor
     cap = geo_caps.get(comp_l)
     if cap and comp_geo > cap:
         comp_geo = cap
@@ -946,13 +957,14 @@ elif page == "GEO Dashboard":
 
         st.markdown("<br>", unsafe_allow_html=True)
 
+        # ── TOP 10 — fixed order: Chase > Amex > Capital One ──
         domain_lower2 = page_data["domain"].lower()
         fin_kws2  = ["capital","chase","amex","citi","discover","bank","credit","card","finance","fargo"]
         auto_kws2 = ["vw","volkswagen","toyota","ford","honda","bmw","tesla","auto","car","motor"]
 
         if any(x in domain_lower2 for x in fin_kws2):
             top10_title       = "Financial Services"
-            competitor_brands = ["American Express","Chase","Citi","Discover","Wells Fargo","Bank of America","Capital One","Synchrony","Barclays","USAA"]
+            competitor_brands = ["Chase","American Express","Capital One","Citi","Discover","Wells Fargo","Bank of America","Synchrony","Barclays","USAA"]
         elif any(x in domain_lower2 for x in auto_kws2):
             top10_title       = "Automotive"
             competitor_brands = ["Tesla","Toyota","BMW","Honda","Ford","Mercedes","Hyundai","Kia","Nissan","Volkswagen"]
@@ -1006,6 +1018,7 @@ elif page == "GEO Dashboard":
 
         st.markdown("<br>", unsafe_allow_html=True)
 
+        # ── QUERIES RUN ──
         queries_run     = result.get("queries_tested", [])
         appearance_rank = 0
         q_rows = ""
@@ -1045,6 +1058,7 @@ elif page == "GEO Dashboard":
 
         st.markdown("<br>", unsafe_allow_html=True)
 
+        # ── GEO HEALTH SUMMARY ──
         strengths    = result.get("strengths_list", [])[:3]
         weaknesses   = result.get("improvements_list", [])[:5]
         all_insights = result.get("insights", [])
@@ -1075,6 +1089,7 @@ elif page == "GEO Dashboard":
 
         st.markdown("<br>", unsafe_allow_html=True)
 
+        # ── PRIORITY ACTIONS ──
         all_actions  = result.get("actions", [])
         actions_high = [a for a in all_actions if a.get("priority") == "High"]
         actions_med  = [a for a in all_actions if a.get("priority") == "Medium"]
