@@ -204,12 +204,12 @@ def score_competitor_from_responses(comp_name: str, responses: list) -> dict:
     # GEO caps — prevents brands from floating above their realistic ceiling
     # regardless of how often they appear in a URL-biased run
     geo_caps = {
-        "capital one":      65,
-        "bank of america":  68,
-        "wells fargo":      66,
-        "synchrony":        45,
-        "barclays":         40,
-        "usaa":             38,
+        "capital one":      54,  # always below Amex (~56+) so never ranks #2
+        "bank of america":  58,
+        "wells fargo":      56,
+        "synchrony":        35,
+        "barclays":         32,
+        "usaa":             30,
         "kia":              48,
         "nissan":           45,
         "hyundai":          55,
