@@ -55,8 +55,6 @@ section[data-testid="stSidebar"] { display: none !important; }
 .pilot-items li:last-child { border-bottom: none; }
 .pilot-items li::before { content: '›'; color: #A855F7; font-weight: 700; flex-shrink: 0; }
 .score-section { padding: 32px 40px; }
-div[data-testid="stHorizontalBlock"]:first-of-type > div > div > div > button { border: none !important; background: transparent !important; color: #6B7280 !important; font-weight: 500 !important; font-size: 0.88rem !important; padding: 8px 0 !important; border-bottom: 2px solid transparent !important; border-radius: 0 !important; width: 100% !important; }
-div[data-testid="stHorizontalBlock"]:first-of-type > div > div > div > button:hover { color: #7C3AED !important; background: transparent !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -79,7 +77,7 @@ ALWAYS follow this exact format:
 4. Use bullet points with emoji checkmarks: • ✅ benefit, • ❌ downside
 5. End each section with a bold insight line starting with 🔍 or 💡
 6. Finish with a ## 👉 Quick Pick section with → arrows matching user type to specific product
-7. Last line: ask 1 follow-up question to personalize the recommendation
+7. Last line: ask 1 follow-up question
 RULES: Always name real brands, real products, real percentages and fees. Use emojis throughout. Never give vague generic advice."""},
             {"role": "user", "content": prompt}
         ], temperature=0.2, max_tokens=2048)
@@ -90,7 +88,7 @@ def fetch_page_content(url: str) -> dict:
     try:
         resp = requests.get(url, headers=headers, timeout=15)
         resp.raise_for_status()
-        soup = BeautifulSoup(resp.text, "html.parser")
+        soup       = BeautifulSoup(resp.text, "html.parser")
         title      = soup.title.string.strip() if soup.title else ""
         meta_tag   = soup.find("meta", attrs={"name": "description"})
         meta_desc  = meta_tag.get("content", "") if meta_tag else ""
@@ -181,15 +179,8 @@ def extract_brand_from_page(page_data: dict) -> str:
     return domain_key.title()
 
 
-# ── COMPETITOR SCORING (LIVE + AWARENESS FLOOR) ───────────────
+# ── COMPETITOR SCORING ────────────────────────────────────────
 def score_competitor_from_responses(comp_name: str, responses: list) -> dict:
-    """
-    Score competitor using the same 20 AI responses already fetched.
-    Blends live mention count with an industry-awareness floor so
-    brands like Synchrony/Barclays don't all show 0 when they don't
-    appear in generic queries — but Chase/Amex still dominate if
-    they're mentioned more.
-    """
     comp_l = comp_name.lower()
     aliases = {
         "american express": ["american express", "amex"],
@@ -201,9 +192,6 @@ def score_competitor_from_responses(comp_name: str, responses: list) -> dict:
     search_terms = aliases.get(comp_l, [comp_l])
     mentions  = sum(1 for r in responses if any(t in r.get("response_preview","").lower() for t in search_terms))
     live_vis  = round((mentions / 20) * 100)
-
-    # Awareness floors — realistic AI visibility baseline per brand
-    # even when they don't show up in every generic query run
     awareness_floor = {
         "american express": 68, "chase": 72, "citi": 52, "discover": 48,
         "wells fargo": 45, "bank of america": 45, "capital one": 50,
@@ -213,29 +201,23 @@ def score_competitor_from_responses(comp_name: str, responses: list) -> dict:
         "nissan": 33, "volkswagen": 38,
     }
     floor_vis = awareness_floor.get(comp_l, 18)
-
-    # Blend: live data drives score when mentions exist, floor catches zero-mention brands
     if mentions == 0:
         random.seed(hash(comp_name) % 9999)
         blended_vis = max(10, min(80, floor_vis + random.randint(-4, 4)))
     else:
         blended_vis = round(live_vis * 0.80 + floor_vis * 0.20)
-
     comp_vis  = blended_vis
     comp_cit  = min(92, round(comp_vis * 0.93 + mentions * 1.8))
     comp_sent = min(92, round(comp_vis * 0.88 + mentions * 1.4))
     comp_prom = min(92, round(comp_vis * 0.78))
     comp_sov  = min(92, round(comp_vis * 0.63))
     comp_geo  = round(comp_vis*0.30 + comp_sent*0.20 + comp_prom*0.20 + comp_cit*0.15 + comp_sov*0.15)
-
     positions = [get_brand_position_in_response(r.get("response_preview",""), comp_name)
                  for r in responses if any(t in r.get("response_preview","").lower() for t in search_terms)]
     valid_pos = [p for p in positions if p > 0]
     avg_pos   = round(sum(valid_pos) / len(valid_pos)) if valid_pos else 0
     rank_str  = f"#{avg_pos}" if avg_pos > 0 else "N/A"
-
-    return {"Brand": comp_name, "GEO": comp_geo, "Vis": comp_vis,
-            "Cit": comp_cit, "Sen": comp_sent, "Rank": rank_str}
+    return {"Brand": comp_name, "GEO": comp_geo, "Vis": comp_vis, "Cit": comp_cit, "Sen": comp_sent, "Rank": rank_str}
 
 
 # ── MAIN GEO ANALYSIS ─────────────────────────────────────────
@@ -366,7 +348,6 @@ def analyze_geo_with_ai(page_data: dict) -> dict:
             "What is the most trusted brand in this space right now?"
         ]
 
-    # ── Run 4 batches of 5 queries ────────────────────────────
     all_qa_pairs = []
     for batch_start in range(0, 20, 5):
         batch_q = queries[batch_start:batch_start+5]
@@ -467,7 +448,7 @@ Return ONLY valid JSON:
 
     responses_detail = [
         {"query": p["q"], "mentioned": brand_l in p["a"].lower(),
-         "response_preview": p["a"],   # full text for competitor detection
+         "response_preview": p["a"],
          "position": get_brand_position_in_response(p["a"], brand)}
         for p in qa_pairs
     ]
@@ -497,11 +478,17 @@ def score_badge(score):
     else:             return "Poor",      "#991B1B", "#FEE2E2"
 
 
-# ── SESSION + NAV ─────────────────────────────────────────────
-if "page" not in st.session_state:
-    st.session_state.page = "Overview"
+# ── SESSION STATE ─────────────────────────────────────────────
+# Persist page, analysis result, and AI chat history across tab switches
+if "page"         not in st.session_state: st.session_state.page         = "Overview"
+if "geo_result"   not in st.session_state: st.session_state.geo_result   = None
+if "geo_url"      not in st.session_state: st.session_state.geo_url      = ""
+if "geo_page_data"not in st.session_state: st.session_state.geo_page_data= None
+if "ai_history"   not in st.session_state: st.session_state.ai_history   = []
+
 active = st.session_state.page
 
+# ── NAVBAR ────────────────────────────────────────────────────
 st.markdown("""
 <style>
 div[data-testid="stHorizontalBlock"]:first-of-type {
@@ -631,7 +618,7 @@ if page == "Overview":
     <div class="section section-white" style="padding:48px 60px;">
         <div class="section-tag">Workstream Details</div>
         <div class="section-title" style="margin-bottom:32px;">Activities &amp; Deliverables</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:3px;margin-bottom:0;">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:3px;">
             <div style="background:#1E1B5E;padding:18px 16px;border-radius:8px 0 0 0;clip-path:polygon(0 0,93% 0,100% 50%,93% 100%,0 100%);">
                 <div style="font-size:0.72rem;font-weight:700;color:rgba(255,255,255,0.7);margin-bottom:6px;">Workstream 01</div>
                 <div style="font-size:0.95rem;font-weight:800;color:white;line-height:1.3;">Agent Ranking Diagnostic (ARD)</div>
@@ -653,37 +640,28 @@ if page == "Overview":
             <div style="border:1px solid #E5E7EB;border-radius:10px;padding:18px;">
                 <div style="font-size:0.85rem;font-weight:800;color:#111827;border-bottom:1px solid #E5E7EB;padding-bottom:8px;margin-bottom:12px;">Activities</div>
                 <ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.7;">
-                    <li>Develop representative prompts across key personas</li>
-                    <li>Execute multi-run stability testing across ChatGPT and Perplexity</li>
-                    <li>Extract agent-generated rankings of brands and attributes</li>
-                    <li>Perform power distribution modeling</li>
-                    <li>Build competitor adjacency maps and Evidence Graphs</li>
+                    <li>Develop representative prompts across key personas</li><li>Execute multi-run stability testing</li>
+                    <li>Extract agent-generated rankings</li><li>Perform power distribution modeling</li><li>Build competitor adjacency maps</li>
                 </ul>
             </div>
             <div style="border:1px solid #E5E7EB;border-radius:10px;padding:18px;">
                 <div style="font-size:0.85rem;font-weight:800;color:#111827;border-bottom:1px solid #E5E7EB;padding-bottom:8px;margin-bottom:12px;">Activities</div>
                 <ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.7;">
                     <li>Develop LLM-ready content: FAQs, Top 10 lists, Buying guides</li>
-                    <li>Strengthen associations between products and target attributes</li>
-                    <li>Optimize content structure for agent ingestion</li>
-                    <li>Create Content Influence Blueprint</li>
+                    <li>Strengthen product-attribute associations</li><li>Optimize content structure for agent ingestion</li><li>Create Content Influence Blueprint</li>
                 </ul>
             </div>
             <div style="border:1px solid #E5E7EB;border-radius:10px;padding:18px;">
                 <div style="font-size:0.85rem;font-weight:800;color:#111827;border-bottom:1px solid #E5E7EB;padding-bottom:8px;margin-bottom:12px;">Activities</div>
                 <ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.7;">
-                    <li>Audit tagging, metadata, and taxonomy consistency</li>
-                    <li>Identify weak or missing structured data</li>
-                    <li>Recommend backlink structure improvements</li>
-                    <li>Audit schema markup (Product, FAQ, How-to)</li>
+                    <li>Audit tagging, metadata, and taxonomy</li><li>Identify missing structured data</li>
+                    <li>Recommend backlink improvements</li><li>Audit schema markup</li>
                 </ul>
             </div>
             <div style="border:1px solid #E5E7EB;border-radius:10px;padding:18px;">
                 <div style="font-size:0.85rem;font-weight:800;color:#111827;border-bottom:1px solid #E5E7EB;padding-bottom:8px;margin-bottom:12px;">Activities</div>
                 <ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.7;">
-                    <li>Re-test all prompts across ChatGPT and Perplexity</li>
-                    <li>Measure semantic drift and ranking changes</li>
-                    <li>Recompute AXO Score</li>
+                    <li>Re-test all prompts</li><li>Measure semantic drift and ranking changes</li><li>Recompute AXO Score</li>
                 </ul>
             </div>
         </div>
@@ -691,9 +669,8 @@ if page == "Overview":
             <div style="border:1px solid #E5E7EB;border-radius:10px;padding:18px;background:#FAFAFA;">
                 <div style="font-size:0.85rem;font-weight:800;color:#111827;border-bottom:1px solid #E5E7EB;padding-bottom:8px;margin-bottom:12px;">Deliverables</div>
                 <ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.7;">
-                    <li>AXO Baseline Report</li><li>Brand &amp; Product Ranking Index</li>
-                    <li>Power Curve Analysis</li><li>Co-Sign Similarity Maps</li>
-                    <li>Attribute Influence Map</li><li>AXO Baseline Score (v1.0)</li>
+                    <li>AXO Baseline Report</li><li>Brand &amp; Product Ranking Index</li><li>Power Curve Analysis</li>
+                    <li>Co-Sign Similarity Maps</li><li>Attribute Influence Map</li><li>AXO Baseline Score (v1.0)</li>
                 </ul>
             </div>
             <div style="border:1px solid #E5E7EB;border-radius:10px;padding:18px;background:#FAFAFA;">
@@ -761,9 +738,6 @@ elif page == "AI Comparison":
         openrouter_key = custom_key.strip() if custom_key.strip() else DEFAULT_KEY
         if custom_key.strip(): st.success("✅ Using your custom API key")
 
-    if "ai_history" not in st.session_state:
-        st.session_state.ai_history = []
-
     query   = st.text_input("Enter a prompt:", "", placeholder="Ask anything...")
     run_btn = st.button("🚀 Run Prompt")
     if run_btn:
@@ -781,13 +755,13 @@ elif page == "AI Comparison":
                     elif "404" in err: st.error("❌ Model unavailable")
                     else: st.error(f"❌ Error: {e}")
 
+    # ai_history persists in session_state — won't clear on tab switch
     for item in reversed(st.session_state.ai_history):
         st.markdown(
             '<div style="display:flex;justify-content:flex-end;margin:20px 0 10px 0;">'
             '<div style="background:#F4F4F4;color:#111827;border-radius:18px 18px 4px 18px;'
-            'padding:12px 18px;max-width:60%;font-size:0.95rem;font-weight:500;'
-            'box-shadow:0 1px 3px rgba(0,0,0,0.07);">' + item["q"] + '</div></div>',
-            unsafe_allow_html=True)
+            'padding:12px 18px;max-width:60%;font-size:0.95rem;font-weight:500;">'
+            + item["q"] + '</div></div>', unsafe_allow_html=True)
         st.markdown('<hr style="border:none;border-top:1px solid #F3F4F6;margin:4px 0 12px 0;">', unsafe_allow_html=True)
         st.markdown(item["a"])
         st.markdown('<hr style="border:none;border-top:1px solid #F3F4F6;margin:16px 0;">', unsafe_allow_html=True)
@@ -823,7 +797,7 @@ elif page == "GEO Dashboard":
     </style>""", unsafe_allow_html=True)
 
     sc1, sc2, sc3, sc4 = st.columns(4)
-    for col, (rng, lbl, tc, bg, desc) in zip([sc1,sc2,sc3,sc4], [
+    for col, (rng, lbl, tc, bg, desc) in zip([sc1,sc2,sc3,sc4],[
         ("80–100","Excellent","#065F46","#D1FAE5","Well optimized for AI citation"),
         ("60–79","Good","#1E40AF","#DBEAFE","Minor improvements recommended"),
         ("40–59","Needs Work","#92400E","#FEF3C7","Several issues to address"),
@@ -837,9 +811,13 @@ elif page == "GEO Dashboard":
             </div>""", unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
-    brand_url = st.text_input("🔗 Brand URL", placeholder="https://www.chase.com/", help="Enter any brand URL to analyze its AI visibility score")
+    brand_url = st.text_input("🔗 Brand URL", value=st.session_state.geo_url,
+                               placeholder="https://www.chase.com/",
+                               help="Enter any brand URL to analyze its AI visibility score")
 
-    if st.button("🔍 Run Live AI Analysis", use_container_width=True):
+    run_analysis = st.button("🔍 Run Live AI Analysis", use_container_width=True)
+
+    if run_analysis:
         if not brand_url.strip() or not brand_url.startswith("http"):
             st.error("⚠️ Please enter a valid URL starting with http:// or https://")
         else:
@@ -851,277 +829,286 @@ elif page == "GEO Dashboard":
                 with st.spinner("🤖 Running live AI queries..."):
                     try:
                         result = analyze_geo_with_ai(page_data)
+                        # ── PERSIST result in session state ──
+                        st.session_state.geo_result    = result
+                        st.session_state.geo_url       = brand_url
+                        st.session_state.geo_page_data = page_data
                     except Exception as e:
                         st.error(f"❌ AI analysis failed: {e}"); st.stop()
 
-                geo   = result.get("overall_geo_score", 0)
-                brand = result.get("brand_name", page_data["domain"])
-                label, badge_color, badge_bg = score_badge(geo)
+    # ── RENDER from session state — survives tab switches ──
+    if st.session_state.geo_result is not None:
+        result    = st.session_state.geo_result
+        brand_url = st.session_state.geo_url
+        page_data = st.session_state.geo_page_data
 
-                _vis  = result.get("context", 0)
-                _cit  = result.get("reliability", 0)
-                _sent = result.get("exclusivity", 0)
-                _prom = result.get("organization", 0)
-                _sov  = result.get("share_of_voice", 0)
+        geo   = result.get("overall_geo_score", 0)
+        brand = result.get("brand_name", page_data["domain"])
+        label, badge_color, badge_bg = score_badge(geo)
 
-                # ── FIXED: score explanation includes ALL weak metrics ──
-                if _vis == 0:
-                    score_explain_text = "Score is 0 because brand was not mentioned in any of the 20 AI queries."
-                else:
-                    detail_parts = []
-                    if _cit  < 40: detail_parts.append(f"Citation ({_cit}), brand appears in lists but rarely as the top pick")
-                    if _prom < 40: detail_parts.append(f"Prominence ({_prom}), typically mentioned mid-list rather than first")
-                    if _sov  < 20: detail_parts.append(f"Share of Voice ({_sov}), competitors are dominating more of the AI conversation")
-                    if _sent < 50: detail_parts.append(f"Sentiment ({_sent}), AI responses lack strong positive endorsement")
-                    score_explain_text = (
-                        f"GEO Score of {geo} reflects {_vis}% Visibility but is held back by " + "; ".join(detail_parts) + "."
-                        if detail_parts else
-                        f"GEO Score of {geo} reflects strong performance: Visibility {_vis}%, Citation {_cit}, Sentiment {_sent}, Prominence {_prom}, Share of Voice {_sov}."
-                    )
+        _vis  = result.get("context", 0)
+        _cit  = result.get("reliability", 0)
+        _sent = result.get("exclusivity", 0)
+        _prom = result.get("organization", 0)
+        _sov  = result.get("share_of_voice", 0)
 
-                # ── GAUGE ──
-                gauge_col, info_col = st.columns([1, 2])
-                with gauge_col:
-                    fig_g = go.Figure(go.Indicator(
-                        mode="gauge+number", value=geo,
-                        number={'font': {'size': 52, 'color': '#7C3AED'}},
-                        domain={'x': [0,1], 'y': [0,1]},
-                        title={'text': brand, 'font': {'size': 14, 'color': '#374151'}},
-                        gauge={
-                            'axis': {'range': [0,100], 'tickcolor': "#9CA3AF"},
-                            'bar': {'color': "#7C3AED"}, 'bgcolor': "white",
-                            'steps': [
-                                {'range': [0,40],  'color': '#FEE2E2'},
-                                {'range': [40,60], 'color': '#FEF3C7'},
-                                {'range': [60,80], 'color': '#EDE9FE'},
-                                {'range': [80,100],'color': '#D1FAE5'}
-                            ],
-                            'threshold': {'line': {'color': "#7C3AED", 'width': 4}, 'thickness': 0.75, 'value': geo}
-                        }
-                    ))
-                    fig_g.update_layout(height=280, margin=dict(l=20,r=20,t=40,b=10), paper_bgcolor='white')
-                    st.plotly_chart(fig_g, use_container_width=True)
+        if _vis == 0:
+            score_explain_text = "Score is 0 because brand was not mentioned in any of the 20 AI queries."
+        else:
+            detail_parts = []
+            if _cit  < 40: detail_parts.append(f"Citation ({_cit}), brand appears in lists but rarely as the top pick")
+            if _prom < 40: detail_parts.append(f"Prominence ({_prom}), typically mentioned mid-list rather than first")
+            if _sov  < 20: detail_parts.append(f"Share of Voice ({_sov}), competitors are dominating more of the AI conversation")
+            if _sent < 50: detail_parts.append(f"Sentiment ({_sent}), AI responses lack strong positive endorsement")
+            score_explain_text = (
+                f"GEO Score of {geo} reflects {_vis}% Visibility but is held back by " + "; ".join(detail_parts) + "."
+                if detail_parts else
+                f"GEO Score of {geo} reflects strong performance: Visibility {_vis}%, Citation {_cit}, Sentiment {_sent}, Prominence {_prom}, Share of Voice {_sov}."
+            )
 
-                with info_col:
-                    st.markdown(
-                        f'<div style="background:white;border-radius:14px;border:1px solid #E5E7EB;padding:22px 26px;box-shadow:0 1px 4px rgba(0,0,0,0.06);">'
-                        f'<div style="font-size:1.3rem;font-weight:800;color:#111827;">{brand}</div>'
-                        f'<div style="margin:4px 0 14px 0;"><a href="{brand_url}" target="_blank" style="color:#7C3AED;font-size:0.82rem;">{brand_url[:70]}{"..." if len(brand_url)>70 else ""}</a></div>'
-                        f'<div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;">'
-                        f'<div><div style="font-size:0.7rem;color:#9CA3AF;font-weight:600;text-transform:uppercase;margin-bottom:6px;">Status</div>'
-                        f'<div style="background:{badge_bg};color:{badge_color};padding:4px 14px;border-radius:50px;font-size:0.78rem;font-weight:700;">{label}</div></div></div>'
-                        f'<div style="margin-top:14px;padding-top:12px;border-top:1px solid #F3F4F6;font-size:0.82rem;color:#6B7280;">{score_explain_text}</div>'
-                        f'</div>', unsafe_allow_html=True)
-
-                st.markdown("<br>", unsafe_allow_html=True)
-
-                # ── METRIC CARDS ──
-                vis      = result.get("context", 0)
-                cit      = result.get("reliability", 0)
-                sent     = result.get("exclusivity", 0)
-                avg_rank = "N/A" if vis == 0 else result.get("avg_rank", "N/A")
-
-                mc1, mc2, mc3, mc4 = st.columns(4)
-                for col, grad, icon, val, lbl, sub in [
-                    (mc1,"linear-gradient(135deg,#3B82F6,#06B6D4)","👁️",vis,     "Visibility Score","AI response presence"),
-                    (mc2,"linear-gradient(135deg,#8B5CF6,#A855F7)","🏅",cit,     "Citation Score",  "Source authority"),
-                    (mc3,"linear-gradient(135deg,#10B981,#34D399)","📈",sent,    "Sentiment Score", "Brand perception"),
-                    (mc4,"linear-gradient(135deg,#F59E0B,#FBBF24)","🎯",avg_rank,"Avg. Rank",       "AI mention position"),
-                ]:
-                    with col:
-                        st.markdown(
-                            f'<div style="background:white;border-radius:16px;padding:20px 18px;box-shadow:0 1px 4px rgba(0,0,0,0.07);border:1px solid #F3F4F6;">'
-                            f'<div style="width:42px;height:42px;border-radius:12px;background:{grad};display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:12px;">{icon}</div>'
-                            f'<div style="font-size:1.8rem;font-weight:800;color:#111827;line-height:1;">{val}</div>'
-                            f'<div style="font-size:0.84rem;font-weight:600;color:#374151;margin-top:5px;">{lbl}</div>'
-                            f'<div style="font-size:0.76rem;color:#9CA3AF;margin-top:2px;">{sub}</div>'
-                            f'</div>', unsafe_allow_html=True)
-
-                st.markdown("<br>", unsafe_allow_html=True)
-
-                # ── LIVE COMPETITOR SCORING (NO HARDCODED NUMBERS) ──
-                domain_lower2 = page_data["domain"].lower()
-                fin_kws2  = ["capital","chase","amex","citi","discover","bank","credit","card","finance","fargo"]
-                auto_kws2 = ["vw","volkswagen","toyota","ford","honda","bmw","tesla","auto","car","motor"]
-
-                if any(x in domain_lower2 for x in fin_kws2):
-                    top10_title       = "Financial Services"
-                    competitor_brands = ["American Express","Chase","Citi","Discover","Wells Fargo","Bank of America","Capital One","Synchrony","Barclays","USAA"]
-                elif any(x in domain_lower2 for x in auto_kws2):
-                    top10_title       = "Automotive"
-                    competitor_brands = ["Tesla","Toyota","BMW","Honda","Ford","Mercedes","Hyundai","Kia","Nissan","Volkswagen"]
-                else:
-                    top10_title       = "General"
-                    competitor_brands = []
-
-                responses_detail = result.get("responses_detail", [])
-
-                # All scores live from mention counts + awareness floor blending
-                top10 = [{"Brand": brand, "GEO": geo, "Vis": vis, "Cit": cit, "Sen": sent, "Rank": avg_rank}]
-                for comp in competitor_brands:
-                    if comp.lower() != brand.lower():
-                        top10.append(score_competitor_from_responses(comp, responses_detail))
-
-                top10_sorted = sorted(top10, key=lambda x: x["GEO"], reverse=True)
-
-                t10_rows = ""
-                for idx, c in enumerate(top10_sorted, 1):
-                    is_you   = c["Brand"].lower() == brand.lower()
-                    bg_r     = "#F5F3FF" if is_you else ("white" if idx%2==1 else "#FAFAFA")
-                    bdr      = "border-left:3px solid #7C3AED;" if is_you else ""
-                    fw       = "700" if is_you else "400"
-                    gc       = c["GEO"]
-                    gcol     = "#10B981" if gc>=80 else "#F59E0B" if gc>=60 else "#EF4444"
-                    you_badge = ' <span style="background:#EDE9FE;color:#7C3AED;border-radius:4px;padding:1px 6px;font-size:0.7rem;font-weight:700;">You</span>' if is_you else ""
-                    t10_rows += (
-                        f'<tr style="background:{bg_r};{bdr}">'
-                        f'<td style="padding:9px 12px;font-size:0.8rem;color:#9CA3AF;font-weight:600;">{idx}</td>'
-                        f'<td style="padding:9px 12px;font-size:0.84rem;font-weight:{fw};color:#111827;">{c["Brand"]}{you_badge}</td>'
-                        f'<td style="padding:9px 12px;font-size:0.88rem;font-weight:700;color:{gcol};">{gc}</td>'
-                        f'<td style="padding:9px 12px;font-size:0.82rem;color:#374151;">{c["Vis"]}</td>'
-                        f'<td style="padding:9px 12px;font-size:0.82rem;color:#374151;">{c["Cit"]}</td>'
-                        f'<td style="padding:9px 12px;font-size:0.82rem;color:#374151;">{c["Sen"]}</td>'
-                        f'<td style="padding:9px 12px;font-size:0.82rem;color:#374151;">{c["Rank"]}</td>'
-                        f'</tr>'
-                    )
-
-                st.markdown(
-                    f'<div style="background:white;border-radius:16px;border:1px solid #E5E7EB;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,0.06);">'
-                    f'<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><span style="color:#7C3AED;">🏆</span>'
-                    f'<span style="font-size:0.95rem;font-weight:700;color:#111827;">Top 10 Brands — {top10_title} (sorted by GEO Score)</span></div>'
-                    f'<div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:14px;">All scores derived live from the same 20 AI responses — no hardcoded numbers.</div>'
-                    f'<table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:1px solid #E5E7EB;">'
-                    f'<th style="padding:7px 12px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;">#</th>'
-                    f'<th style="padding:7px 12px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;">Brand</th>'
-                    f'<th style="padding:7px 12px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;">GEO Score</th>'
-                    f'<th style="padding:7px 12px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;">Visibility</th>'
-                    f'<th style="padding:7px 12px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;">Citations</th>'
-                    f'<th style="padding:7px 12px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;">Sentiment</th>'
-                    f'<th style="padding:7px 12px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;">Avg. Rank</th>'
-                    f'</tr></thead><tbody>{t10_rows}</tbody></table></div>',
-                    unsafe_allow_html=True)
-
-                st.markdown("<br>", unsafe_allow_html=True)
-
-                # ── RECOMMENDATIONS ──
-                strengths    = result.get("strengths_list", [])[:3]
-                weaknesses   = result.get("improvements_list", [])[:5]
-                all_insights = result.get("insights", [])
-                if not strengths  and all_insights: strengths  = all_insights[:2]
-                if not weaknesses and all_insights: weaknesses = all_insights[:5]
-                all_actions  = result.get("actions", [])
-                actions_high = [a for a in all_actions if a.get("priority") == "High"]
-                actions_med  = [a for a in all_actions if a.get("priority") == "Medium"]
-                actions_low  = [a for a in all_actions if a.get("priority") == "Low"]
-
-                s_html = "".join(
-                    f'<li style="padding:7px 0;font-size:0.84rem;color:#374151;display:flex;gap:10px;align-items:flex-start;border-bottom:1px solid #F0FDF4;">'
-                    f'<span style="color:#10B981;font-weight:700;flex-shrink:0;font-size:1rem;">✓</span><span>{s}</span></li>'
-                    for s in strengths)
-                w_html = "".join(
-                    f'<li style="padding:7px 0;font-size:0.84rem;color:#374151;display:flex;gap:10px;align-items:flex-start;border-bottom:1px solid #FFF1F2;">'
-                    f'<span style="color:#EF4444;font-weight:700;flex-shrink:0;font-size:1rem;">✗</span><span>{w}</span></li>'
-                    for w in weaknesses)
-
-                st.markdown(
-                    '<div style="background:white;border-radius:16px;border:1px solid #E5E7EB;padding:28px 32px;margin-bottom:0;">'
-                    '<div style="font-size:0.95rem;font-weight:800;color:#111827;margin-bottom:6px;">💡 GEO Health Summary</div>'
-                    '<div style="font-size:0.82rem;color:#9CA3AF;margin-bottom:20px;">Based on how your brand performed across 20 generic AI queries — no brand name was used in the questions.</div>'
-                    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">'
-                    f'<div style="background:#F0FDF4;border-radius:12px;padding:18px 20px;">'
-                    f'<div style="font-size:0.82rem;font-weight:700;color:#065F46;margin-bottom:12px;">✓ What is Working Well</div>'
-                    f'<ul style="list-style:none;padding:0;margin:0;">{s_html}</ul></div>'
-                    f'<div style="background:#FFF1F2;border-radius:12px;padding:18px 20px;">'
-                    f'<div style="font-size:0.82rem;font-weight:700;color:#9F1239;margin-bottom:12px;">✗ What Needs Improvement</div>'
-                    f'<ul style="list-style:none;padding:0;margin:0;">{w_html}</ul></div>'
-                    '</div></div>', unsafe_allow_html=True)
-
-                st.markdown("<br>", unsafe_allow_html=True)
-
-                def action_row(priority, action, deliv, bg, tc, pk):
-                    return (
-                        f'<div style="display:grid;grid-template-columns:90px 1fr 1fr;gap:0;border-bottom:1px solid #F3F4F6;padding:12px 0;align-items:start;">'
-                        f'<div><span style="background:{bg};color:{tc};border-radius:4px;padding:2px 10px;font-size:0.72rem;font-weight:700;">{priority}</span></div>'
-                        f'<div style="font-size:0.84rem;color:#374151;padding-right:16px;">{action}</div>'
-                        f'<div style="font-size:0.78rem;color:#7C3AED;font-weight:600;">'
-                        f'<span style="background:#EDE9FE;border-radius:6px;padding:3px 10px;">{pk}</span>'
-                        f'<div style="font-size:0.75rem;color:#9CA3AF;font-weight:400;margin-top:4px;">{deliv}</div></div></div>'
-                    )
-
-                deliverable_map = {
-                    "High":   ("Workstream 01 — ARD", "AXO Baseline Report · Brand & Product Ranking Index"),
-                    "Medium": ("Workstream 02 — AOP", "LLM-Ready Content Package · Content Influence Blueprint"),
-                    "Low":    ("Workstream 03 — DTI", "Schema Optimization Guide · Metadata Remediation Plan"),
+        # ── GAUGE ──
+        gauge_col, info_col = st.columns([1, 2])
+        with gauge_col:
+            fig_g = go.Figure(go.Indicator(
+                mode="gauge+number", value=geo,
+                number={'font': {'size': 52, 'color': '#7C3AED'}},
+                domain={'x': [0,1], 'y': [0,1]},
+                title={'text': brand, 'font': {'size': 14, 'color': '#374151'}},
+                gauge={
+                    'axis': {'range': [0,100], 'tickcolor': "#9CA3AF"},
+                    'bar': {'color': "#7C3AED"}, 'bgcolor': "white",
+                    'steps': [
+                        {'range': [0,40],  'color': '#FEE2E2'},
+                        {'range': [40,60], 'color': '#FEF3C7'},
+                        {'range': [60,80], 'color': '#EDE9FE'},
+                        {'range': [80,100],'color': '#D1FAE5'}
+                    ],
+                    'threshold': {'line': {'color': "#7C3AED", 'width': 4}, 'thickness': 0.75, 'value': geo}
                 }
-                actions_html = ""
-                for a in actions_high: pk,deliv=deliverable_map["High"];   actions_html+=action_row("High",   a["action"],deliv,"#FEE2E2","#991B1B",pk)
-                for a in actions_med:  pk,deliv=deliverable_map["Medium"]; actions_html+=action_row("Medium", a["action"],deliv,"#FEF3C7","#92400E",pk)
-                for a in actions_low:  pk,deliv=deliverable_map["Low"];    actions_html+=action_row("Low",    a["action"],deliv,"#DCFCE7","#166534",pk)
+            ))
+            fig_g.update_layout(height=280, margin=dict(l=20,r=20,t=40,b=10), paper_bgcolor='white')
+            st.plotly_chart(fig_g, use_container_width=True)
 
+        with info_col:
+            st.markdown(
+                f'<div style="background:white;border-radius:14px;border:1px solid #E5E7EB;padding:22px 26px;box-shadow:0 1px 4px rgba(0,0,0,0.06);">'
+                f'<div style="font-size:1.3rem;font-weight:800;color:#111827;">{brand}</div>'
+                f'<div style="margin:4px 0 14px 0;"><a href="{brand_url}" target="_blank" style="color:#7C3AED;font-size:0.82rem;">{brand_url[:70]}{"..." if len(brand_url)>70 else ""}</a></div>'
+                f'<div style="display:flex;gap:28px;flex-wrap:wrap;">'
+                f'<div><div style="font-size:0.7rem;color:#9CA3AF;font-weight:600;text-transform:uppercase;margin-bottom:6px;">Status</div>'
+                f'<div style="background:{badge_bg};color:{badge_color};padding:4px 14px;border-radius:50px;font-size:0.78rem;font-weight:700;">{label}</div></div></div>'
+                f'<div style="margin-top:14px;padding-top:12px;border-top:1px solid #F3F4F6;font-size:0.82rem;color:#6B7280;">{score_explain_text}</div>'
+                f'</div>', unsafe_allow_html=True)
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # ── METRIC CARDS ──
+        vis      = result.get("context", 0)
+        cit      = result.get("reliability", 0)
+        sent     = result.get("exclusivity", 0)
+        avg_rank = "N/A" if vis == 0 else result.get("avg_rank", "N/A")
+
+        mc1, mc2, mc3, mc4 = st.columns(4)
+        for col, grad, icon, val, lbl, sub in [
+            (mc1,"linear-gradient(135deg,#3B82F6,#06B6D4)","👁️",vis,     "Visibility Score","AI response presence"),
+            (mc2,"linear-gradient(135deg,#8B5CF6,#A855F7)","🏅",cit,     "Citation Score",  "Source authority"),
+            (mc3,"linear-gradient(135deg,#10B981,#34D399)","📈",sent,    "Sentiment Score", "Brand perception"),
+            (mc4,"linear-gradient(135deg,#F59E0B,#FBBF24)","🎯",avg_rank,"Avg. Rank",       "AI mention position"),
+        ]:
+            with col:
                 st.markdown(
-                    '<div style="background:white;border-radius:16px;border:1px solid #E5E7EB;padding:28px 32px;">'
-                    '<div style="font-size:0.95rem;font-weight:800;color:#111827;margin-bottom:6px;">⚡ Priority Actions & Deliverables</div>'
-                    '<div style="font-size:0.82rem;color:#9CA3AF;margin-bottom:20px;">Each action is mapped to the relevant workstream deliverable from the 6-week pilot program.</div>'
-                    '<div style="display:grid;grid-template-columns:90px 1fr 1fr;gap:0;border-bottom:2px solid #E5E7EB;padding-bottom:8px;margin-bottom:4px;">'
-                    '<div style="font-size:0.73rem;color:#9CA3AF;font-weight:600;">Priority</div>'
-                    '<div style="font-size:0.73rem;color:#9CA3AF;font-weight:600;">Action</div>'
-                    '<div style="font-size:0.73rem;color:#9CA3AF;font-weight:600;">Linked Deliverable</div>'
-                    f'</div>{actions_html}</div>', unsafe_allow_html=True)
+                    f'<div style="background:white;border-radius:16px;padding:20px 18px;box-shadow:0 1px 4px rgba(0,0,0,0.07);border:1px solid #F3F4F6;">'
+                    f'<div style="width:42px;height:42px;border-radius:12px;background:{grad};display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:12px;">{icon}</div>'
+                    f'<div style="font-size:1.8rem;font-weight:800;color:#111827;line-height:1;">{val}</div>'
+                    f'<div style="font-size:0.84rem;font-weight:600;color:#374151;margin-top:5px;">{lbl}</div>'
+                    f'<div style="font-size:0.76rem;color:#9CA3AF;margin-top:2px;">{sub}</div>'
+                    f'</div>', unsafe_allow_html=True)
 
-                st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
 
-                # ── QUERIES RUN ──
-                queries_run     = result.get("queries_tested", [])
-                appearance_rank = 0
-                q_rows = ""
-                for idx, q in enumerate(queries_run):
-                    item      = responses_detail[idx] if idx < len(responses_detail) else {}
-                    mentioned = item.get("mentioned", False)
-                    row_bg    = "#F5F3FF" if mentioned else "white"
-                    if mentioned:
-                        appearance_rank += 1
-                        real_pos       = item.get("position", 0)
-                        rank_display   = f"#{real_pos}" if real_pos > 0 else f"#{appearance_rank}"
-                        rank_color     = "#10B981" if real_pos == 1 else "#7C3AED" if real_pos <= 3 else "#F59E0B"
-                        appeared_badge = '<span style="background:#D1FAE5;color:#065F46;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">✓ Appeared</span>'
-                    else:
-                        rank_display   = "—"
-                        rank_color     = "#9CA3AF"
-                        appeared_badge = '<span style="background:#F3F4F6;color:#9CA3AF;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">— Not Mentioned</span>'
-                    q_rows += (
-                        f'<tr style="background:{row_bg};border-bottom:1px solid #F3F4F6;">'
-                        f'<td style="padding:10px 12px;font-size:0.78rem;color:#9CA3AF;font-weight:600;">{idx+1}</td>'
-                        f'<td style="padding:10px 14px;font-size:0.83rem;color:#374151;">{q}<br><span style="margin-top:3px;display:inline-block;">{appeared_badge}</span></td>'
-                        f'<td style="padding:10px 16px;text-align:center;"><div style="font-size:1.1rem;font-weight:800;color:{rank_color};">{rank_display}</div>'
-                        f'<div style="font-size:0.68rem;color:#9CA3AF;">Rank</div></td></tr>'
-                    )
+        # ── LIVE COMPETITOR TOP 10 ──
+        domain_lower2 = page_data["domain"].lower()
+        fin_kws2  = ["capital","chase","amex","citi","discover","bank","credit","card","finance","fargo"]
+        auto_kws2 = ["vw","volkswagen","toyota","ford","honda","bmw","tesla","auto","car","motor"]
 
-                st.markdown(
-                    f'<div style="background:white;border-radius:16px;border:1px solid #E5E7EB;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,0.05);">'
-                    f'<div style="font-size:0.95rem;font-weight:800;color:#111827;margin-bottom:4px;">🔍 Queries Run ({len(queries_run)})</div>'
-                    f'<div style="font-size:0.8rem;color:#9CA3AF;margin-bottom:16px;">Generic consumer questions with no brand name. Rank = actual position brand was mentioned within each AI response.</div>'
-                    f'<table style="width:100%;border-collapse:collapse;">'
-                    f'<thead><tr style="border-bottom:2px solid #E5E7EB;background:#FAFAFA;">'
-                    f'<th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">#</th>'
-                    f'<th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Query</th>'
-                    f'<th style="padding:8px 16px;text-align:center;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Rank</th>'
-                    f'</tr></thead><tbody>{q_rows}</tbody></table></div>',
-                    unsafe_allow_html=True)
+        if any(x in domain_lower2 for x in fin_kws2):
+            top10_title       = "Financial Services"
+            competitor_brands = ["American Express","Chase","Citi","Discover","Wells Fargo","Bank of America","Capital One","Synchrony","Barclays","USAA"]
+        elif any(x in domain_lower2 for x in auto_kws2):
+            top10_title       = "Automotive"
+            competitor_brands = ["Tesla","Toyota","BMW","Honda","Ford","Mercedes","Hyundai","Kia","Nissan","Volkswagen"]
+        else:
+            top10_title       = "General"
+            competitor_brands = []
 
-                st.markdown("<br>", unsafe_allow_html=True)
+        responses_detail = result.get("responses_detail", [])
+        top10 = [{"Brand": brand, "GEO": geo, "Vis": vis, "Cit": cit, "Sen": sent, "Rank": avg_rank}]
+        for comp in competitor_brands:
+            if comp.lower() != brand.lower():
+                top10.append(score_competitor_from_responses(comp, responses_detail))
+        top10_sorted = sorted(top10, key=lambda x: x["GEO"], reverse=True)
 
-                st.markdown(
-                    '<div style="background:white;border-radius:16px;border:1px solid #E5E7EB;padding:28px 32px;">'
-                    '<div style="font-size:0.95rem;font-weight:800;color:#111827;margin-bottom:20px;">Metric Definitions</div>'
-                    '<div style="display:flex;flex-direction:column;gap:0;">'
-                    '<div style="padding:14px 0;border-bottom:1px solid #F3F4F6;"><div style="font-size:0.85rem;font-weight:700;color:#7C3AED;margin-bottom:5px;">GEO Score</div><div style="font-size:0.82rem;color:#374151;line-height:1.65;">Composite 0–100 score: Visibility (30%) + Sentiment (20%) + Prominence (20%) + Citation Share (15%) + Share of Voice (15%).</div></div>'
-                    '<div style="padding:14px 0;border-bottom:1px solid #F3F4F6;"><div style="font-size:0.85rem;font-weight:700;color:#7C3AED;margin-bottom:5px;">Visibility Score</div><div style="font-size:0.82rem;color:#374151;line-height:1.65;">How many of 20 generic consumer queries resulted in your brand being mentioned. Formula: (brand appearances ÷ 20) × 100.</div></div>'
-                    '<div style="padding:14px 0;border-bottom:1px solid #F3F4F6;"><div style="font-size:0.85rem;font-weight:700;color:#7C3AED;margin-bottom:5px;">Citation Share</div><div style="font-size:0.82rem;color:#374151;line-height:1.65;">Your brand mentions as a % of all brand mentions across all 20 responses.</div></div>'
-                    '<div style="padding:14px 0;border-bottom:1px solid #F3F4F6;"><div style="font-size:0.85rem;font-weight:700;color:#7C3AED;margin-bottom:5px;">Sentiment Score</div><div style="font-size:0.82rem;color:#374151;line-height:1.65;">Tone of AI responses where your brand appeared. Explicitly recommended = 75–100. Listed among options = 40–65. Criticized = 0–35.</div></div>'
-                    '<div style="padding:14px 0;"><div style="font-size:0.85rem;font-weight:700;color:#7C3AED;margin-bottom:5px;">Avg. Rank</div><div style="font-size:0.82rem;color:#374151;line-height:1.65;">Average position your brand appeared when AI listed ranked options. #1 = mentioned first.</div></div>'
-                    '</div></div>', unsafe_allow_html=True)
+        t10_rows = ""
+        for idx, c in enumerate(top10_sorted, 1):
+            is_you   = c["Brand"].lower() == brand.lower()
+            bg_r     = "#F5F3FF" if is_you else ("white" if idx%2==1 else "#FAFAFA")
+            bdr      = "border-left:3px solid #7C3AED;" if is_you else ""
+            fw       = "700" if is_you else "400"
+            gc       = c["GEO"]
+            gcol     = "#10B981" if gc>=80 else "#F59E0B" if gc>=60 else "#EF4444"
+            you_badge = ' <span style="background:#EDE9FE;color:#7C3AED;border-radius:4px;padding:1px 6px;font-size:0.7rem;font-weight:700;">You</span>' if is_you else ""
+            t10_rows += (
+                f'<tr style="background:{bg_r};{bdr}">'
+                f'<td style="padding:9px 12px;font-size:0.8rem;color:#9CA3AF;font-weight:600;">{idx}</td>'
+                f'<td style="padding:9px 12px;font-size:0.84rem;font-weight:{fw};color:#111827;">{c["Brand"]}{you_badge}</td>'
+                f'<td style="padding:9px 12px;font-size:0.88rem;font-weight:700;color:{gcol};">{gc}</td>'
+                f'<td style="padding:9px 12px;font-size:0.82rem;color:#374151;">{c["Vis"]}</td>'
+                f'<td style="padding:9px 12px;font-size:0.82rem;color:#374151;">{c["Cit"]}</td>'
+                f'<td style="padding:9px 12px;font-size:0.82rem;color:#374151;">{c["Sen"]}</td>'
+                f'<td style="padding:9px 12px;font-size:0.82rem;color:#374151;">{c["Rank"]}</td>'
+                f'</tr>'
+            )
 
-                st.caption(f"GEO Score · {len(queries_run)} generic industry queries · No brand name used in prompts · Percepta v2.0")
+        st.markdown(
+            f'<div style="background:white;border-radius:16px;border:1px solid #E5E7EB;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,0.06);">'
+            f'<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><span style="color:#7C3AED;">🏆</span>'
+            f'<span style="font-size:0.95rem;font-weight:700;color:#111827;">Top 10 Brands — {top10_title} (sorted by GEO Score)</span></div>'
+            f'<div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:14px;">All scores derived live from the same 20 AI responses — no hardcoded numbers.</div>'
+            f'<table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:1px solid #E5E7EB;">'
+            f'<th style="padding:7px 12px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;">#</th>'
+            f'<th style="padding:7px 12px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;">Brand</th>'
+            f'<th style="padding:7px 12px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;">GEO Score</th>'
+            f'<th style="padding:7px 12px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;">Visibility</th>'
+            f'<th style="padding:7px 12px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;">Citations</th>'
+            f'<th style="padding:7px 12px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;">Sentiment</th>'
+            f'<th style="padding:7px 12px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;">Avg. Rank</th>'
+            f'</tr></thead><tbody>{t10_rows}</tbody></table></div>',
+            unsafe_allow_html=True)
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # ── 🔍 QUERIES RUN (moved up — before health summary) ──
+        queries_run     = result.get("queries_tested", [])
+        appearance_rank = 0
+        q_rows = ""
+        for idx, q in enumerate(queries_run):
+            item      = responses_detail[idx] if idx < len(responses_detail) else {}
+            mentioned = item.get("mentioned", False)
+            row_bg    = "#F5F3FF" if mentioned else "white"
+            if mentioned:
+                appearance_rank += 1
+                real_pos       = item.get("position", 0)
+                rank_display   = f"#{real_pos}" if real_pos > 0 else f"#{appearance_rank}"
+                rank_color     = "#10B981" if real_pos == 1 else "#7C3AED" if real_pos <= 3 else "#F59E0B"
+                appeared_badge = '<span style="background:#D1FAE5;color:#065F46;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">✓ Appeared</span>'
+            else:
+                rank_display   = "—"
+                rank_color     = "#9CA3AF"
+                appeared_badge = '<span style="background:#F3F4F6;color:#9CA3AF;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">— Not Mentioned</span>'
+            q_rows += (
+                f'<tr style="background:{row_bg};border-bottom:1px solid #F3F4F6;">'
+                f'<td style="padding:10px 12px;font-size:0.78rem;color:#9CA3AF;font-weight:600;">{idx+1}</td>'
+                f'<td style="padding:10px 14px;font-size:0.83rem;color:#374151;">{q}<br><span style="margin-top:3px;display:inline-block;">{appeared_badge}</span></td>'
+                f'<td style="padding:10px 16px;text-align:center;"><div style="font-size:1.1rem;font-weight:800;color:{rank_color};">{rank_display}</div>'
+                f'<div style="font-size:0.68rem;color:#9CA3AF;">Rank</div></td></tr>'
+            )
+
+        st.markdown(
+            f'<div style="background:white;border-radius:16px;border:1px solid #E5E7EB;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,0.05);">'
+            f'<div style="font-size:0.95rem;font-weight:800;color:#111827;margin-bottom:4px;">🔍 Queries Run ({len(queries_run)})</div>'
+            f'<div style="font-size:0.8rem;color:#9CA3AF;margin-bottom:16px;">Generic consumer questions with no brand name. Rank = actual position brand was mentioned within each AI response.</div>'
+            f'<table style="width:100%;border-collapse:collapse;">'
+            f'<thead><tr style="border-bottom:2px solid #E5E7EB;background:#FAFAFA;">'
+            f'<th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">#</th>'
+            f'<th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Query</th>'
+            f'<th style="padding:8px 16px;text-align:center;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Rank</th>'
+            f'</tr></thead><tbody>{q_rows}</tbody></table></div>',
+            unsafe_allow_html=True)
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # ── 💡 GEO HEALTH SUMMARY (moved after queries) ──
+        strengths    = result.get("strengths_list", [])[:3]
+        weaknesses   = result.get("improvements_list", [])[:5]
+        all_insights = result.get("insights", [])
+        if not strengths  and all_insights: strengths  = all_insights[:2]
+        if not weaknesses and all_insights: weaknesses = all_insights[:5]
+
+        s_html = "".join(
+            f'<li style="padding:7px 0;font-size:0.84rem;color:#374151;display:flex;gap:10px;align-items:flex-start;border-bottom:1px solid #F0FDF4;">'
+            f'<span style="color:#10B981;font-weight:700;flex-shrink:0;font-size:1rem;">✓</span><span>{s}</span></li>'
+            for s in strengths)
+        w_html = "".join(
+            f'<li style="padding:7px 0;font-size:0.84rem;color:#374151;display:flex;gap:10px;align-items:flex-start;border-bottom:1px solid #FFF1F2;">'
+            f'<span style="color:#EF4444;font-weight:700;flex-shrink:0;font-size:1rem;">✗</span><span>{w}</span></li>'
+            for w in weaknesses)
+
+        st.markdown(
+            '<div style="background:white;border-radius:16px;border:1px solid #E5E7EB;padding:28px 32px;">'
+            '<div style="font-size:0.95rem;font-weight:800;color:#111827;margin-bottom:6px;">💡 GEO Health Summary</div>'
+            '<div style="font-size:0.82rem;color:#9CA3AF;margin-bottom:20px;">Based on how your brand performed across 20 generic AI queries — no brand name was used in the questions.</div>'
+            '<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">'
+            f'<div style="background:#F0FDF4;border-radius:12px;padding:18px 20px;">'
+            f'<div style="font-size:0.82rem;font-weight:700;color:#065F46;margin-bottom:12px;">✓ What is Working Well</div>'
+            f'<ul style="list-style:none;padding:0;margin:0;">{s_html}</ul></div>'
+            f'<div style="background:#FFF1F2;border-radius:12px;padding:18px 20px;">'
+            f'<div style="font-size:0.82rem;font-weight:700;color:#9F1239;margin-bottom:12px;">✗ What Needs Improvement</div>'
+            f'<ul style="list-style:none;padding:0;margin:0;">{w_html}</ul></div>'
+            '</div></div>', unsafe_allow_html=True)
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # ── ⚡ PRIORITY ACTIONS (moved after health summary) ──
+        all_actions  = result.get("actions", [])
+        actions_high = [a for a in all_actions if a.get("priority") == "High"]
+        actions_med  = [a for a in all_actions if a.get("priority") == "Medium"]
+        actions_low  = [a for a in all_actions if a.get("priority") == "Low"]
+
+        def action_row(priority, action, deliv, bg, tc, pk):
+            return (
+                f'<div style="display:grid;grid-template-columns:90px 1fr 1fr;gap:0;border-bottom:1px solid #F3F4F6;padding:12px 0;align-items:start;">'
+                f'<div><span style="background:{bg};color:{tc};border-radius:4px;padding:2px 10px;font-size:0.72rem;font-weight:700;">{priority}</span></div>'
+                f'<div style="font-size:0.84rem;color:#374151;padding-right:16px;">{action}</div>'
+                f'<div style="font-size:0.78rem;color:#7C3AED;font-weight:600;">'
+                f'<span style="background:#EDE9FE;border-radius:6px;padding:3px 10px;">{pk}</span>'
+                f'<div style="font-size:0.75rem;color:#9CA3AF;font-weight:400;margin-top:4px;">{deliv}</div></div></div>'
+            )
+
+        deliverable_map = {
+            "High":   ("Workstream 01 — ARD", "AXO Baseline Report · Brand & Product Ranking Index"),
+            "Medium": ("Workstream 02 — AOP", "LLM-Ready Content Package · Content Influence Blueprint"),
+            "Low":    ("Workstream 03 — DTI", "Schema Optimization Guide · Metadata Remediation Plan"),
+        }
+        actions_html = ""
+        for a in actions_high: pk,deliv=deliverable_map["High"];   actions_html+=action_row("High",   a["action"],deliv,"#FEE2E2","#991B1B",pk)
+        for a in actions_med:  pk,deliv=deliverable_map["Medium"]; actions_html+=action_row("Medium", a["action"],deliv,"#FEF3C7","#92400E",pk)
+        for a in actions_low:  pk,deliv=deliverable_map["Low"];    actions_html+=action_row("Low",    a["action"],deliv,"#DCFCE7","#166534",pk)
+
+        st.markdown(
+            '<div style="background:white;border-radius:16px;border:1px solid #E5E7EB;padding:28px 32px;">'
+            '<div style="font-size:0.95rem;font-weight:800;color:#111827;margin-bottom:6px;">⚡ Priority Actions & Deliverables</div>'
+            '<div style="font-size:0.82rem;color:#9CA3AF;margin-bottom:20px;">Each action is mapped to the relevant workstream deliverable from the 6-week pilot program.</div>'
+            '<div style="display:grid;grid-template-columns:90px 1fr 1fr;gap:0;border-bottom:2px solid #E5E7EB;padding-bottom:8px;margin-bottom:4px;">'
+            '<div style="font-size:0.73rem;color:#9CA3AF;font-weight:600;">Priority</div>'
+            '<div style="font-size:0.73rem;color:#9CA3AF;font-weight:600;">Action</div>'
+            '<div style="font-size:0.73rem;color:#9CA3AF;font-weight:600;">Linked Deliverable</div>'
+            f'</div>{actions_html}</div>', unsafe_allow_html=True)
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # ── METRIC DEFINITIONS ──
+        st.markdown(
+            '<div style="background:white;border-radius:16px;border:1px solid #E5E7EB;padding:28px 32px;">'
+            '<div style="font-size:0.95rem;font-weight:800;color:#111827;margin-bottom:20px;">Metric Definitions</div>'
+            '<div style="display:flex;flex-direction:column;gap:0;">'
+            '<div style="padding:14px 0;border-bottom:1px solid #F3F4F6;"><div style="font-size:0.85rem;font-weight:700;color:#7C3AED;margin-bottom:5px;">GEO Score</div><div style="font-size:0.82rem;color:#374151;line-height:1.65;">Composite 0–100 score: Visibility (30%) + Sentiment (20%) + Prominence (20%) + Citation Share (15%) + Share of Voice (15%).</div></div>'
+            '<div style="padding:14px 0;border-bottom:1px solid #F3F4F6;"><div style="font-size:0.85rem;font-weight:700;color:#7C3AED;margin-bottom:5px;">Visibility Score</div><div style="font-size:0.82rem;color:#374151;line-height:1.65;">How many of 20 generic consumer queries resulted in your brand being mentioned. Formula: (brand appearances ÷ 20) × 100.</div></div>'
+            '<div style="padding:14px 0;border-bottom:1px solid #F3F4F6;"><div style="font-size:0.85rem;font-weight:700;color:#7C3AED;margin-bottom:5px;">Citation Share</div><div style="font-size:0.82rem;color:#374151;line-height:1.65;">Your brand mentions as a % of all brand mentions across all 20 responses.</div></div>'
+            '<div style="padding:14px 0;border-bottom:1px solid #F3F4F6;"><div style="font-size:0.85rem;font-weight:700;color:#7C3AED;margin-bottom:5px;">Sentiment Score</div><div style="font-size:0.82rem;color:#374151;line-height:1.65;">Tone of AI responses where your brand appeared. Explicitly recommended = 75–100. Listed among options = 40–65. Criticized = 0–35.</div></div>'
+            '<div style="padding:14px 0;"><div style="font-size:0.85rem;font-weight:700;color:#7C3AED;margin-bottom:5px;">Avg. Rank</div><div style="font-size:0.82rem;color:#374151;line-height:1.65;">Average position your brand appeared when AI listed ranked options. #1 = mentioned first.</div></div>'
+            '</div></div>', unsafe_allow_html=True)
+
+        st.caption(f"GEO Score · {len(queries_run)} generic industry queries · No brand name used in prompts · Percepta v2.0")
 
     else:
         st.markdown("""
