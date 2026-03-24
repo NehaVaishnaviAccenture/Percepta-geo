@@ -783,7 +783,7 @@ elif page == "GEO Dashboard":
     <div class="hero" style="padding:52px 60px;">
         <div class="hero-badge">✦ Real GEO Scoring</div>
         <h1 style="font-size:2.6rem;">GEO <span>Scorecard</span></h1>
-        <div class="hero-sub">Enter any brand URL · Get your AI brand visibility score</div>
+        <div class="hero-sub">Enter any brand URL · Discover your brand's AI presence</div>
     </div>""", unsafe_allow_html=True)
 
     st.markdown('<div class="score-section">', unsafe_allow_html=True)
