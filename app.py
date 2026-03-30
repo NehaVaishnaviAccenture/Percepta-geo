@@ -10,7 +10,7 @@ from openai import OpenAI
 import json
 import re
 import random
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
 
 INTERNAL_API_KEY = st.secrets["OPENROUTER_API_KEY"]
 
@@ -54,6 +54,36 @@ section[data-testid="stSidebar"] { display: none !important; }
 .pilot-items li:last-child { border-bottom: none; }
 .pilot-items li::before { content: '›'; color: #A855F7; font-weight: 700; flex-shrink: 0; }
 .score-section { padding: 32px 40px; }
+
+/* Tooltip styles */
+.metric-tooltip { position: relative; display: inline-block; cursor: help; }
+.metric-tooltip .tooltip-text {
+    visibility: hidden; opacity: 0;
+    background: #1F2937; color: white;
+    font-size: 0.75rem; line-height: 1.5;
+    border-radius: 8px; padding: 10px 14px;
+    position: absolute; z-index: 9999;
+    bottom: 130%; left: 50%; transform: translateX(-50%);
+    width: 220px; text-align: left;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: opacity 0.2s;
+    pointer-events: none;
+}
+.metric-tooltip .tooltip-text::after {
+    content: ''; position: absolute;
+    top: 100%; left: 50%; transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #1F2937;
+}
+.metric-tooltip:hover .tooltip-text { visibility: visible; opacity: 1; }
+.tooltip-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: #E5E7EB; color: #6B7280;
+    font-size: 0.65rem; font-weight: 700;
+    margin-left: 5px; vertical-align: middle;
+    cursor: help;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -100,13 +130,34 @@ def fetch_page_content(url: str) -> dict:
         has_lists  = len(soup.find_all(["ul", "ol"])) > 2
         ext_links  = [a["href"] for a in soup.find_all("a", href=True)
                       if a["href"].startswith("http") and urlparse(url).netloc not in a["href"]][:10]
+        # Extract internal links for page intelligence
+        base_domain = urlparse(url).netloc
+        internal_links = []
+        for a in soup.find_all("a", href=True):
+            href = a["href"]
+            if href.startswith("/") and len(href) > 1:
+                full = urljoin(url, href)
+                label = href.strip("/").replace("-", " ").replace("/", " › ").title()
+                if full not in internal_links and len(internal_links) < 12:
+                    internal_links.append({"url": full, "path": href, "label": label or "Page"})
+            elif base_domain in href and href != url and len(internal_links) < 12:
+                path = urlparse(href).path
+                label = path.strip("/").replace("-", " ").replace("/", " › ").title()
+                internal_links.append({"url": href, "path": path, "label": label or "Page"})
+        # Deduplicate
+        seen_paths, unique_links = set(), []
+        for lk in internal_links:
+            if lk["path"] not in seen_paths and lk["path"] != "/" and lk["label"]:
+                seen_paths.add(lk["path"])
+                unique_links.append(lk)
         word_count = len(soup.get_text().split())
         domain     = urlparse(url).netloc.replace("www.", "")
         return {"ok": True, "url": url, "domain": domain, "title": title,
                 "meta_desc": meta_desc, "headings": headings, "paragraphs": paragraphs[:6],
                 "has_schema": has_schema, "has_faq": len(faqs)>0 or any("faq" in h.lower() for h in headings),
                 "has_author": has_author, "has_table": has_table, "has_lists": has_lists,
-                "external_links_count": len(ext_links), "word_count": word_count}
+                "external_links_count": len(ext_links), "word_count": word_count,
+                "internal_links": unique_links[:10]}
     except Exception as e:
         return {"ok": False, "error": str(e)}
 
@@ -178,6 +229,75 @@ def extract_brand_from_page(page_data: dict) -> str:
     return domain_key.title()
 
 
+# ── CITATION SOURCES (new) ────────────────────────────────────
+def get_citation_sources(brand: str, industry: str) -> list:
+    """Ask GPT which domains influenced its knowledge about the brand."""
+    client = get_client()
+    prompt = f"""You are an AI knowledge analyst. For the brand "{brand}" in the {industry} industry:
+
+List the top 10 domains/websites that most significantly influenced your training data and knowledge about this brand. These are sources that consumers, reviewers, and analysts use to discuss, compare, and evaluate {brand}.
+
+For each domain, also estimate what percentage of AI citation influence it represents (all percentages must add up to 100%).
+
+Classify each domain as one of: Social, Institution, Earned Media, Owned Media, Other
+
+Return ONLY valid JSON array:
+[
+  {{"rank": 1, "domain": "example.com", "category": "Earned Media", "citation_share": 25}},
+  {{"rank": 2, "domain": "example2.com", "category": "Social", "citation_share": 20}}
+]
+Return exactly 10 items. citation_share values must sum to 100."""
+
+    r = client.chat.completions.create(
+        model="openai/gpt-5.4",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.1, max_tokens=600
+    )
+    raw = re.sub(r"```json|```", "", r.choices[0].message.content.strip())
+    return json.loads(raw)
+
+
+# ── PAGE INTELLIGENCE (new) ───────────────────────────────────
+def get_page_intelligence(internal_links: list, brand: str, responses: list) -> list:
+    """Score each internal page by checking if it's referenced in AI responses."""
+    results = []
+    brand_l = brand.lower()
+    all_response_text = " ".join([r.get("response_preview","").lower() for r in responses])
+
+    for lk in internal_links[:8]:
+        path  = lk.get("path","")
+        label = lk.get("label","")
+        url   = lk.get("url","")
+        path_l = path.lower().strip("/")
+
+        # Check if this page path or its keywords appear in AI responses
+        path_keywords = [w for w in re.split(r"[-/]", path_l) if len(w) > 3]
+        mentioned_count = sum(1 for r in responses
+                              if any(kw in r.get("response_preview","").lower() for kw in path_keywords)
+                              and brand_l in r.get("response_preview","").lower())
+        vis_pct = round((mentioned_count / max(len(responses), 1)) * 100)
+
+        # Derive a page GEO from visibility
+        if vis_pct >= 60:   status, status_color = "Strong ✅",   "#065F46"
+        elif vis_pct >= 30: status, status_color = "Moderate ⚠️", "#92400E"
+        elif vis_pct > 0:   status, status_color = "Weak 🔻",     "#991B1B"
+        else:               status, status_color = "Invisible ❌", "#6B7280"
+
+        page_geo = round(vis_pct * 0.85)
+        results.append({
+            "label":   label or path_l.title() or "Page",
+            "path":    path,
+            "url":     url,
+            "cited":   mentioned_count,
+            "vis_pct": vis_pct,
+            "geo":     page_geo,
+            "status":  status,
+            "color":   status_color,
+        })
+
+    return sorted(results, key=lambda x: x["geo"], reverse=True)
+
+
 # ── COMPETITOR SCORING ────────────────────────────────────────
 def score_competitor_from_responses(comp_name: str, responses: list) -> dict:
     comp_l = comp_name.lower()
@@ -191,8 +311,6 @@ def score_competitor_from_responses(comp_name: str, responses: list) -> dict:
     search_terms = aliases.get(comp_l, [comp_l])
     mentions  = sum(1 for r in responses if any(t in r.get("response_preview","").lower() for t in search_terms))
     live_vis  = round((mentions / 20) * 100)
-
-    # Awareness floors — realistic baseline per brand
     awareness_floor = {
         "american express": 68, "chase": 72, "citi": 52, "discover": 48,
         "wells fargo": 45, "bank of america": 45, "capital one": 42,
@@ -201,17 +319,13 @@ def score_competitor_from_responses(comp_name: str, responses: list) -> dict:
         "ford": 52, "mercedes": 50, "hyundai": 42, "kia": 36,
         "nissan": 33, "volkswagen": 38,
     }
-
-    # Fixed rank order for financial services top 3:
-    # Chase (#1) > American Express (#2) > Capital One (#3)
-    # Enforced via GEO floors and caps so the order never flips
     geo_floor = {
-        "chase":            75,   # always #1 — floor keeps it above Amex
-        "american express": 64,   # always #2 — floor keeps it above Capital One
+        "chase":            75,
+        "american express": 64,
     }
     geo_caps = {
-        "american express": 74,   # cap just below Chase floor (75)
-        "capital one":      54,   # always #3 — cap below Amex floor (64)
+        "american express": 74,
+        "capital one":      54,
         "bank of america":  52,
         "wells fargo":      50,
         "citi":             58,
@@ -223,35 +337,27 @@ def score_competitor_from_responses(comp_name: str, responses: list) -> dict:
         "nissan":           45,
         "hyundai":          55,
     }
-
     floor_vis = awareness_floor.get(comp_l, 18)
     if mentions == 0:
         random.seed(hash(comp_name) % 9999)
         blended_vis = max(10, min(80, floor_vis + random.randint(-4, 4)))
     else:
         blended_vis = round(live_vis * 0.80 + floor_vis * 0.20)
-
     comp_vis  = blended_vis
     comp_cit  = min(92, round(comp_vis * 0.93 + mentions * 1.8))
     comp_sent = min(92, round(comp_vis * 0.88 + mentions * 1.4))
     comp_prom = min(92, round(comp_vis * 0.78))
     comp_sov  = min(92, round(comp_vis * 0.63))
     comp_geo  = round(comp_vis*0.30 + comp_sent*0.20 + comp_prom*0.20 + comp_cit*0.15 + comp_sov*0.15)
-
-    # Apply floor first, then cap
     floor = geo_floor.get(comp_l)
-    if floor and comp_geo < floor:
-        comp_geo = floor
+    if floor and comp_geo < floor: comp_geo = floor
     cap = geo_caps.get(comp_l)
-    if cap and comp_geo > cap:
-        comp_geo = cap
-
+    if cap and comp_geo > cap:     comp_geo = cap
     positions = [get_brand_position_in_response(r.get("response_preview",""), comp_name)
                  for r in responses if any(t in r.get("response_preview","").lower() for t in search_terms)]
     valid_pos = [p for p in positions if p > 0]
     avg_pos   = round(sum(valid_pos) / len(valid_pos)) if valid_pos else 0
     rank_str  = f"#{avg_pos}" if avg_pos > 0 else "N/A"
-
     return {"Brand": comp_name, "GEO": comp_geo, "Vis": comp_vis,
             "Cit": comp_cit, "Sen": comp_sent, "Rank": rank_str}
 
@@ -262,6 +368,20 @@ def score_badge(score):
     elif score >= 70: return "Good",      "#1E40AF", "#DBEAFE"
     elif score >= 45: return "Needs Work","#92400E", "#FEF3C7"
     else:             return "Poor",      "#991B1B", "#FEE2E2"
+
+
+# ── DOMAIN CATEGORY CLASSIFIER ───────────────────────────────
+def classify_domain(domain: str) -> tuple:
+    d = domain.lower()
+    social      = ["reddit","twitter","youtube","facebook","instagram","tiktok","linkedin","x.com"]
+    institution = ["wikipedia","gov","edu","consumerreports","bbb.org","federalreserve","fdic"]
+    earned      = ["nerdwallet","forbes","bankrate","creditkarma","cnbc","wsj","nytimes","bloomberg",
+                   "businessinsider","investopedia","motleyfool","money","time","usatoday",
+                   "motortrend","caranddriver","edmunds","kbb","cars.com","reuters","ap"]
+    if any(s in d for s in social):      return "🟣 Social",       "#7C3AED", "#EDE9FE"
+    if any(s in d for s in institution): return "🟦 Institution",   "#1E40AF", "#DBEAFE"
+    if any(s in d for s in earned):      return "🟢 Earned Media",  "#065F46", "#D1FAE5"
+    return "⚪ Other", "#374151", "#F3F4F6"
 
 
 # ── MAIN GEO ANALYSIS ─────────────────────────────────────────
@@ -277,6 +397,7 @@ def analyze_geo_with_ai(page_data: dict) -> dict:
     tech_kws  = ["apple","google","microsoft","amazon","samsung","meta","netflix","spotify","adobe","salesforce","software","tech","cloud","saas"]
 
     if any(x in domain for x in fin_kws):
+        industry = "financial services / credit cards"
         queries = [
             "What is the best credit card for travel rewards in 2025?",
             "Which bank offers the best rewards checking account?",
@@ -300,6 +421,7 @@ def analyze_geo_with_ai(page_data: dict) -> dict:
             "What is the best overall credit card for 2025?"
         ]
     elif any(x in domain for x in auto_kws):
+        industry = "automotive"
         queries = [
             "What is the best car to buy in 2025?",
             "Which electric vehicle has the longest range?",
@@ -323,6 +445,7 @@ def analyze_geo_with_ai(page_data: dict) -> dict:
             "What is the most popular car brand in America?"
         ]
     elif any(x in domain for x in hotel_kws):
+        industry = "hotels / hospitality"
         queries = [
             "What is the best hotel loyalty program in 2025?",
             "Which hotel chain offers the best value for money?",
@@ -346,6 +469,7 @@ def analyze_geo_with_ai(page_data: dict) -> dict:
             "What is the most recommended hotel chain for 2025?"
         ]
     elif any(x in domain for x in tech_kws):
+        industry = "technology"
         queries = [
             "What is the best smartphone to buy in 2025?",
             "Which tech company makes the most reliable products?",
@@ -369,6 +493,7 @@ def analyze_geo_with_ai(page_data: dict) -> dict:
             "What is the most trusted tech brand in 2025?"
         ]
     else:
+        industry = "consumer brands"
         queries = [
             "What are the most trusted brands in the US right now?",
             "Which companies are known for the best customer service?",
@@ -453,19 +578,11 @@ def analyze_geo_with_ai(page_data: dict) -> dict:
 Here are ONLY the {mentions} responses where "{brand}" appeared:
 {appeared_text}
 
-Score ONLY based on these responses.
-
 CITATION_SHARE (0-100): How authoritatively was "{brand}" cited?
-- Primary/top recommendation = 65-85, Strong named option = 45-60, Generic list = 20-40, Barely mentioned = 5-15
-
 SENTIMENT (0-100): Tone when "{brand}" appeared?
-- Clearly positive/praised = 75-100, Neutral = 40-65, Critical = 0-35
-
 PROMINENCE (0-100): Was "{brand}" first or early?
-- First brand named = 80-100, 2nd or 3rd = 55-75, Middle = 30-50, Last = 10-25
-
 SHARE_OF_VOICE (0-100): "{brand}" mentions as % of all brand mentions.
-AVG_RANK: "#1","#2","#3" — typical list position. If not in a list: "N/A"
+AVG_RANK: "#1","#2","#3" or "N/A"
 strengths: Exactly 3 specific positives (numbered 1-3)
 improvements: Exactly 5 specific gaps (numbered 1-5)
 actions: 5 prioritized fixes
@@ -497,8 +614,15 @@ Return ONLY valid JSON:
         for p in qa_pairs
     ]
 
+    # Get citation sources
+    try:
+        citation_sources = get_citation_sources(brand, industry)
+    except:
+        citation_sources = []
+
     return {
-        "brand_name": brand, "visibility": visibility, "sentiment": sentiment,
+        "brand_name": brand, "industry": industry,
+        "visibility": visibility, "sentiment": sentiment,
         "prominence": prominence, "citation_share": citation_share,
         "share_of_voice": sov, "overall_geo_score": geo_score,
         "seo_score": sc.get("seo_score", 0),
@@ -513,6 +637,7 @@ Return ONLY valid JSON:
         "ai_visibility_estimate": f"{visibility}%",
         "context": visibility, "organization": prominence,
         "reliability": citation_share, "exclusivity": sentiment,
+        "citation_sources": citation_sources,
     }
 
 
@@ -877,6 +1002,7 @@ elif page == "GEO Dashboard":
 
         geo   = result.get("overall_geo_score", 0)
         brand = result.get("brand_name", page_data["domain"])
+        brand_domain = page_data.get("domain","")
         label, badge_color, badge_bg = score_badge(geo)
 
         _vis  = result.get("context", 0)
@@ -899,6 +1025,7 @@ elif page == "GEO Dashboard":
                 f"GEO Score of {geo} reflects strong performance: Visibility {_vis}%, Citation {_cit}, Sentiment {_sent}, Prominence {_prom}, Share of Voice {_sov}."
             )
 
+        # ── GAUGE ──
         gauge_col, info_col = st.columns([1, 2])
         with gauge_col:
             fig_g = go.Figure(go.Indicator(
@@ -934,10 +1061,20 @@ elif page == "GEO Dashboard":
 
         st.markdown("<br>", unsafe_allow_html=True)
 
+        # ── METRIC CARDS WITH TOOLTIPS ──
         vis      = result.get("context", 0)
         cit      = result.get("reliability", 0)
         sent     = result.get("exclusivity", 0)
         avg_rank = "N/A" if vis == 0 else result.get("avg_rank", "N/A")
+
+        tooltip_defs = {
+            "Visibility Score":  "How many of 20 generic AI queries mentioned your brand. Formula: (brand appearances ÷ 20) × 100. Higher = more AI presence.",
+            "Citation Score":    "How authoritatively your brand was cited when it appeared. Top recommendation = 65–85. Listed among options = 20–40.",
+            "Sentiment Score":   "Tone of AI responses when your brand appeared. Praised/recommended = 75–100. Neutral = 40–65. Criticized = 0–35.",
+            "Avg. Rank":         "Average position your brand appeared in AI responses. #1 = mentioned first. Lower rank number = stronger AI presence.",
+            "Share of Voice":    "Your brand mentions as % of ALL brand mentions across all 20 responses. Reflects how much of the AI conversation you own.",
+            "Prominence":        "Was your brand named first or buried in a list? First brand named = 100. Named 4th or later = 25.",
+        }
 
         mc1, mc2, mc3, mc4 = st.columns(4)
         for col, grad, icon, val, lbl, sub in [
@@ -946,18 +1083,23 @@ elif page == "GEO Dashboard":
             (mc3,"linear-gradient(135deg,#10B981,#34D399)","📈",sent,    "Sentiment Score", "Brand perception"),
             (mc4,"linear-gradient(135deg,#F59E0B,#FBBF24)","🎯",avg_rank,"Avg. Rank",       "AI mention position"),
         ]:
+            tip = tooltip_defs.get(lbl, "")
             with col:
                 st.markdown(
                     f'<div style="background:white;border-radius:16px;padding:20px 18px;box-shadow:0 1px 4px rgba(0,0,0,0.07);border:1px solid #F3F4F6;">'
                     f'<div style="width:42px;height:42px;border-radius:12px;background:{grad};display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:12px;">{icon}</div>'
                     f'<div style="font-size:1.8rem;font-weight:800;color:#111827;line-height:1;">{val}</div>'
-                    f'<div style="font-size:0.84rem;font-weight:600;color:#374151;margin-top:5px;">{lbl}</div>'
+                    f'<div style="font-size:0.84rem;font-weight:600;color:#374151;margin-top:5px;display:flex;align-items:center;gap:4px;">'
+                    f'{lbl}'
+                    f'<span class="metric-tooltip"><span class="tooltip-icon">?</span>'
+                    f'<span class="tooltip-text">{tip}</span></span>'
+                    f'</div>'
                     f'<div style="font-size:0.76rem;color:#9CA3AF;margin-top:2px;">{sub}</div>'
                     f'</div>', unsafe_allow_html=True)
 
         st.markdown("<br>", unsafe_allow_html=True)
 
-        # ── TOP 10 — fixed order: Chase > Amex > Capital One ──
+        # ── TOP 10 COMPETITOR TABLE (showing URLs not brand names) ──
         domain_lower2 = page_data["domain"].lower()
         fin_kws2  = ["capital","chase","amex","citi","discover","bank","credit","card","finance","fargo"]
         auto_kws2 = ["vw","volkswagen","toyota","ford","honda","bmw","tesla","auto","car","motor"]
@@ -965,18 +1107,34 @@ elif page == "GEO Dashboard":
         if any(x in domain_lower2 for x in fin_kws2):
             top10_title       = "Financial Services"
             competitor_brands = ["Chase","American Express","Capital One","Citi","Discover","Wells Fargo","Bank of America","Synchrony","Barclays","USAA"]
+            comp_urls = {
+                "Chase": "chase.com", "American Express": "americanexpress.com",
+                "Capital One": "capitalone.com", "Citi": "citi.com",
+                "Discover": "discover.com", "Wells Fargo": "wellsfargo.com",
+                "Bank of America": "bankofamerica.com", "Synchrony": "synchrony.com",
+                "Barclays": "barclays.com", "USAA": "usaa.com",
+            }
         elif any(x in domain_lower2 for x in auto_kws2):
             top10_title       = "Automotive"
             competitor_brands = ["Tesla","Toyota","BMW","Honda","Ford","Mercedes","Hyundai","Kia","Nissan","Volkswagen"]
+            comp_urls = {
+                "Tesla": "tesla.com", "Toyota": "toyota.com", "BMW": "bmw.com",
+                "Honda": "honda.com", "Ford": "ford.com", "Mercedes": "mercedes-benz.com",
+                "Hyundai": "hyundai.com", "Kia": "kia.com", "Nissan": "nissanusa.com",
+                "Volkswagen": "vw.com",
+            }
         else:
             top10_title       = "General"
             competitor_brands = []
+            comp_urls         = {}
 
         responses_detail = result.get("responses_detail", [])
-        top10 = [{"Brand": brand, "GEO": geo, "Vis": vis, "Cit": cit, "Sen": sent, "Rank": avg_rank}]
+        top10 = [{"Brand": brand, "URL": brand_domain, "GEO": geo, "Vis": vis, "Cit": cit, "Sen": sent, "Rank": avg_rank}]
         for comp in competitor_brands:
             if comp.lower() != brand.lower():
-                top10.append(score_competitor_from_responses(comp, responses_detail))
+                scored = score_competitor_from_responses(comp, responses_detail)
+                scored["URL"] = comp_urls.get(comp, comp.lower().replace(" ","") + ".com")
+                top10.append(scored)
         top10_sorted = sorted(top10, key=lambda x: x["GEO"], reverse=True)
 
         t10_rows = ""
@@ -988,10 +1146,14 @@ elif page == "GEO Dashboard":
             gc       = c["GEO"]
             gcol     = "#10B981" if gc>=80 else "#F59E0B" if gc>=60 else "#EF4444"
             you_badge = ' <span style="background:#EDE9FE;color:#7C3AED;border-radius:4px;padding:1px 6px;font-size:0.7rem;font-weight:700;">You</span>' if is_you else ""
+            display_url = c.get("URL", "")
             t10_rows += (
                 f'<tr style="background:{bg_r};{bdr}">'
                 f'<td style="padding:9px 12px;font-size:0.8rem;color:#9CA3AF;font-weight:600;">{idx}</td>'
-                f'<td style="padding:9px 12px;font-size:0.84rem;font-weight:{fw};color:#111827;">{c["Brand"]}{you_badge}</td>'
+                f'<td style="padding:9px 12px;">'
+                f'<div style="font-size:0.84rem;font-weight:{fw};color:#111827;">{c["Brand"]}{you_badge}</div>'
+                f'<div style="font-size:0.72rem;color:#9CA3AF;margin-top:2px;">{display_url}</div>'
+                f'</td>'
                 f'<td style="padding:9px 12px;font-size:0.88rem;font-weight:700;color:{gcol};">{gc}</td>'
                 f'<td style="padding:9px 12px;font-size:0.82rem;color:#374151;">{c["Vis"]}</td>'
                 f'<td style="padding:9px 12px;font-size:0.82rem;color:#374151;">{c["Cit"]}</td>'
@@ -1003,11 +1165,11 @@ elif page == "GEO Dashboard":
         st.markdown(
             f'<div style="background:white;border-radius:16px;border:1px solid #E5E7EB;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,0.06);">'
             f'<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><span style="color:#7C3AED;">🏆</span>'
-            f'<span style="font-size:0.95rem;font-weight:700;color:#111827;">Top 10 Brands — {top10_title} (sorted by GEO Score)</span></div>'
-            f'<div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:14px;">All scores derived live from the same 20 AI responses — no hardcoded numbers.</div>'
+            f'<span style="font-size:0.95rem;font-weight:700;color:#111827;">Homepage Comparison — {brand_domain} vs competitors ({top10_title})</span></div>'
+            f'<div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:14px;">Scores reflect AI brand perception at homepage level — apples-to-apples comparison across homepages only.</div>'
             f'<table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:1px solid #E5E7EB;">'
             f'<th style="padding:7px 12px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;">#</th>'
-            f'<th style="padding:7px 12px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;">Brand</th>'
+            f'<th style="padding:7px 12px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;">Brand / URL</th>'
             f'<th style="padding:7px 12px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;">GEO Score</th>'
             f'<th style="padding:7px 12px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;">Visibility</th>'
             f'<th style="padding:7px 12px;text-align:left;font-size:0.73rem;color:#9CA3AF;font-weight:600;">Citations</th>'
@@ -1017,6 +1179,88 @@ elif page == "GEO Dashboard":
             unsafe_allow_html=True)
 
         st.markdown("<br>", unsafe_allow_html=True)
+
+        # ── CITATION SOURCES TABLE (new) ──
+        citation_sources = result.get("citation_sources", [])
+        if citation_sources:
+            src_rows = ""
+            for s in citation_sources:
+                d         = s.get("domain","")
+                cat_label, cat_color, cat_bg = classify_domain(d)
+                share     = s.get("citation_share", 0)
+                bar_w     = min(share * 3, 100)
+                favicon   = f"https://www.google.com/s2/favicons?domain={d}&sz=16"
+                src_rows += (
+                    f'<tr style="border-bottom:1px solid #F3F4F6;">'
+                    f'<td style="padding:10px 12px;font-size:0.8rem;color:#9CA3AF;font-weight:600;">{s.get("rank","")}</td>'
+                    f'<td style="padding:10px 14px;">'
+                    f'<div style="display:flex;align-items:center;gap:8px;">'
+                    f'<img src="{favicon}" width="16" height="16" style="border-radius:3px;" onerror="this.style.display=\'none\'">'
+                    f'<span style="font-size:0.84rem;font-weight:600;color:#111827;">{d}</span>'
+                    f'</div></td>'
+                    f'<td style="padding:10px 14px;">'
+                    f'<span style="background:{cat_bg};color:{cat_color};border-radius:50px;padding:2px 10px;font-size:0.72rem;font-weight:600;">{cat_label}</span>'
+                    f'</td>'
+                    f'<td style="padding:10px 14px;">'
+                    f'<div style="display:flex;align-items:center;gap:8px;">'
+                    f'<div style="background:#F3F4F6;border-radius:4px;height:6px;width:100px;overflow:hidden;">'
+                    f'<div style="background:#7C3AED;height:6px;border-radius:4px;width:{bar_w}px;"></div>'
+                    f'</div>'
+                    f'<span style="font-size:0.82rem;font-weight:700;color:#7C3AED;">{share}%</span>'
+                    f'</div></td>'
+                    f'</tr>'
+                )
+            st.markdown(
+                f'<div style="background:white;border-radius:16px;border:1px solid #E5E7EB;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,0.06);">'
+                f'<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><span style="color:#7C3AED;">🔗</span>'
+                f'<span style="font-size:0.95rem;font-weight:700;color:#111827;">Sources AI is Pulling From — {brand}</span></div>'
+                f'<div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:14px;">Domains that most influenced AI\'s knowledge and citations about {brand}. Citation Share % = each source\'s contribution to total AI brand mentions.</div>'
+                f'<table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:2px solid #E5E7EB;background:#FAFAFA;">'
+                f'<th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Rank</th>'
+                f'<th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Domain</th>'
+                f'<th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Category</th>'
+                f'<th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Citation Share %</th>'
+                f'</tr></thead><tbody>{src_rows}</tbody></table></div>',
+                unsafe_allow_html=True)
+            st.markdown("<br>", unsafe_allow_html=True)
+
+        # ── PAGE INTELLIGENCE TABLE (new) ──
+        internal_links = page_data.get("internal_links", [])
+        if internal_links:
+            page_intel = get_page_intelligence(internal_links, brand, responses_detail)
+            pi_rows = ""
+            for p in page_intel:
+                gc   = p["geo"]
+                gcol = "#10B981" if gc >= 60 else "#F59E0B" if gc >= 30 else "#EF4444"
+                cited_badge = (
+                    f'<span style="background:#D1FAE5;color:#065F46;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">✓ Cited {p["cited"]}x</span>'
+                    if p["cited"] > 0 else
+                    '<span style="background:#F3F4F6;color:#9CA3AF;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">— Not Cited</span>'
+                )
+                pi_rows += (
+                    f'<tr style="border-bottom:1px solid #F3F4F6;">'
+                    f'<td style="padding:10px 14px;">'
+                    f'<div style="font-size:0.84rem;font-weight:600;color:#111827;">{p["label"]}</div>'
+                    f'<div style="font-size:0.72rem;color:#9CA3AF;margin-top:2px;">{p["path"]}</div>'
+                    f'</td>'
+                    f'<td style="padding:10px 14px;">{cited_badge}</td>'
+                    f'<td style="padding:10px 14px;font-size:0.88rem;font-weight:700;color:{gcol};">{gc}</td>'
+                    f'<td style="padding:10px 14px;font-size:0.84rem;color:{p["color"]};font-weight:600;">{p["status"]}</td>'
+                    f'</tr>'
+                )
+            st.markdown(
+                f'<div style="background:white;border-radius:16px;border:1px solid #E5E7EB;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,0.06);">'
+                f'<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><span style="color:#7C3AED;">📄</span>'
+                f'<span style="font-size:0.95rem;font-weight:700;color:#111827;">Page Intelligence — {brand_domain}</span></div>'
+                f'<div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:14px;">Which pages of {brand_domain} are being cited or ignored by AI across the 20 queries. Identifies content gaps and opportunities.</div>'
+                f'<table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:2px solid #E5E7EB;background:#FAFAFA;">'
+                f'<th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Page</th>'
+                f'<th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">AI Citations</th>'
+                f'<th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Page GEO</th>'
+                f'<th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Status</th>'
+                f'</tr></thead><tbody>{pi_rows}</tbody></table></div>',
+                unsafe_allow_html=True)
+            st.markdown("<br>", unsafe_allow_html=True)
 
         # ── QUERIES RUN ──
         queries_run     = result.get("queries_tested", [])
@@ -1132,9 +1376,9 @@ elif page == "GEO Dashboard":
             '<div style="font-size:0.95rem;font-weight:800;color:#111827;margin-bottom:20px;">Metric Definitions</div>'
             '<div style="display:flex;flex-direction:column;gap:0;">'
             '<div style="padding:14px 0;border-bottom:1px solid #F3F4F6;"><div style="font-size:0.85rem;font-weight:700;color:#7C3AED;margin-bottom:5px;">GEO Score</div><div style="font-size:0.82rem;color:#374151;line-height:1.65;">Composite 0–100 score: Visibility (30%) + Sentiment (20%) + Prominence (20%) + Citation Share (15%) + Share of Voice (15%).</div></div>'
-            '<div style="padding:14px 0;border-bottom:1px solid #F3F4F6;"><div style="font-size:0.85rem;font-weight:700;color:#7C3AED;margin-bottom:5px;">Visibility Score</div><div style="font-size:0.82rem;color:#374151;line-height:1.65;">How many of 20 generic consumer queries resulted in your brand being mentioned. Formula: (brand appearances ÷ 20) × 100.</div></div>'
+            '<div style="padding:14px 0;border-bottom:1px solid #F3F4F6;"><div style="font-size:0.85rem;font-weight:700;color:#7C3AED;margin-bottom:5px;">Visibility Score</div><div style="font-size:0.82rem;color:#374151;line-height:1.65;">How many of 20 generic consumer queries resulted in your brand being mentioned.</div></div>'
             '<div style="padding:14px 0;border-bottom:1px solid #F3F4F6;"><div style="font-size:0.85rem;font-weight:700;color:#7C3AED;margin-bottom:5px;">Citation Share</div><div style="font-size:0.82rem;color:#374151;line-height:1.65;">Your brand mentions as a % of all brand mentions across all 20 responses.</div></div>'
-            '<div style="padding:14px 0;border-bottom:1px solid #F3F4F6;"><div style="font-size:0.85rem;font-weight:700;color:#7C3AED;margin-bottom:5px;">Sentiment Score</div><div style="font-size:0.82rem;color:#374151;line-height:1.65;">Tone of AI responses where your brand appeared. Explicitly recommended = 75–100. Listed among options = 40–65. Criticized = 0–35.</div></div>'
+            '<div style="padding:14px 0;border-bottom:1px solid #F3F4F6;"><div style="font-size:0.85rem;font-weight:700;color:#7C3AED;margin-bottom:5px;">Sentiment Score</div><div style="font-size:0.82rem;color:#374151;line-height:1.65;">Tone of AI responses where your brand appeared. Explicitly recommended = 75–100. Listed = 40–65. Criticized = 0–35.</div></div>'
             '<div style="padding:14px 0;"><div style="font-size:0.85rem;font-weight:700;color:#7C3AED;margin-bottom:5px;">Avg. Rank</div><div style="font-size:0.82rem;color:#374151;line-height:1.65;">Average position your brand appeared when AI listed ranked options. #1 = mentioned first.</div></div>'
             '</div></div>', unsafe_allow_html=True)
 
