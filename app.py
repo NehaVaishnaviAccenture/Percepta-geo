@@ -894,7 +894,7 @@ elif page == "AI Comparison":
     </div>""", unsafe_allow_html=True)
 
     st.markdown('<div class="score-section">', unsafe_allow_html=True)
-    DEFAULT_KEY = st.secrets["OPENROUTER_API_KEY"]
+    DEFAULT_KEY = os.environ.get("OPENROUTER_API_KEY")
     with st.expander("🔑 OpenRouter API Key", expanded=False):
         st.caption("A default key is pre-loaded. Paste your own key below to override it.")
         custom_key     = st.text_input("Use your own API Key (optional)", type="password", placeholder="sk-or-v1-...")
