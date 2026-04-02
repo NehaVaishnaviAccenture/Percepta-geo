@@ -12,7 +12,8 @@ import re
 import random
 from urllib.parse import urlparse, urljoin
 
-INTERNAL_API_KEY = st.secrets["OPENROUTER_API_KEY"]
+import os
+INTERNAL_API_KEY = os.environ.get("OPENROUTER_API_KEY")
 
 st.set_page_config(page_title="Percepta | GEO Insights", page_icon="🧠", layout="wide")
 
