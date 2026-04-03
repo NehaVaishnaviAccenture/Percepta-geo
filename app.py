@@ -271,7 +271,7 @@ if nav=="Overview":
         <div style="max-width:900px;margin:0 auto;text-align:center;">
             <div style="display:inline-block;border:1px solid rgba(255,255,255,0.35);border-radius:50px;padding:5px 16px;font-size:0.72rem;font-weight:600;letter-spacing:.1em;color:rgba(255,255,255,0.85);text-transform:uppercase;margin-bottom:24px;">Accenture's AI GEO Intelligence Platform</div>
             <h1 style="font-size:3.4rem;font-weight:900;color:white;line-height:1.1;margin:0 0 20px 0;letter-spacing:-1.5px;">Your Brand's Rank in AI<br>is Now a Business Metric.</h1>
-            <p style="font-size:1.05rem;color:rgba(255,255,255,0.82);line-height:1.8;margin:0 auto 36px auto;max-width:560px;">Percepta measures, scores, and improves your brand's visibility across AI search engines. In real time. With a team behind every insight.</p>
+            <p style="font-size:1.05rem;color:rgba(255,255,255,0.82);line-height:1.7;margin:0 auto 36px auto;max-width:560px;">Percepta measures, scores, and improves your brand's visibility across AI search engines. Real time. With a team behind every insight.</p>
             <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
                 <div style="border:1px solid rgba(255,255,255,0.35);border-radius:50px;padding:7px 18px;font-size:0.82rem;font-weight:500;color:rgba(255,255,255,0.9);">Live GEO Scoring</div>
                 <div style="border:1px solid rgba(255,255,255,0.35);border-radius:50px;padding:7px 18px;font-size:0.82rem;font-weight:500;color:rgba(255,255,255,0.9);">Competitor Benchmarking</div>
@@ -282,42 +282,42 @@ if nav=="Overview":
 
     # STATS BAR
     st.markdown("""
-    <div style="background:#F9F9FC;border-bottom:1px solid #E5E7EB;padding:24px 40px;">
-        <div style="max-width:900px;margin:0 auto;display:flex;gap:0;justify-content:space-between;align-items:center;flex-wrap:wrap;">
-            <div style="text-align:center;padding:0 20px;"><div style="font-size:1.6rem;font-weight:900;color:#111827;">10+</div><div style="font-size:0.78rem;color:#6B7280;margin-top:2px;">Client Engagements</div></div>
-            <div style="width:1px;height:36px;background:#E5E7EB;"></div>
-            <div style="text-align:center;padding:0 20px;"><div style="font-size:1.6rem;font-weight:900;color:#111827;">Real-time</div><div style="font-size:0.78rem;color:#6B7280;margin-top:2px;">Live AI Queries</div></div>
-            <div style="width:1px;height:36px;background:#E5E7EB;"></div>
-            <div style="text-align:center;padding:0 20px;"><div style="font-size:1.6rem;font-weight:900;color:#111827;">4X</div><div style="font-size:0.78rem;color:#6B7280;margin-top:2px;">Higher Conversion from AI</div></div>
-            <div style="width:1px;height:36px;background:#E5E7EB;"></div>
-            <div style="text-align:center;padding:0 20px;"><div style="font-size:1.6rem;font-weight:900;color:#111827;">200</div><div style="font-size:0.78rem;color:#6B7280;margin-top:2px;">AI Queries Per Analysis</div></div>
-            <div style="width:1px;height:36px;background:#E5E7EB;"></div>
-            <div style="text-align:center;padding:0 20px;"><div style="font-size:1.6rem;font-weight:900;color:#111827;">#1</div><div style="font-size:0.78rem;color:#6B7280;margin-top:2px;">GEO Score and Strategy</div></div>
+    <div style="background:#F9F9FC;border-bottom:1px solid #E5E7EB;padding:20px 40px;">
+        <div style="max-width:900px;margin:0 auto;display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr 1px 1fr 1px 1fr;align-items:center;gap:0;">
+            <div style="text-align:center;padding:8px 16px;"><div style="font-size:1.5rem;font-weight:900;color:#111827;line-height:1.1;">10+</div><div style="font-size:0.76rem;color:#6B7280;margin-top:3px;white-space:nowrap;">Client Engagements</div></div>
+            <div style="background:#E5E7EB;height:32px;"></div>
+            <div style="text-align:center;padding:8px 16px;"><div style="font-size:1.5rem;font-weight:900;color:#111827;line-height:1.1;">Real-time</div><div style="font-size:0.76rem;color:#6B7280;margin-top:3px;white-space:nowrap;">Live AI Queries</div></div>
+            <div style="background:#E5E7EB;height:32px;"></div>
+            <div style="text-align:center;padding:8px 16px;"><div style="font-size:1.5rem;font-weight:900;color:#111827;line-height:1.1;">4X</div><div style="font-size:0.76rem;color:#6B7280;margin-top:3px;white-space:nowrap;">Higher Conversion from AI</div></div>
+            <div style="background:#E5E7EB;height:32px;"></div>
+            <div style="text-align:center;padding:8px 16px;"><div style="font-size:1.5rem;font-weight:900;color:#111827;line-height:1.1;">200</div><div style="font-size:0.76rem;color:#6B7280;margin-top:3px;white-space:nowrap;">AI Queries Per Analysis</div></div>
+            <div style="background:#E5E7EB;height:32px;"></div>
+            <div style="text-align:center;padding:8px 16px;"><div style="font-size:1.5rem;font-weight:900;color:#111827;line-height:1.1;">#1</div><div style="font-size:0.76rem;color:#6B7280;margin-top:3px;white-space:nowrap;">GEO Score and Strategy</div></div>
         </div>
     </div>""",unsafe_allow_html=True)
 
     # THE AI SHIFT
     st.markdown("""
-    <div style="background:white;padding:80px 40px;">
+    <div style="background:white;padding:72px 40px;">
         <div style="max-width:900px;margin:0 auto;">
-            <div style="text-align:center;margin-bottom:56px;">
+            <div style="text-align:center;margin-bottom:48px;">
                 <div class="section-tag">The AI Shift</div>
-                <h2 style="font-size:2rem;font-weight:800;color:#111827;margin:0 0 14px 0;">Search is Being Replaced. Is Your Brand Ready?</h2>
-                <p style="font-size:0.95rem;color:#6B7280;max-width:520px;margin:0 auto;line-height:1.8;">ChatGPT, Gemini, and Perplexity now answer questions your customers used to Google. If AI doesn't mention your brand, you don't exist in that moment.</p>
+                <h2 style="font-size:2rem;font-weight:800;color:#111827;margin:0 0 12px 0;">Search is Being Replaced. Is Your Brand Ready?</h2>
+                <p style="font-size:0.95rem;color:#6B7280;max-width:560px;margin:0 auto;line-height:1.7;">ChatGPT, Gemini, and Perplexity now answer questions your customers used to Google. If AI does not mention your brand, you do not exist in that moment.</p>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;">
-                <div style="text-align:center;padding:32px 24px;border:1px solid #E5E7EB;border-radius:14px;">
-                    <div style="font-size:2.4rem;font-weight:900;color:#7C3AED;margin-bottom:10px;">25%</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;">
+                <div style="padding:28px 24px;border:1px solid #E5E7EB;border-radius:12px;">
+                    <div style="font-size:2.2rem;font-weight:900;color:#7C3AED;margin-bottom:8px;">25%</div>
                     <div style="font-size:0.88rem;font-weight:600;color:#111827;margin-bottom:6px;">Drop in Traditional Search</div>
                     <div style="font-size:0.8rem;color:#6B7280;line-height:1.6;">Gartner forecasts traditional search engine traffic drops 25% by 2026 as users shift to AI</div>
                 </div>
-                <div style="text-align:center;padding:32px 24px;border:1px solid #E5E7EB;border-radius:14px;">
-                    <div style="font-size:2.4rem;font-weight:900;color:#7C3AED;margin-bottom:10px;">59%+</div>
+                <div style="padding:28px 24px;border:1px solid #E5E7EB;border-radius:12px;">
+                    <div style="font-size:2.2rem;font-weight:900;color:#7C3AED;margin-bottom:8px;">59%+</div>
                     <div style="font-size:0.88rem;font-weight:600;color:#111827;margin-bottom:6px;">Zero-Click Searches</div>
                     <div style="font-size:0.8rem;color:#6B7280;line-height:1.6;">Of Google searches now end without a click. AI summaries answer before users visit any site</div>
                 </div>
-                <div style="text-align:center;padding:32px 24px;border:1px solid #E5E7EB;border-radius:14px;">
-                    <div style="font-size:2.4rem;font-weight:900;color:#7C3AED;margin-bottom:10px;">18B+</div>
+                <div style="padding:28px 24px;border:1px solid #E5E7EB;border-radius:12px;">
+                    <div style="font-size:2.2rem;font-weight:900;color:#7C3AED;margin-bottom:8px;">18B+</div>
                     <div style="font-size:0.88rem;font-weight:600;color:#111827;margin-bottom:6px;">Weekly AI Queries</div>
                     <div style="font-size:0.8rem;color:#6B7280;line-height:1.6;">ChatGPT processes 18B+ queries weekly from 700M+ users, all discovering brands through AI</div>
                 </div>
@@ -327,45 +327,53 @@ if nav=="Overview":
 
     # VALUE CHAIN
     st.markdown("""
-    <div style="background:#F9F9FC;padding:80px 40px;border-top:1px solid #E5E7EB;">
+    <div style="background:#F9F9FC;padding:72px 40px;border-top:1px solid #E5E7EB;">
         <div style="max-width:900px;margin:0 auto;">
-            <div style="text-align:center;margin-bottom:56px;">
+            <div style="text-align:center;margin-bottom:48px;">
                 <div class="section-tag">Why This Matters</div>
-                <h2 style="font-size:2rem;font-weight:800;color:#111827;margin:0 0 14px 0;">GEO Score Drives Real Business Outcomes</h2>
-                <p style="font-size:0.95rem;color:#6B7280;max-width:520px;margin:0 auto;line-height:1.8;">Every point you gain in your GEO Score cascades through your entire growth funnel. This is not a vanity metric.</p>
+                <h2 style="font-size:2rem;font-weight:800;color:#111827;margin:0 0 12px 0;">GEO Score Drives Real Business Outcomes</h2>
+                <p style="font-size:0.95rem;color:#6B7280;max-width:560px;margin:0 auto;line-height:1.7;">Every point you gain in your GEO Score cascades through your entire growth funnel. This is not a vanity metric.</p>
             </div>
-            <div style="display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:nowrap;overflow-x:auto;">
-                <div style="text-align:center;padding:24px 20px;background:white;border:1px solid #E5E7EB;border-radius:12px;min-width:130px;">
-                    <div style="width:40px;height:40px;background:#EDE9FE;border-radius:10px;margin:0 auto 10px auto;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#7C3AED" stroke-width="2"/><path d="M8 12h8M12 8v8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg></div>
-                    <div style="font-size:0.88rem;font-weight:700;color:#111827;">GEO Score</div>
-                    <div style="font-size:0.75rem;color:#6B7280;margin-top:3px;">Your AI visibility benchmark</div>
+            <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:0;align-items:start;">
+                <div style="text-align:center;padding:0 8px;">
+                    <div style="width:44px;height:44px;background:#7C3AED;border-radius:10px;margin:0 auto 10px auto;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="white" stroke-width="2"/><path d="M8 12h8M12 8v8" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+                    <div style="font-size:0.82rem;font-weight:700;color:#111827;margin-bottom:5px;">GEO Score</div>
+                    <div style="font-size:0.72rem;color:#6B7280;line-height:1.5;">Measures how strongly your brand appears in AI responses</div>
                 </div>
-                <div style="padding:0 8px;color:#7C3AED;font-size:1.2rem;font-weight:700;">→</div>
-                <div style="text-align:center;padding:24px 20px;background:white;border:1px solid #E5E7EB;border-radius:12px;min-width:130px;">
-                    <div style="width:40px;height:40px;background:#EDE9FE;border-radius:10px;margin:0 auto 10px auto;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L15 9H22L16.5 13.5L18.5 21L12 17L5.5 21L7.5 13.5L2 9H9L12 2Z" stroke="#7C3AED" stroke-width="1.8" fill="none"/></svg></div>
-                    <div style="font-size:0.88rem;font-weight:700;color:#111827;">Ranking</div>
-                    <div style="font-size:0.75rem;color:#6B7280;margin-top:3px;">Where you appear vs competitors</div>
+                <div style="display:flex;align-items:flex-start;justify-content:center;padding-top:14px;"><div style="color:#7C3AED;font-size:1.1rem;font-weight:700;">→</div></div>
+                <div style="text-align:center;padding:0 8px;">
+                    <div style="width:44px;height:44px;background:#EDE9FE;border-radius:10px;margin:0 auto 10px auto;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L15 9H22L16.5 13.5L18.5 21L12 17L5.5 21L7.5 13.5L2 9H9L12 2Z" stroke="#7C3AED" stroke-width="1.8" fill="none"/></svg></div>
+                    <div style="font-size:0.82rem;font-weight:700;color:#111827;margin-bottom:5px;">Ranking</div>
+                    <div style="font-size:0.72rem;color:#6B7280;line-height:1.5;">Higher scores help your brand appear more competitively vs others</div>
                 </div>
-                <div style="padding:0 8px;color:#7C3AED;font-size:1.2rem;font-weight:700;">→</div>
-                <div style="text-align:center;padding:24px 20px;background:white;border:1px solid #E5E7EB;border-radius:12px;min-width:130px;">
-                    <div style="width:40px;height:40px;background:#EDE9FE;border-radius:10px;margin:0 auto 10px auto;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="#7C3AED" stroke-width="1.8" fill="none"/><circle cx="12" cy="12" r="3" stroke="#7C3AED" stroke-width="1.8" fill="none"/></svg></div>
-                    <div style="font-size:0.88rem;font-weight:700;color:#111827;">Visibility</div>
-                    <div style="font-size:0.75rem;color:#6B7280;margin-top:3px;">How often AI mentions you</div>
+                <div style="display:flex;align-items:flex-start;justify-content:center;padding-top:14px;"><div style="color:#7C3AED;font-size:1.1rem;font-weight:700;">→</div></div>
+                <div style="text-align:center;padding:0 8px;">
+                    <div style="width:44px;height:44px;background:#EDE9FE;border-radius:10px;margin:0 auto 10px auto;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="#7C3AED" stroke-width="1.8" fill="none"/><circle cx="12" cy="12" r="3" stroke="#7C3AED" stroke-width="1.8" fill="none"/></svg></div>
+                    <div style="font-size:0.82rem;font-weight:700;color:#111827;margin-bottom:5px;">Visibility</div>
+                    <div style="font-size:0.72rem;color:#6B7280;line-height:1.5;">Better rankings increase how often users see your brand in AI answers</div>
                 </div>
-                <div style="padding:0 8px;color:#7C3AED;font-size:1.2rem;font-weight:700;">→</div>
-                <div style="text-align:center;padding:24px 20px;background:white;border:1px solid #E5E7EB;border-radius:12px;min-width:130px;">
-                    <div style="width:40px;height:40px;background:#EDE9FE;border-radius:10px;margin:0 auto 10px auto;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17 3H7C5.9 3 5 3.9 5 5v16l7-3 7 3V5c0-1.1-.9-2-2-2z" stroke="#7C3AED" stroke-width="1.8" fill="none"/></svg></div>
-                    <div style="font-size:0.88rem;font-weight:700;color:#111827;">Traffic</div>
-                    <div style="font-size:0.75rem;color:#6B7280;margin-top:3px;">AI-referred visits to your site</div>
-                </div>
-                <div style="padding:0 8px;color:#7C3AED;font-size:1.2rem;font-weight:700;">→</div>
-                <div style="text-align:center;padding:24px 20px;background:#7C3AED;border:1px solid #7C3AED;border-radius:12px;min-width:130px;">
-                    <div style="width:40px;height:40px;background:rgba(255,255,255,0.2);border-radius:10px;margin:0 auto 10px auto;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg></div>
-                    <div style="font-size:0.88rem;font-weight:700;color:white;">Revenue</div>
-                    <div style="font-size:0.75rem;color:rgba(255,255,255,0.8);margin-top:3px;">Conversion and growth</div>
-                </div>
+                <div style="display:flex;align-items:flex-start;justify-content:center;padding-top:14px;"><div style="color:#7C3AED;font-size:1.1rem;font-weight:700;">→</div></div>
             </div>
-            <div style="text-align:center;margin-top:20px;font-size:0.82rem;color:#9CA3AF;">Every point you gain in your GEO Score moves your brand further along this chain</div>
+            <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:0;align-items:start;margin-top:24px;">
+                <div style="text-align:center;padding:0 8px;">
+                    <div style="width:44px;height:44px;background:#EDE9FE;border-radius:10px;margin:0 auto 10px auto;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M17 3H7C5.9 3 5 3.9 5 5v16l7-3 7 3V5c0-1.1-.9-2-2-2z" stroke="#7C3AED" stroke-width="1.8" fill="none"/></svg></div>
+                    <div style="font-size:0.82rem;font-weight:700;color:#111827;margin-bottom:5px;">Traffic</div>
+                    <div style="font-size:0.72rem;color:#6B7280;line-height:1.5;">More visibility leads to more profile views, clicks, and site visits</div>
+                </div>
+                <div style="display:flex;align-items:flex-start;justify-content:center;padding-top:14px;"><div style="color:#7C3AED;font-size:1.1rem;font-weight:700;">→</div></div>
+                <div style="text-align:center;padding:0 8px;">
+                    <div style="width:44px;height:44px;background:#EDE9FE;border-radius:10px;margin:0 auto 10px auto;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#7C3AED" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="#7C3AED" stroke-width="1.8" fill="none"/></svg></div>
+                    <div style="font-size:0.82rem;font-weight:700;color:#111827;margin-bottom:5px;">Conversion</div>
+                    <div style="font-size:0.72rem;color:#6B7280;line-height:1.5;">More qualified traffic creates more calls, bookings, and actions</div>
+                </div>
+                <div style="display:flex;align-items:flex-start;justify-content:center;padding-top:14px;"><div style="color:#7C3AED;font-size:1.1rem;font-weight:700;">→</div></div>
+                <div style="text-align:center;padding:0 8px;">
+                    <div style="width:44px;height:44px;background:#7C3AED;border-radius:10px;margin:0 auto 10px auto;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+                    <div style="font-size:0.82rem;font-weight:700;color:#111827;margin-bottom:5px;">Revenue</div>
+                    <div style="font-size:0.72rem;color:#6B7280;line-height:1.5;">Better conversions translate into measurable business growth</div>
+                </div>
+                <div style="padding:0 8px;"></div>
+            </div>
         </div>
     </div>""",unsafe_allow_html=True)
 
@@ -480,38 +488,6 @@ if nav=="Overview":
         st.plotly_chart(fig_donut,use_container_width=True,config={"displayModeBar":False})
     st.markdown('</div>',unsafe_allow_html=True)
     st.markdown('<div style="height:20px;"></div>',unsafe_allow_html=True)
-
-    # GEO SHIFT
-    st.markdown("""
-    <div style="background:white;padding:80px 40px;border-top:1px solid #E5E7EB;">
-        <div style="max-width:900px;margin:0 auto;">
-            <div style="text-align:center;margin-bottom:56px;">
-                <div class="section-tag">GEO is No Longer Optional</div>
-                <h2 style="font-size:2rem;font-weight:800;color:#111827;margin:0 0 14px 0;">While Search Spend Rises, Its Impact Fades</h2>
-                <p style="font-size:0.95rem;color:#6B7280;max-width:520px;margin:0 auto;line-height:1.8;">AI agents are increasingly shaping the decisions search used to influence. The brands that win will be the ones AI recommends.</p>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
-                <div style="padding:32px;border:1px solid #E5E7EB;border-radius:14px;">
-                    <div style="font-size:0.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9CA3AF;margin-bottom:12px;">Before GEO</div>
-                    <div style="display:flex;flex-direction:column;gap:10px;">
-                        <div style="font-size:0.88rem;color:#6B7280;display:flex;gap:8px;"><span style="color:#EF4444;">x</span>Unknown AI ranking vs competitors</div>
-                        <div style="font-size:0.88rem;color:#6B7280;display:flex;gap:8px;"><span style="color:#EF4444;">x</span>Invisible to AI recommendation engines</div>
-                        <div style="font-size:0.88rem;color:#6B7280;display:flex;gap:8px;"><span style="color:#EF4444;">x</span>No idea which content AI is citing</div>
-                        <div style="font-size:0.88rem;color:#6B7280;display:flex;gap:8px;"><span style="color:#EF4444;">x</span>Losing traffic to AI-recommended competitors</div>
-                    </div>
-                </div>
-                <div style="padding:32px;border:2px solid #7C3AED;border-radius:14px;background:#FAFBFF;">
-                    <div style="font-size:0.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#7C3AED;margin-bottom:12px;">After Percepta</div>
-                    <div style="display:flex;flex-direction:column;gap:10px;">
-                        <div style="font-size:0.88rem;color:#374151;display:flex;gap:8px;"><span style="color:#10B981;font-weight:700;">+</span>Know your exact GEO Score vs every competitor</div>
-                        <div style="font-size:0.88rem;color:#374151;display:flex;gap:8px;"><span style="color:#10B981;font-weight:700;">+</span>Understand exactly why AI mentions or ignores you</div>
-                        <div style="font-size:0.88rem;color:#374151;display:flex;gap:8px;"><span style="color:#10B981;font-weight:700;">+</span>Know which sources and pages drive AI citations</div>
-                        <div style="font-size:0.88rem;color:#374151;display:flex;gap:8px;"><span style="color:#10B981;font-weight:700;">+</span>Accenture team executes the fix end to end</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>""",unsafe_allow_html=True)
 
     # CTA
     st.markdown("""<div style="background:#F9F9FC;padding:64px 40px;border-top:1px solid #E5E7EB;text-align:center;">
