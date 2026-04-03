@@ -801,12 +801,11 @@ elif nav=="GEO Hub":
                 <p style="font-size:0.88rem;color:rgba(255,255,255,0.85);margin:0;">Type any prompt and see exactly how GPT-5.4 responds in real time. Great for testing brand-specific queries.</p>
             </div>""",unsafe_allow_html=True)
             DEFAULT_KEY=os.environ.get("OPENROUTER_API_KEY")
+            custom_key=""
             with st.expander("🔑 API Key (optional override)",expanded=False):
                 custom_key=st.text_input("Your OpenRouter key",type="password",placeholder="sk-or-v1-...")
-                openrouter_key=custom_key.strip() if custom_key.strip() else DEFAULT_KEY
                 if custom_key.strip(): st.success("✅ Using your custom key")
-            else:
-                openrouter_key=DEFAULT_KEY
+            openrouter_key=custom_key.strip() if custom_key.strip() else DEFAULT_KEY
             query=st.text_input("Enter a prompt:","",placeholder="e.g. What is the best travel credit card for high net worth individuals?")
             if st.button("🚀 Run Prompt"):
                 if not query.strip(): st.warning("Please enter a prompt.")
