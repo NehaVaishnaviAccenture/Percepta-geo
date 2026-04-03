@@ -271,7 +271,7 @@ if nav=="Overview":
         <div style="max-width:900px;margin:0 auto;text-align:center;">
             <div style="display:inline-block;border:1px solid rgba(255,255,255,0.35);border-radius:50px;padding:5px 16px;font-size:0.72rem;font-weight:600;letter-spacing:.1em;color:rgba(255,255,255,0.85);text-transform:uppercase;margin-bottom:24px;">Accenture's AI GEO Intelligence Platform</div>
             <h1 style="font-size:3.4rem;font-weight:900;color:white;line-height:1.1;margin:0 0 20px 0;letter-spacing:-1.5px;">Your Brand's Rank in AI<br>is Now a Business Metric.</h1>
-            <p style="font-size:1.05rem;color:rgba(255,255,255,0.82);line-height:1.7;margin:0 auto 36px auto;max-width:560px;">Percepta measures, scores, and improves your brand's visibility across AI search engines. Real time. With a team behind every insight.</p>
+            <p style="font-size:1.05rem;color:rgba(255,255,255,0.82);line-height:1.6;margin:0 auto 36px auto;max-width:600px;">Percepta measures, scores, and improves your brand's visibility across AI search engines — real time, with a team behind every insight.</p>
             <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
                 <div style="border:1px solid rgba(255,255,255,0.35);border-radius:50px;padding:7px 18px;font-size:0.82rem;font-weight:500;color:rgba(255,255,255,0.9);">Live GEO Scoring</div>
                 <div style="border:1px solid rgba(255,255,255,0.35);border-radius:50px;padding:7px 18px;font-size:0.82rem;font-weight:500;color:rgba(255,255,255,0.9);">Competitor Benchmarking</div>
