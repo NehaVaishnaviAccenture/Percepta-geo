@@ -266,16 +266,26 @@ if nav=="Overview":
 
     st.markdown("""
 <!-- HERO -->
-<div style="background:#7C3AED;padding:100px 40px;text-align:center;">
+<div style="background:#7C3AED;padding:100px 40px 48px 40px;text-align:center;">
   <div style="display:inline-block;border:1px solid rgba(255,255,255,0.35);border-radius:50px;padding:5px 16px;font-size:0.72rem;font-weight:600;letter-spacing:.1em;color:rgba(255,255,255,0.85);text-transform:uppercase;margin-bottom:28px;">Accenture's AI GEO Intelligence Platform</div>
   <h1 style="font-size:3.4rem;font-weight:900;color:white;line-height:1.08;margin:0 0 22px;letter-spacing:-1.5px;">Your Brand's Rank in AI<br>is Now a Business Metric.</h1>
   <p style="font-size:1.05rem;color:rgba(255,255,255,0.82);line-height:1.7;max-width:660px;margin:0 auto 36px;">Percepta measures, scores, and improves your brand's visibility across AI search engines — real time, with a team behind every insight.</p>
   <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-    <span style="border:1px solid rgba(255,255,255,0.35);border-radius:50px;padding:7px 18px;font-size:0.82rem;font-weight:500;color:rgba(255,255,255,0.9);">Live GEO Scoring</span>
-    <span style="border:1px solid rgba(255,255,255,0.35);border-radius:50px;padding:7px 18px;font-size:0.82rem;font-weight:500;color:rgba(255,255,255,0.9);">Competitor Benchmarking</span>
-    <span style="border:1px solid rgba(255,255,255,0.35);border-radius:50px;padding:7px 18px;font-size:0.82rem;font-weight:500;color:rgba(255,255,255,0.9);">Actionable Recommendations</span>
+    <a href="javascript:void(0)" style="border:1px solid rgba(255,255,255,0.35);border-radius:50px;padding:7px 18px;font-size:0.82rem;font-weight:500;color:rgba(255,255,255,0.9);text-decoration:none;cursor:pointer;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='transparent'">Live GEO Scoring</a>
+    <a href="javascript:void(0)" style="border:1px solid rgba(255,255,255,0.35);border-radius:50px;padding:7px 18px;font-size:0.82rem;font-weight:500;color:rgba(255,255,255,0.9);text-decoration:none;cursor:pointer;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='transparent'">Competitor Benchmarking</a>
+    <a href="javascript:void(0)" style="border:1px solid rgba(255,255,255,0.35);border-radius:50px;padding:7px 18px;font-size:0.82rem;font-weight:500;color:rgba(255,255,255,0.9);text-decoration:none;cursor:pointer;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='transparent'">Actionable Recommendations</a>
   </div>
 </div>
+<div style="background:#7C3AED;padding:0 40px 56px 40px;">
+</div>""", unsafe_allow_html=True)
+
+    h1, h2, h3 = st.columns([1.4, 1.2, 1.4])
+    with h2:
+        if st.button("🔍  Discover Your GEO Score Now", key="hero_cta", use_container_width=True):
+            st.session_state.nav = "GEO Hub"
+            st.rerun()
+
+    st.markdown("""
 
 
 
@@ -329,9 +339,9 @@ if nav=="Overview":
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;">
     <div style="border:1px solid #E5E7EB;border-radius:16px;padding:36px 32px;background:#FAFAFA;">
       <div style="font-size:0.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9CA3AF;margin-bottom:18px;">Competitors</div>
-      <div style="display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:#9CA3AF;text-decoration:line-through;margin-bottom:14px;"><span style="color:#D1D5DB;font-weight:700;font-size:1rem;flex-shrink:0;">–</span> Fragmented metrics with no clear direction</div>
-      <div style="display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:#9CA3AF;text-decoration:line-through;margin-bottom:14px;"><span style="color:#D1D5DB;font-weight:700;font-size:1rem;flex-shrink:0;">–</span> Surface-level visibility tracking</div>
-      <div style="display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:#9CA3AF;text-decoration:line-through;"><span style="color:#D1D5DB;font-weight:700;font-size:1rem;flex-shrink:0;">–</span> Dashboards that stop at "what," not "what next"</div>
+      <div style="display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:#9CA3AF;margin-bottom:14px;"><span style="color:#D1D5DB;font-weight:700;font-size:1rem;flex-shrink:0;">–</span> Fragmented metrics with no clear direction</div>
+      <div style="display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:#9CA3AF;margin-bottom:14px;"><span style="color:#D1D5DB;font-weight:700;font-size:1rem;flex-shrink:0;">–</span> Surface-level visibility tracking</div>
+      <div style="display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:#9CA3AF;"><span style="color:#D1D5DB;font-weight:700;font-size:1rem;flex-shrink:0;">–</span> Dashboards that stop at "what," not "what next"</div>
     </div>
     <div style="border:2px solid #7C3AED;border-radius:16px;padding:36px 32px;background:white;position:relative;">
       <div style="position:absolute;top:-13px;left:28px;background:#7C3AED;color:white;border-radius:50px;padding:4px 16px;font-size:0.72rem;font-weight:700;">Percepta by Accenture</div>
