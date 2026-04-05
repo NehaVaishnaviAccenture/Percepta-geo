@@ -277,31 +277,7 @@ if nav=="Overview":
   </div>
 </div>
 
-<!-- THE AI SHIFT -->
-<div style="background:white;padding:80px 40px;">
-  <div style="text-align:center;margin-bottom:52px;">
-    <div class="section-tag">The AI Shift</div>
-    <h2 style="font-size:2.1rem;font-weight:800;color:#111827;margin:0 0 14px;line-height:1.2;">Search is Being Replaced.<br>Is Your Brand Ready?</h2>
-    <p style="font-size:0.97rem;color:#6B7280;max-width:620px;margin:0 auto;line-height:1.75;">ChatGPT, Gemini, and Perplexity now answer questions your customers used to Google. If AI doesn't mention your brand, you don't exist in that moment.</p>
-  </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;">
-    <div style="padding:32px 28px;border:1px solid #E5E7EB;border-radius:14px;">
-      <div style="font-size:2.6rem;font-weight:900;color:#7C3AED;margin-bottom:8px;line-height:1;">25%</div>
-      <div style="font-size:0.92rem;font-weight:700;color:#111827;margin-bottom:6px;">Drop in Traditional Search</div>
-      <div style="font-size:0.82rem;color:#6B7280;line-height:1.65;">Gartner forecasts traditional search engine traffic drops 25% by 2026 as users shift to AI.</div>
-    </div>
-    <div style="padding:32px 28px;border:1px solid #E5E7EB;border-radius:14px;">
-      <div style="font-size:2.6rem;font-weight:900;color:#7C3AED;margin-bottom:8px;line-height:1;">59%+</div>
-      <div style="font-size:0.92rem;font-weight:700;color:#111827;margin-bottom:6px;">Zero-Click Searches</div>
-      <div style="font-size:0.82rem;color:#6B7280;line-height:1.65;">Of Google searches now end without a click — AI summaries answer before users visit any site.</div>
-    </div>
-    <div style="padding:32px 28px;border:1px solid #E5E7EB;border-radius:14px;">
-      <div style="font-size:2.6rem;font-weight:900;color:#7C3AED;margin-bottom:8px;line-height:1;">18B+</div>
-      <div style="font-size:0.92rem;font-weight:700;color:#111827;margin-bottom:6px;">Weekly AI Queries</div>
-      <div style="font-size:0.82rem;color:#6B7280;line-height:1.65;">ChatGPT processes 18B+ queries weekly from 700M+ users, all discovering brands through AI.</div>
-    </div>
-  </div>
-</div>
+
 
 <!-- WHY THIS MATTERS -->
 <div style="background:#F9F9FC;padding:80px 40px;border-top:1px solid #E5E7EB;">
@@ -372,10 +348,33 @@ if nav=="Overview":
 
 <!-- CTA -->
 <div style="background:#F9F9FC;padding:88px 40px;border-top:1px solid #E5E7EB;text-align:center;">
-  <div style="max-width:520px;margin:0 auto;">
+  <div style="max-width:620px;margin:0 auto;">
     <div class="section-tag">Get Started</div>
     <h2 style="font-size:2.1rem;font-weight:800;color:#111827;margin:0 0 14px;line-height:1.2;">Ready to See Your Score?</h2>
-    <p style="font-size:0.97rem;color:#6B7280;line-height:1.75;">Enter your brand URL and get a complete live GEO analysis in minutes. No setup required.</p>
+    <p style="font-size:0.97rem;color:#6B7280;line-height:1.75;margin-bottom:32px;">Enter your brand URL and get a complete live GEO analysis in minutes. No setup required.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:8px;">
+      <a href="javascript:void(0)" onclick="window.parent.postMessage({type:'streamlit:setComponentValue', value:'GEO Hub'}, '*')" style="text-decoration:none;">
+        <div style="padding:28px 20px;border:1.5px solid #E5E7EB;border-radius:14px;background:white;cursor:pointer;transition:border-color .2s;" onmouseover="this.style.borderColor='#7C3AED'" onmouseout="this.style.borderColor='#E5E7EB'">
+          <div style="font-size:1.4rem;margin-bottom:10px;">📊</div>
+          <div style="font-size:0.88rem;font-weight:700;color:#111827;margin-bottom:4px;">Live GEO Scoring</div>
+          <div style="font-size:0.78rem;color:#6B7280;line-height:1.5;">Real-time AI visibility scores across 20 industry queries</div>
+        </div>
+      </a>
+      <a href="javascript:void(0)" onclick="window.parent.postMessage({type:'streamlit:setComponentValue', value:'GEO Hub'}, '*')" style="text-decoration:none;">
+        <div style="padding:28px 20px;border:1.5px solid #E5E7EB;border-radius:14px;background:white;cursor:pointer;transition:border-color .2s;" onmouseover="this.style.borderColor='#7C3AED'" onmouseout="this.style.borderColor='#E5E7EB'">
+          <div style="font-size:1.4rem;margin-bottom:10px;">🏆</div>
+          <div style="font-size:0.88rem;font-weight:700;color:#111827;margin-bottom:4px;">Competitor Benchmarking</div>
+          <div style="font-size:0.78rem;color:#6B7280;line-height:1.5;">See how your brand stacks up against 10+ competitors</div>
+        </div>
+      </a>
+      <a href="javascript:void(0)" onclick="window.parent.postMessage({type:'streamlit:setComponentValue', value:'GEO Hub'}, '*')" style="text-decoration:none;">
+        <div style="padding:28px 20px;border:1.5px solid #E5E7EB;border-radius:14px;background:white;cursor:pointer;transition:border-color .2s;" onmouseover="this.style.borderColor='#7C3AED'" onmouseout="this.style.borderColor='#E5E7EB'">
+          <div style="font-size:1.4rem;margin-bottom:10px;">🎯</div>
+          <div style="font-size:0.88rem;font-weight:700;color:#111827;margin-bottom:4px;">Actionable Recommendations</div>
+          <div style="font-size:0.78rem;color:#6B7280;line-height:1.5;">Prioritized actions tied to Accenture workstream deliverables</div>
+        </div>
+      </a>
+    </div>
   </div>
 </div>
 """, unsafe_allow_html=True)
