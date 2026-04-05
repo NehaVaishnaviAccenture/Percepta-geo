@@ -347,28 +347,25 @@ if nav=="Overview":
 <div style="background:white;padding:80px 40px;border-top:1px solid #E5E7EB;">
   <div style="text-align:center;margin-bottom:52px;">
     <div class="section-tag">What You Gain</div>
-    <h2 style="font-size:2.1rem;font-weight:800;color:#111827;margin:0 0 14px;line-height:1.2;">Competitors Give You Data.<br>We Give You a Solution.</h2>
+    <h2 style="font-size:2.1rem;font-weight:800;color:#111827;margin:0 0 14px;line-height:1.2;">Others Give You Data.<br>We Give You a Solution.</h2>
     <p style="font-size:0.97rem;color:#6B7280;max-width:620px;margin:0 auto;line-height:1.75;">Every other GEO tool stops at the dashboard. Percepta combines measurement, strategy, and execution in one place.</p>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;">
     <div style="border:1px solid #E5E7EB;border-radius:16px;padding:36px 32px;background:#FAFAFA;">
-      <div style="font-size:0.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9CA3AF;margin-bottom:18px;">Other GEO Tools</div>
-      <div style="display:flex;align-items:center;gap:12px;font-size:0.88rem;color:#374151;margin-bottom:14px;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;">+</span> Raw visibility data</div>
-      <div style="display:flex;align-items:center;gap:12px;font-size:0.88rem;color:#374151;margin-bottom:14px;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;">+</span> Citation tracking</div>
-      <div style="display:flex;align-items:center;gap:12px;font-size:0.88rem;color:#374151;margin-bottom:14px;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;">+</span> A dashboard to check</div>
-      <div style="display:flex;align-items:center;gap:12px;font-size:0.88rem;color:#9CA3AF;text-decoration:line-through;margin-bottom:14px;"><span style="color:#E5E7EB;font-weight:700;font-size:1rem;">+</span> Insights on what to do</div>
-      <div style="display:flex;align-items:center;gap:12px;font-size:0.88rem;color:#9CA3AF;text-decoration:line-through;margin-bottom:14px;"><span style="color:#E5E7EB;font-weight:700;font-size:1rem;">+</span> Prioritized recommendations</div>
-      <div style="display:flex;align-items:center;gap:12px;font-size:0.88rem;color:#9CA3AF;text-decoration:line-through;"><span style="color:#E5E7EB;font-weight:700;font-size:1rem;">+</span> A team to implement it</div>
+      <div style="font-size:0.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9CA3AF;margin-bottom:18px;">Competitors</div>
+      <div style="display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:#9CA3AF;text-decoration:line-through;margin-bottom:14px;"><span style="color:#D1D5DB;font-weight:700;font-size:1rem;flex-shrink:0;">–</span> Fragmented metrics with no clear direction</div>
+      <div style="display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:#9CA3AF;text-decoration:line-through;margin-bottom:14px;"><span style="color:#D1D5DB;font-weight:700;font-size:1rem;flex-shrink:0;">–</span> Surface-level visibility tracking</div>
+      <div style="display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:#9CA3AF;text-decoration:line-through;"><span style="color:#D1D5DB;font-weight:700;font-size:1rem;flex-shrink:0;">–</span> Dashboards that stop at "what," not "what next"</div>
     </div>
     <div style="border:2px solid #7C3AED;border-radius:16px;padding:36px 32px;background:white;position:relative;">
       <div style="position:absolute;top:-13px;left:28px;background:#7C3AED;color:white;border-radius:50px;padding:4px 16px;font-size:0.72rem;font-weight:700;">Percepta by Accenture</div>
       <div style="font-size:0.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#7C3AED;margin-bottom:18px;margin-top:6px;">Your All-in-One GEO Solution</div>
-      <div style="display:flex;align-items:center;gap:12px;font-size:0.88rem;color:#374151;margin-bottom:14px;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;">+</span> Proprietary GEO Score (0 to 100)</div>
-      <div style="display:flex;align-items:center;gap:12px;font-size:0.88rem;color:#374151;margin-bottom:14px;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;">+</span> Competitor benchmarking across 10+ brands</div>
-      <div style="display:flex;align-items:center;gap:12px;font-size:0.88rem;color:#374151;margin-bottom:14px;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;">+</span> Source attribution with page-level detail</div>
-      <div style="display:flex;align-items:center;gap:12px;font-size:0.88rem;color:#374151;margin-bottom:14px;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;">+</span> Insights on exactly what is holding you back</div>
-      <div style="display:flex;align-items:center;gap:12px;font-size:0.88rem;color:#374151;margin-bottom:14px;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;">+</span> Prioritized recommendations tied to deliverables</div>
-      <div style="display:flex;align-items:center;gap:12px;font-size:0.88rem;color:#374151;font-weight:700;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;">+</span> Accenture team to execute the strategy</div>
+      <div style="display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:#374151;margin-bottom:14px;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;flex-shrink:0;">+</span> Unified GEO Score (0–100) to track performance</div>
+      <div style="display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:#374151;margin-bottom:14px;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;flex-shrink:0;">+</span> Competitive benchmarking across key players</div>
+      <div style="display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:#374151;margin-bottom:14px;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;flex-shrink:0;">+</span> Clear attribution of where and why you appear</div>
+      <div style="display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:#374151;margin-bottom:14px;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;flex-shrink:0;">+</span> Pinpoint what's limiting your visibility</div>
+      <div style="display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:#374151;margin-bottom:14px;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;flex-shrink:0;">+</span> Actionable recommendations tied to execution</div>
+      <div style="display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:#374151;font-weight:700;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;flex-shrink:0;">+</span> Accenture team to implement and drive results</div>
     </div>
   </div>
 </div>
@@ -379,18 +376,13 @@ if nav=="Overview":
     <div class="section-tag">Get Started</div>
     <h2 style="font-size:2.1rem;font-weight:800;color:#111827;margin:0 0 14px;line-height:1.2;">Ready to See Your Score?</h2>
     <p style="font-size:0.97rem;color:#6B7280;line-height:1.75;">Enter your brand URL and get a complete live GEO analysis in minutes. No setup required.</p>
-    <div style="background:linear-gradient(135deg,#7C3AED 0%,#5B21B6 100%);border-radius:18px;padding:38px 40px;box-shadow:0 12px 48px rgba(124,58,237,0.28);max-width:400px;margin:32px auto 0;">
-      <div style="font-size:1.5rem;margin-bottom:10px;">🔍</div>
-      <div style="font-size:1.3rem;font-weight:900;color:white;margin-bottom:6px;">Discover Your GEO Score Now</div>
-      <div style="font-size:0.88rem;color:rgba(255,255,255,0.8);">Run your free AI visibility analysis →</div>
-    </div>
   </div>
 </div>
 """, unsafe_allow_html=True)
 
-    c1, c2, c3 = st.columns([1.6, 1, 1.6])
+    c1, c2, c3 = st.columns([1.4, 1.2, 1.4])
     with c2:
-        if st.button("→  Open GEO Hub", use_container_width=True):
+        if st.button("🔍  Discover Your GEO Score Now", use_container_width=True):
             st.session_state.nav = "GEO Hub"
             st.rerun()
 
