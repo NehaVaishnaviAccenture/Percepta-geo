@@ -243,7 +243,6 @@ div[data-testid="stHorizontalBlock"]:first-of-type button[kind="primary"]{backgr
 .percepta-brand-wrap{display:flex;align-items:center;gap:10px;padding:4px 0;}
 .percepta-icon{width:30px;height:30px;border-radius:7px;background:#7C3AED;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .percepta-title{font-size:1rem;font-weight:800;color:#111827;letter-spacing:-0.3px;}
-div[data-testid="stHorizontalBlock"]:first-of-type>div:first-child button{position:absolute!important;top:0!important;left:0!important;width:100%!important;height:56px!important;opacity:0!important;z-index:2!important;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -251,7 +250,6 @@ nav = st.session_state.nav
 nb_c,ov_c,gh_c,sp_c = st.columns([3,1,1,1.2])
 with nb_c:
     st.markdown("""<div class="percepta-brand-wrap"><div class="percepta-icon"><svg width="16" height="16" viewBox="0 0 22 22" fill="none"><circle cx="9.5" cy="9.5" r="5.5" stroke="white" stroke-width="1.8" fill="none"/><line x1="13.5" y1="13.5" x2="18" y2="18" stroke="white" stroke-width="1.8" stroke-linecap="round"/><path d="M7 9.5 Q8.5 7 9.5 9.5 Q10.5 12 12 9.5" stroke="white" stroke-width="1.3" fill="none" stroke-linecap="round" opacity="0.9"/></svg></div><span class="percepta-title">Percepta</span></div>""",unsafe_allow_html=True)
-    if st.button("home",key="nb_home",use_container_width=True): st.session_state.nav="Overview"; st.rerun()
 with ov_c:
     if st.button("Overview",key="nb_ov",type="primary" if nav=="Overview" else "secondary",use_container_width=True): st.session_state.nav="Overview"; st.rerun()
 with gh_c:
@@ -264,136 +262,136 @@ with sp_c:
 # ════════════════════════════════════════════════════════════
 if nav=="Overview":
 
+    # HERO
     st.markdown("""
-<!-- HERO -->
-<div style="background:#7C3AED;padding:100px 40px 48px 40px;text-align:center;">
-  <div style="display:inline-block;border:1px solid rgba(255,255,255,0.35);border-radius:50px;padding:5px 16px;font-size:0.72rem;font-weight:600;letter-spacing:.1em;color:rgba(255,255,255,0.85);text-transform:uppercase;margin-bottom:28px;">Accenture's AI GEO Intelligence Platform</div>
-  <h1 style="font-size:3.4rem;font-weight:900;color:white;line-height:1.08;margin:0 0 22px;letter-spacing:-1.5px;">Your Brand's Rank in AI<br>is Now a Business Metric.</h1>
-  <p style="font-size:1.05rem;color:rgba(255,255,255,0.82);line-height:1.7;max-width:660px;margin:0 auto 36px;">Percepta measures, scores, and improves your brand's visibility across AI search engines — real time, with a team behind every insight.</p>
-  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-    <a href="javascript:void(0)" style="border:1px solid rgba(255,255,255,0.35);border-radius:50px;padding:7px 18px;font-size:0.82rem;font-weight:500;color:rgba(255,255,255,0.9);text-decoration:none;cursor:pointer;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='transparent'">Live GEO Scoring</a>
-    <a href="javascript:void(0)" style="border:1px solid rgba(255,255,255,0.35);border-radius:50px;padding:7px 18px;font-size:0.82rem;font-weight:500;color:rgba(255,255,255,0.9);text-decoration:none;cursor:pointer;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='transparent'">Competitor Benchmarking</a>
-    <a href="javascript:void(0)" style="border:1px solid rgba(255,255,255,0.35);border-radius:50px;padding:7px 18px;font-size:0.82rem;font-weight:500;color:rgba(255,255,255,0.9);text-decoration:none;cursor:pointer;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='transparent'">Actionable Recommendations</a>
+<div style="background:white;padding:80px 40px 40px 40px;text-align:center;border-bottom:1px solid #F3F4F6;">
+  <p style="font-size:1rem;color:#6B7280;max-width:700px;margin:0 auto 18px;line-height:1.8;">The Percepta GEO Score is a single 0–100 number that measures how often and how favorably your brand is cited in AI-generated responses — across ChatGPT, Gemini, and other major AI engines.</p>
+  <h1 style="font-size:3rem;font-weight:900;color:#111827;line-height:1.1;margin:0 0 40px;letter-spacing:-1.5px;">Your Brand's GEO Score</h1>
+</div>
+""", unsafe_allow_html=True)
+
+    _, hb1, hb2, _ = st.columns([1.5, 0.85, 0.85, 1.5])
+    with hb1:
+        if st.button("Get Your GEO Score  →", key="hero_primary", use_container_width=True):
+            st.session_state.nav = "GEO Hub"; st.rerun()
+    with hb2:
+        if st.button("See How It Works", key="hero_secondary", use_container_width=True):
+            st.session_state.nav = "GEO Hub"; st.rerun()
+
+    # PROCESS
+    st.markdown("""
+<div style="background:#F9F9FC;padding:80px 40px;border-top:1px solid #E5E7EB;">
+  <div style="text-align:center;margin-bottom:64px;">
+    <div class="section-tag">Process</div>
+    <h2 style="font-size:2.2rem;font-weight:900;color:#111827;margin:10px 0 14px;">How Percepta Works</h2>
+    <p style="font-size:0.97rem;color:#6B7280;margin:0 auto;line-height:1.75;">From brand input to actionable GEO insights — in four simple steps.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:40px;position:relative;">
+    <div style="position:absolute;top:22px;left:calc(25% + 20px);width:calc(75% - 40px);height:1px;background:#E5E7EB;z-index:0;"></div>
+    <div style="position:relative;z-index:1;">
+      <div style="font-size:3.2rem;font-weight:900;color:#EDE9FE;line-height:1;margin-bottom:24px;">01</div>
+      <div style="font-size:1rem;font-weight:800;color:#111827;margin-bottom:8px;">Enter Your Brand</div>
+      <div style="font-size:0.84rem;color:#6B7280;line-height:1.7;">Input your brand name, target keywords, and competitor list into the Percepta platform.</div>
+    </div>
+    <div style="position:relative;z-index:1;">
+      <div style="font-size:3.2rem;font-weight:900;color:#EDE9FE;line-height:1;margin-bottom:24px;">02</div>
+      <div style="font-size:1rem;font-weight:800;color:#111827;margin-bottom:8px;">AI Engine Scanning</div>
+      <div style="font-size:0.84rem;color:#6B7280;line-height:1.7;">Percepta queries major AI engines with hundreds of relevant prompts to analyze brand mentions and sentiment.</div>
+    </div>
+    <div style="position:relative;z-index:1;">
+      <div style="font-size:3.2rem;font-weight:900;color:#EDE9FE;line-height:1;margin-bottom:24px;">03</div>
+      <div style="font-size:1rem;font-weight:800;color:#111827;margin-bottom:8px;">Score Calculation</div>
+      <div style="font-size:0.84rem;color:#6B7280;line-height:1.7;">Our proprietary algorithm computes your GEO Score (0–100) based on visibility frequency, sentiment, and positioning.</div>
+    </div>
+    <div style="position:relative;z-index:1;">
+      <div style="font-size:3.2rem;font-weight:900;color:#EDE9FE;line-height:1;margin-bottom:24px;">04</div>
+      <div style="font-size:1rem;font-weight:800;color:#111827;margin-bottom:8px;">Actionable Insights</div>
+      <div style="font-size:0.84rem;color:#6B7280;line-height:1.7;">Receive detailed reports with specific recommendations on how to improve your brand's AI visibility.</div>
+    </div>
   </div>
 </div>
-<div style="background:#7C3AED;padding:0 40px 56px 40px;">
-</div>""", unsafe_allow_html=True)
 
-    h1, h2, h3 = st.columns([1.4, 1.2, 1.4])
-    with h2:
-        if st.button("🔍  Discover Your GEO Score Now", key="hero_cta", use_container_width=True):
-            st.session_state.nav = "GEO Hub"
-            st.rerun()
-
-    st.markdown("""
-
-
-
-<!-- WHY THIS MATTERS -->
-<div style="background:#F9F9FC;padding:80px 40px;border-top:1px solid #E5E7EB;">
-  <div style="text-align:center;margin-bottom:52px;">
-    <div class="section-tag">Why This Matters</div>
-    <h2 style="font-size:2.1rem;font-weight:800;color:#111827;margin:0 0 14px;line-height:1.2;">Introducing the Percepta GEO Score —<br>Your Brand's AI Visibility Number.</h2>
-    <p style="font-size:0.97rem;color:#6B7280;max-width:620px;margin:0 auto;line-height:1.75;">A single 0–100 number that tells you how visible and favorably your brand appears across AI-generated responses. Every point you gain cascades through your entire growth funnel.</p>
+<!-- THE GEO SCORE -->
+<div style="background:white;padding:80px 40px;border-top:1px solid #E5E7EB;">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-bottom:56px;">
+    <div>
+      <div style="font-size:0.72rem;font-weight:800;letter-spacing:.12em;color:#7C3AED;text-transform:uppercase;margin-bottom:14px;">The GEO Score</div>
+      <h2 style="font-size:2.6rem;font-weight:900;color:#111827;margin:0 0 20px;line-height:1.1;">One Number That<br>Changes Everything</h2>
+      <p style="font-size:0.95rem;color:#6B7280;line-height:1.8;margin:0;">Your GEO Score distills complex AI citation data into a single, actionable metric. Understand how frequently and positively your brand appears in AI-generated answers, and get clear next steps to improve.</p>
+    </div>
+    <div style="background:white;border-radius:20px;padding:44px 40px;box-shadow:0 8px 40px rgba(124,58,237,0.13);border:1px solid #F0EBFF;text-align:center;">
+      <div style="font-size:0.7rem;font-weight:700;letter-spacing:.14em;color:#9CA3AF;text-transform:uppercase;margin-bottom:18px;">GEO SCORE</div>
+      <div style="font-size:5.5rem;font-weight:900;color:#7C3AED;line-height:1;margin-bottom:20px;">78</div>
+      <div style="background:#F3F4F6;border-radius:50px;height:6px;width:100%;margin-bottom:10px;overflow:hidden;"><div style="background:#7C3AED;height:6px;border-radius:50px;width:78%;"></div></div>
+      <div style="font-size:0.82rem;color:#9CA3AF;margin-bottom:20px;">out of 100</div>
+      <span style="background:#EDE9FE;color:#7C3AED;border-radius:50px;padding:6px 22px;font-size:0.84rem;font-weight:700;">Good</span>
+    </div>
   </div>
-  <div style="display:grid;grid-template-columns:1fr 28px 1fr 28px 1fr 28px 1fr 28px 1fr 28px 1fr;gap:0;align-items:stretch;">
-    <div style="text-align:center;padding:24px 12px;border-radius:14px;background:#7C3AED;display:flex;flex-direction:column;">
-      <div style="font-size:0.86rem;font-weight:800;color:white;margin-bottom:8px;">GEO Score</div>
-      <div style="font-size:0.73rem;color:rgba(255,255,255,0.85);line-height:1.55;">Measures your brand's presence and strength in AI-generated responses</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;">
+    <div style="background:#ECFDF5;border-radius:16px;padding:28px 24px;text-align:center;">
+      <div style="font-size:0.84rem;font-weight:700;color:#065F46;margin-bottom:8px;">80–100</div>
+      <div style="font-size:1.4rem;font-weight:900;color:#065F46;margin-bottom:8px;">Excellent</div>
+      <div style="font-size:0.8rem;color:#065F46;opacity:0.8;">Well optimized for AI citation</div>
     </div>
-    <div style="display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:#7C3AED;font-weight:700;">→</div>
-    <div style="text-align:center;padding:24px 12px;border-radius:14px;background:#EDE9FE;display:flex;flex-direction:column;">
-      <div style="font-size:0.86rem;font-weight:800;color:#7C3AED;margin-bottom:8px;">Ranking</div>
-      <div style="font-size:0.73rem;color:#6B7280;line-height:1.55;">Higher scores improve your competitive position vs. peers</div>
+    <div style="background:#EFF6FF;border-radius:16px;padding:28px 24px;text-align:center;">
+      <div style="font-size:0.84rem;font-weight:700;color:#1E40AF;margin-bottom:8px;">70–79</div>
+      <div style="font-size:1.4rem;font-weight:900;color:#1E40AF;margin-bottom:8px;">Good</div>
+      <div style="font-size:0.8rem;color:#1E40AF;opacity:0.8;">Minor improvements recommended</div>
     </div>
-    <div style="display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:#7C3AED;font-weight:700;">→</div>
-    <div style="text-align:center;padding:24px 12px;border-radius:14px;background:#EDE9FE;display:flex;flex-direction:column;">
-      <div style="font-size:0.86rem;font-weight:800;color:#7C3AED;margin-bottom:8px;">Visibility</div>
-      <div style="font-size:0.73rem;color:#6B7280;line-height:1.55;">Greater visibility means your brand appears more often in AI answers</div>
+    <div style="background:#FFFBEB;border-radius:16px;padding:28px 24px;text-align:center;">
+      <div style="font-size:0.84rem;font-weight:700;color:#92400E;margin-bottom:8px;">45–69</div>
+      <div style="font-size:1.4rem;font-weight:900;color:#92400E;margin-bottom:8px;">Needs Work</div>
+      <div style="font-size:0.8rem;color:#92400E;opacity:0.8;">Several issues to address</div>
     </div>
-    <div style="display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:#7C3AED;font-weight:700;">→</div>
-    <div style="text-align:center;padding:24px 12px;border-radius:14px;background:#EDE9FE;display:flex;flex-direction:column;">
-      <div style="font-size:0.86rem;font-weight:800;color:#7C3AED;margin-bottom:8px;">Traffic</div>
-      <div style="font-size:0.73rem;color:#6B7280;line-height:1.55;">Increased visibility drives more clicks and site visits</div>
-    </div>
-    <div style="display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:#7C3AED;font-weight:700;">→</div>
-    <div style="text-align:center;padding:24px 12px;border-radius:14px;background:#EDE9FE;display:flex;flex-direction:column;">
-      <div style="font-size:0.86rem;font-weight:800;color:#7C3AED;margin-bottom:8px;">Conversion</div>
-      <div style="font-size:0.73rem;color:#6B7280;line-height:1.55;">More qualified traffic leads to higher engagement and actions</div>
-    </div>
-    <div style="display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:#7C3AED;font-weight:700;">→</div>
-    <div style="text-align:center;padding:24px 12px;border-radius:14px;background:#7C3AED;display:flex;flex-direction:column;">
-      <div style="font-size:0.86rem;font-weight:800;color:white;margin-bottom:8px;">Revenue</div>
-      <div style="font-size:0.73rem;color:rgba(255,255,255,0.85);line-height:1.55;">Higher conversions translate into measurable business growth</div>
+    <div style="background:#FFF1F2;border-radius:16px;padding:28px 24px;text-align:center;">
+      <div style="font-size:0.84rem;font-weight:700;color:#991B1B;margin-bottom:8px;">0–44</div>
+      <div style="font-size:1.4rem;font-weight:900;color:#991B1B;margin-bottom:8px;">Poor</div>
+      <div style="font-size:0.8rem;color:#991B1B;opacity:0.8;">Major optimization needed</div>
     </div>
   </div>
 </div>
 
 <!-- WHAT YOU GAIN -->
-<div style="background:white;padding:80px 40px;border-top:1px solid #E5E7EB;">
+<div style="background:#F9F9FC;padding:80px 40px;border-top:1px solid #E5E7EB;">
   <div style="text-align:center;margin-bottom:52px;">
     <div class="section-tag">What You Gain</div>
-    <h2 style="font-size:2.1rem;font-weight:800;color:#111827;margin:0 0 14px;line-height:1.2;">Others Give You Data.<br>We Give You a Solution.</h2>
+    <h2 style="font-size:2.2rem;font-weight:900;color:#111827;margin:10px 0 14px;line-height:1.2;">Others Give You Data.<br>We Give You a Solution.</h2>
     <p style="font-size:0.97rem;color:#6B7280;max-width:620px;margin:0 auto;line-height:1.75;">Every other GEO tool stops at the dashboard. Percepta combines measurement, strategy, and execution in one place.</p>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;">
-    <div style="border:1px solid #E5E7EB;border-radius:16px;padding:36px 32px;background:#FAFAFA;">
-      <div style="font-size:0.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9CA3AF;margin-bottom:18px;">Competitors</div>
-      <div style="display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:#9CA3AF;margin-bottom:14px;"><span style="color:#D1D5DB;font-weight:700;font-size:1rem;flex-shrink:0;">–</span> Fragmented metrics with no clear direction</div>
-      <div style="display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:#9CA3AF;margin-bottom:14px;"><span style="color:#D1D5DB;font-weight:700;font-size:1rem;flex-shrink:0;">–</span> Surface-level visibility tracking</div>
-      <div style="display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:#9CA3AF;"><span style="color:#D1D5DB;font-weight:700;font-size:1rem;flex-shrink:0;">–</span> Dashboards that stop at "what," not "what next"</div>
+    <div style="border:1px solid #E5E7EB;border-radius:16px;padding:36px 32px;background:white;">
+      <div style="font-size:0.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9CA3AF;margin-bottom:20px;">Competitors</div>
+      <div style="display:flex;align-items:flex-start;gap:14px;font-size:0.88rem;color:#9CA3AF;margin-bottom:16px;"><span style="font-weight:700;font-size:1rem;flex-shrink:0;">–</span><span>Fragmented metrics with no clear direction</span></div>
+      <div style="display:flex;align-items:flex-start;gap:14px;font-size:0.88rem;color:#9CA3AF;margin-bottom:16px;"><span style="font-weight:700;font-size:1rem;flex-shrink:0;">–</span><span>Surface-level visibility tracking</span></div>
+      <div style="display:flex;align-items:flex-start;gap:14px;font-size:0.88rem;color:#9CA3AF;"><span style="font-weight:700;font-size:1rem;flex-shrink:0;">–</span><span>Dashboards that stop at "what," not "what next"</span></div>
     </div>
     <div style="border:2px solid #7C3AED;border-radius:16px;padding:36px 32px;background:white;position:relative;">
-      <div style="position:absolute;top:-13px;left:28px;background:#7C3AED;color:white;border-radius:50px;padding:4px 16px;font-size:0.72rem;font-weight:700;">Percepta by Accenture</div>
-      <div style="font-size:0.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#7C3AED;margin-bottom:18px;margin-top:6px;">Your All-in-One GEO Solution</div>
-      <div style="display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:#374151;margin-bottom:14px;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;flex-shrink:0;">+</span> Unified GEO Score (0–100) to track performance</div>
-      <div style="display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:#374151;margin-bottom:14px;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;flex-shrink:0;">+</span> Competitive benchmarking across key players</div>
-      <div style="display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:#374151;margin-bottom:14px;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;flex-shrink:0;">+</span> Clear attribution of where and why you appear</div>
-      <div style="display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:#374151;margin-bottom:14px;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;flex-shrink:0;">+</span> Pinpoint what's limiting your visibility</div>
-      <div style="display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:#374151;margin-bottom:14px;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;flex-shrink:0;">+</span> Actionable recommendations tied to execution</div>
-      <div style="display:flex;align-items:flex-start;gap:12px;font-size:0.88rem;color:#374151;font-weight:700;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;flex-shrink:0;">+</span> Accenture team to implement and drive results</div>
+      <div style="position:absolute;top:-14px;left:24px;background:#7C3AED;color:white;border-radius:50px;padding:5px 18px;font-size:0.72rem;font-weight:700;">Percepta by Accenture</div>
+      <div style="font-size:0.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#7C3AED;margin-bottom:20px;margin-top:6px;">Your All-in-One GEO Solution</div>
+      <div style="display:flex;align-items:flex-start;gap:14px;font-size:0.88rem;color:#374151;margin-bottom:16px;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;flex-shrink:0;">+</span><span>Unified GEO Score (0–100) to track performance</span></div>
+      <div style="display:flex;align-items:flex-start;gap:14px;font-size:0.88rem;color:#374151;margin-bottom:16px;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;flex-shrink:0;">+</span><span>Competitive benchmarking across key players</span></div>
+      <div style="display:flex;align-items:flex-start;gap:14px;font-size:0.88rem;color:#374151;margin-bottom:16px;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;flex-shrink:0;">+</span><span>Clear attribution of where and why you appear</span></div>
+      <div style="display:flex;align-items:flex-start;gap:14px;font-size:0.88rem;color:#374151;margin-bottom:16px;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;flex-shrink:0;">+</span><span>Pinpoint what's limiting your visibility</span></div>
+      <div style="display:flex;align-items:flex-start;gap:14px;font-size:0.88rem;color:#374151;margin-bottom:16px;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;flex-shrink:0;">+</span><span>Actionable recommendations tied to execution</span></div>
+      <div style="display:flex;align-items:flex-start;gap:14px;font-size:0.88rem;color:#374151;font-weight:700;"><span style="color:#7C3AED;font-weight:700;font-size:1rem;flex-shrink:0;">+</span><span>Accenture team to implement and drive results</span></div>
     </div>
   </div>
 </div>
 
-<!-- CTA -->
-<div style="background:#F9F9FC;padding:88px 40px;border-top:1px solid #E5E7EB;text-align:center;">
-  <div style="max-width:620px;margin:0 auto;">
-    <div class="section-tag">Get Started</div>
-    <h2 style="font-size:2.1rem;font-weight:800;color:#111827;margin:0 0 14px;line-height:1.2;">Ready to See Your Score?</h2>
-    <p style="font-size:0.97rem;color:#6B7280;line-height:1.75;margin-bottom:32px;">Enter your brand URL and get a complete live GEO analysis in minutes. No setup required.</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:8px;">
-      <a href="javascript:void(0)" onclick="window.parent.postMessage({type:'streamlit:setComponentValue', value:'GEO Hub'}, '*')" style="text-decoration:none;">
-        <div style="padding:28px 20px;border:1.5px solid #E5E7EB;border-radius:14px;background:white;cursor:pointer;transition:border-color .2s;" onmouseover="this.style.borderColor='#7C3AED'" onmouseout="this.style.borderColor='#E5E7EB'">
-          <div style="font-size:1.4rem;margin-bottom:10px;">📊</div>
-          <div style="font-size:0.88rem;font-weight:700;color:#111827;margin-bottom:4px;">Live GEO Scoring</div>
-          <div style="font-size:0.78rem;color:#6B7280;line-height:1.5;">Real-time AI visibility scores across 20 industry queries</div>
-        </div>
-      </a>
-      <a href="javascript:void(0)" onclick="window.parent.postMessage({type:'streamlit:setComponentValue', value:'GEO Hub'}, '*')" style="text-decoration:none;">
-        <div style="padding:28px 20px;border:1.5px solid #E5E7EB;border-radius:14px;background:white;cursor:pointer;transition:border-color .2s;" onmouseover="this.style.borderColor='#7C3AED'" onmouseout="this.style.borderColor='#E5E7EB'">
-          <div style="font-size:1.4rem;margin-bottom:10px;">🏆</div>
-          <div style="font-size:0.88rem;font-weight:700;color:#111827;margin-bottom:4px;">Competitor Benchmarking</div>
-          <div style="font-size:0.78rem;color:#6B7280;line-height:1.5;">See how your brand stacks up against 10+ competitors</div>
-        </div>
-      </a>
-      <a href="javascript:void(0)" onclick="window.parent.postMessage({type:'streamlit:setComponentValue', value:'GEO Hub'}, '*')" style="text-decoration:none;">
-        <div style="padding:28px 20px;border:1.5px solid #E5E7EB;border-radius:14px;background:white;cursor:pointer;transition:border-color .2s;" onmouseover="this.style.borderColor='#7C3AED'" onmouseout="this.style.borderColor='#E5E7EB'">
-          <div style="font-size:1.4rem;margin-bottom:10px;">🎯</div>
-          <div style="font-size:0.88rem;font-weight:700;color:#111827;margin-bottom:4px;">Actionable Recommendations</div>
-          <div style="font-size:0.78rem;color:#6B7280;line-height:1.5;">Prioritized actions tied to Accenture workstream deliverables</div>
-        </div>
-      </a>
-    </div>
+<!-- FINAL CTA -->
+<div style="background:linear-gradient(135deg,#F5F3FF 0%,#EDE9FE 60%,#F5F3FF 100%);padding:80px 40px;border-top:1px solid #E5E7EB;">
+  <div style="max-width:680px;margin:0 auto;border:1.5px solid #DDD6FE;border-radius:24px;padding:72px 56px;background:rgba(255,255,255,0.55);text-align:center;">
+    <h2 style="font-size:2.5rem;font-weight:900;color:#111827;margin:0 0 4px;line-height:1.2;">Ready to Discover Your</h2>
+    <h2 style="font-size:2.5rem;font-weight:900;color:#7C3AED;margin:0 0 24px;line-height:1.2;">AI Visibility Score?</h2>
+    <p style="font-size:0.97rem;color:#6B7280;line-height:1.8;margin:0;">Join forward-thinking brands that are optimizing for the new era of generative search. Get your Percepta GEO Score today — backed by Accenture.</p>
   </div>
 </div>
 """, unsafe_allow_html=True)
 
-    c1, c2, c3 = st.columns([1.4, 1.2, 1.4])
-    with c2:
-        if st.button("🔍  Discover Your GEO Score Now", use_container_width=True):
-            st.session_state.nav = "GEO Hub"
-            st.rerun()
+    _, fc2, _ = st.columns([2, 1, 2])
+    with fc2:
+        if st.button("Launch Percepta  →", key="final_cta", use_container_width=True):
+            st.session_state.nav = "GEO Hub"; st.rerun()
 
 # ════════════════════════════════════════════════════════════
 # PAGE 2: GEO HUB
@@ -530,7 +528,7 @@ elif nav=="GEO Hub":
             st.markdown(f'<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;"><div style="background:white;border-radius:10px;border:1px solid #E5E7EB;padding:20px;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Citation Score</div><div style="font-size:2rem;font-weight:800;color:#7C3AED;">{cit}</div><div style="font-size:0.78rem;color:#6B7280;margin-top:3px;">How authoritatively your brand was cited</div></div><div style="background:white;border-radius:10px;border:1px solid #E5E7EB;padding:20px;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Share of Voice</div><div style="font-size:2rem;font-weight:800;color:#7C3AED;">{sov}</div><div style="font-size:0.78rem;color:#6B7280;margin-top:3px;">Your brand mentions as % of all mentions</div></div></div>',unsafe_allow_html=True)
             citation_sources=result.get("citation_sources",[])
             if citation_sources:
-                st.markdown('<div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px;"><div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Sources AI is Pulling From</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Domains influencing AI knowledge about this brand. Expand each to see which pages are most cited.</div>',unsafe_allow_html=True)
+                st.markdown('<div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px;"><div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Sources AI is Pulling From</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Domains influencing AI knowledge about this brand.</div>',unsafe_allow_html=True)
                 for s in citation_sources:
                     d=s.get("domain",""); cat_label,cat_color,cat_bg=classify_domain(d)
                     share=s.get("citation_share",0); top_pages=s.get("top_pages",[])
