@@ -1,7 +1,6 @@
 # pip install openai streamlit pandas plotly requests beautifulsoup4
 
 import streamlit as st
-import streamlit.components.v1 as components
 import plotly.graph_objects as go
 import requests
 from bs4 import BeautifulSoup
@@ -349,9 +348,9 @@ if nav=="Overview":
     </div>
     <div style="background:white;border-radius:20px;padding:44px 40px;box-shadow:0 8px 40px rgba(124,58,237,0.13);border:1px solid #F0EBFF;text-align:center;">
       <div style="font-size:0.7rem;font-weight:700;letter-spacing:.14em;color:#9CA3AF;text-transform:uppercase;margin-bottom:18px;">GEO SCORE</div>
-      <div id="geo-num" style="font-size:5.5rem;font-weight:900;color:#7C3AED;line-height:1;margin-bottom:20px;">0</div>
+      <div style="font-size:5.5rem;font-weight:900;color:#7C3AED;line-height:1;margin-bottom:20px;">78</div>
       <div style="background:#F3F4F6;border-radius:50px;height:6px;width:100%;margin-bottom:10px;overflow:hidden;">
-        <div id="geo-bar" style="background:#7C3AED;height:6px;border-radius:50px;width:0%;transition:width 0.05s linear;"></div>
+        <div style="background:#7C3AED;height:6px;border-radius:50px;width:78%;"></div>
       </div>
       <div style="font-size:0.82rem;color:#9CA3AF;margin-bottom:20px;">out of 100</div>
       <span style="background:#EDE9FE;color:#7C3AED;border-radius:50px;padding:6px 22px;font-size:0.84rem;font-weight:700;">Good</span>
@@ -419,58 +418,7 @@ if nav=="Overview":
 </div>
 """, unsafe_allow_html=True)
 
-    # ── ANIMATED GEO SCORE ── injected via components.html so JS executes
-    components.html("""
-<script>
-(function() {
-  var target = 78;
-  var duration = 1800;
-  var started = false;
 
-  function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
-
-  function animateScore() {
-    var el = window.parent.document.getElementById('geo-num');
-    var bar = window.parent.document.getElementById('geo-bar');
-    if (!el || !bar) return;
-    var start = null;
-    function step(ts) {
-      if (!start) start = ts;
-      var progress = Math.min((ts - start) / duration, 1);
-      var eased = easeOutCubic(progress);
-      var cur = Math.round(eased * target);
-      el.textContent = cur;
-      bar.style.width = (eased * target) + '%';
-      if (progress < 1) { window.parent.requestAnimationFrame(step); }
-      else { el.textContent = target; bar.style.width = target + '%'; }
-    }
-    window.parent.requestAnimationFrame(step);
-  }
-
-  function checkVisible() {
-    var el = window.parent.document.getElementById('geo-num');
-    if (!el) return false;
-    var rect = el.getBoundingClientRect();
-    return rect.top < window.parent.innerHeight - 50;
-  }
-
-  function tryStart() {
-    if (started) return;
-    if (checkVisible()) {
-      started = true;
-      animateScore();
-    }
-  }
-
-  // Check immediately and on parent scroll
-  setTimeout(tryStart, 500);
-  window.parent.addEventListener('scroll', function onScroll() {
-    if (started) { window.parent.removeEventListener('scroll', onScroll); return; }
-    tryStart();
-  });
-})();
-</script>
-""", height=0)
 
 # ════════════════════════════════════════════════════════════
 # PAGE 2: GEO HUB
