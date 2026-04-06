@@ -357,71 +357,50 @@ elif nav=="GEO Hub":
         # ── SCORE BAND CARDS ────────────────────────────────────
         st.markdown(score_band_cards(), unsafe_allow_html=True)
 
-        # ── INPUT CARD: matches Image 2 layout ─────────────────
-        st.markdown("""
-        <style>
-        /* Outer wrapper to give background + padding */
-        .geo-input-outer {
-            background: #F3F4F6;
-            padding: 28px 24px 40px 24px;
+        # ── INPUT CARD CSS ──────────────────────────────────────
+        st.markdown("""<style>
+        /* Force white card on the border container */
+        div[data-testid="stVerticalBlockBorderWrapper"]{
+            background:white!important;
+            border-radius:16px!important;
+            border:1px solid #E5E7EB!important;
+            box-shadow:0 2px 16px rgba(0,0,0,0.07)!important;
+            padding:28px 28px 24px!important;
+            margin:24px 24px 32px!important;
         }
-        /* The white card */
-        div[data-testid="stVerticalBlockBorderWrapper"] {
-            background: white !important;
-            border-radius: 16px !important;
-            border: 1px solid #E5E7EB !important;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06) !important;
-            padding: 28px 28px 24px 28px !important;
-            margin: 0 24px 32px 24px !important;
+        /* Input inside the card */
+        div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stTextInput"] input{
+            border-radius:10px!important;
+            border:1.5px solid #E5E7EB!important;
+            height:54px!important;
+            font-size:0.95rem!important;
+            background:white!important;
         }
-        /* Brand URL label inside the card */
-        div[data-testid="stVerticalBlockBorderWrapper"] .brand-url-label {
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            color: #9CA3AF;
-            text-transform: uppercase;
-            margin-bottom: 14px;
+        div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stTextInput"] input:focus{
+            border-color:#7C3AED!important;
+            box-shadow:0 0 0 3px rgba(124,58,237,0.1)!important;
         }
-        /* Input inside card */
-        div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stTextInput"] input {
-            border-radius: 10px !important;
-            border: 1.5px solid #E5E7EB !important;
-            height: 54px !important;
-            font-size: 0.95rem !important;
-            background: white !important;
-            color: #374151 !important;
+        /* Run button: solid purple pill */
+        div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stButton"]>button{
+            background:#7C3AED!important;
+            color:white!important;
+            border:none!important;
+            border-radius:12px!important;
+            font-weight:700!important;
+            font-size:0.92rem!important;
+            height:54px!important;
+            width:100%!important;
+            box-shadow:0 4px 14px rgba(124,58,237,0.4)!important;
+            padding:0 16px!important;
         }
-        div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stTextInput"] input:focus {
-            border-color: #7C3AED !important;
-            box-shadow: 0 0 0 3px rgba(124,58,237,0.1) !important;
+        div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stButton"]>button:hover{
+            background:#6D28D9!important;
         }
-        /* Run button inside card: purple pill */
-        div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stButton"] > button {
-            background: #7C3AED !important;
-            color: white !important;
-            border: none !important;
-            border-radius: 12px !important;
-            font-weight: 700 !important;
-            font-size: 0.95rem !important;
-            height: 54px !important;
-            width: 100% !important;
-            box-shadow: 0 4px 16px rgba(124,58,237,0.4) !important;
-            padding: 0 20px !important;
-            transition: background 0.2s !important;
-        }
-        div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stButton"] > button:hover {
-            background: #6D28D9 !important;
-        }
-        </style>
-        """, unsafe_allow_html=True)
+        </style>""", unsafe_allow_html=True)
 
-        st.markdown("<div class='geo-input-outer'>", unsafe_allow_html=True)
-
+        # ── INPUT CARD ──────────────────────────────────────────
         with st.container(border=True):
-            st.markdown("""
-            <div class="brand-url-label">Brand URL</div>
-            """, unsafe_allow_html=True)
+            st.markdown('<p style="font-size:0.72rem;font-weight:700;letter-spacing:0.12em;color:#9CA3AF;text-transform:uppercase;margin:0 0 14px 0;">Brand URL</p>', unsafe_allow_html=True)
             col_i, col_b = st.columns([3.5, 1])
             with col_i:
                 brand_url = st.text_input(
@@ -432,8 +411,6 @@ elif nav=="GEO Hub":
                 )
             with col_b:
                 run = st.button("🔍  Run Live AI Analysis", use_container_width=True)
-
-        st.markdown("</div>", unsafe_allow_html=True)
 
         if run:
             if not brand_url.strip() or not brand_url.startswith("http"):
