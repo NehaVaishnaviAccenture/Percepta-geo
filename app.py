@@ -428,7 +428,6 @@ elif nav=="GEO Hub":
     has_result = st.session_state.geo_result is not None
 
     if not has_result:
-        # Score band cards
         st.markdown("""
         <div style="background:#F9F9FC;padding:40px 40px 0 40px;">
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;margin-bottom:40px;">
@@ -456,7 +455,6 @@ elif nav=="GEO Hub":
         </div>
         """, unsafe_allow_html=True)
 
-        # URL input card
         st.markdown("""
         <div style="background:#F9F9FC;padding:0 40px 48px 40px;">
           <div style="background:white;border-radius:16px;border:1px solid #E5E7EB;padding:32px 36px;">
@@ -493,179 +491,203 @@ elif nav=="GEO Hub":
                             st.error(f"Analysis failed: {e}")
 
     else:
-        tabs = st.tabs(["GEO Score","Competitors","Visibility","Sentiment","Citations","Prompts","Recommendations","Live Prompt"])
-        if has_result:
-        result=st.session_state.geo_result; page_data=st.session_state.geo_page_data; brand_url_=st.session_state.geo_url
-            geo=result.get("overall_geo_score",0); brand=result.get("brand_name",page_data["domain"]); brand_domain=page_data.get("domain","")
-            label,badge_color,badge_bg=score_badge(geo)
-            vis=result.get("context",0); cit=result.get("reliability",0); sent=result.get("exclusivity",0); prom=result.get("organization",0); sov=result.get("share_of_voice",0)
-            avg_rank="N/A" if vis==0 else result.get("avg_rank","N/A")
-            responses_detail=result.get("responses_detail",[])
-            gauge_col,info_col=st.columns([1,2])
-            with gauge_col:
-                fig_g=go.Figure(go.Indicator(mode="gauge+number",value=geo,number={'font':{'size':52,'color':'#7C3AED'}},domain={'x':[0,1],'y':[0,1]},title={'text':brand,'font':{'size':14,'color':'#374151'}},gauge={'axis':{'range':[0,100],'tickcolor':"#9CA3AF"},'bar':{'color':"#7C3AED"},'bgcolor':"white",'steps':[{'range':[0,44],'color':'#FEE2E2'},{'range':[44,69],'color':'#FEF3C7'},{'range':[69,80],'color':'#DBEAFE'},{'range':[80,100],'color':'#D1FAE5'}],'threshold':{'line':{'color':"#7C3AED",'width':4},'thickness':0.75,'value':geo}}))
-                fig_g.update_layout(height=280,margin=dict(l=20,r=20,t=40,b=10),paper_bgcolor='white')
-                st.plotly_chart(fig_g,use_container_width=True)
-            with info_col:
-                detail_parts=[]
-                if cit<40: detail_parts.append(f"Citation ({cit}): brand appears in lists but rarely as top pick")
-                if prom<40: detail_parts.append(f"Prominence ({prom}): typically mentioned mid-list")
-                if sov<20: detail_parts.append(f"Share of Voice ({sov}): competitors dominating AI conversation")
-                if sent<50: detail_parts.append(f"Sentiment ({sent}): AI responses lack strong positive endorsement")
-                score_txt=(f"GEO Score of {geo} reflects {vis}% Visibility but is held back by: "+"; ".join(detail_parts)+"." if detail_parts else f"Strong performance: Visibility {vis}%, Citation {cit}, Sentiment {sent}, Prominence {prom}, SoV {sov}.")
-                st.markdown(f'<div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px 28px;"><div style="font-size:1.2rem;font-weight:800;color:#111827;margin-bottom:4px;">{brand}</div><a href="{brand_url_}" target="_blank" style="color:#7C3AED;font-size:0.82rem;">{brand_url_[:70]}{"..." if len(brand_url_)>70 else ""}</a><div style="margin:12px 0;"><span style="background:{badge_bg};color:{badge_color};padding:4px 14px;border-radius:50px;font-size:0.78rem;font-weight:700;">{label}</span></div><div style="font-size:0.82rem;color:#6B7280;line-height:1.6;border-top:1px solid #F3F4F6;padding-top:12px;">{score_txt}</div></div>',unsafe_allow_html=True)
-            st.markdown("<br>",unsafe_allow_html=True)
-            tooltip_defs={"Visibility Score":"How many of 20 generic AI queries mentioned your brand.","Citation Score":"How authoritatively your brand was cited. Top recommendation = 65 to 85.","Sentiment Score":"Tone of AI responses when your brand appeared. Praised = 75 to 100.","Avg. Rank":"Average position your brand appeared. #1 = mentioned first."}
-            mc1,mc2,mc3,mc4=st.columns(4)
-            for col,val,lbl,sub in [(mc1,vis,"Visibility Score","AI response presence"),(mc2,cit,"Citation Score","Source authority"),(mc3,sent,"Sentiment Score","Brand perception"),(mc4,avg_rank,"Avg. Rank","AI mention position")]:
-                tip=tooltip_defs.get(lbl,"")
-                with col:
-                    st.markdown(f'<div style="background:white;border-radius:10px;padding:18px 16px;border:1px solid #E5E7EB;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">{lbl}<span class="metric-tooltip"><span class="tooltip-icon">?</span><span class="tooltip-text">{tip}</span></span></div><div style="font-size:1.8rem;font-weight:800;color:#7C3AED;line-height:1;">{val}</div><div style="font-size:0.75rem;color:#9CA3AF;margin-top:3px;">{sub}</div></div>',unsafe_allow_html=True)
-        st.markdown("</div>",unsafe_allow_html=True)
+        result = st.session_state.geo_result
+        page_data = st.session_state.geo_page_data
+        brand_url_ = st.session_state.geo_url
+        geo = result.get("overall_geo_score", 0)
+        brand = result.get("brand_name", page_data["domain"])
+        brand_domain = page_data.get("domain", "")
+        label, badge_color, badge_bg = score_badge(geo)
+        vis = result.get("context", 0)
+        cit = result.get("reliability", 0)
+        sent = result.get("exclusivity", 0)
+        prom = result.get("organization", 0)
+        sov = result.get("share_of_voice", 0)
+        avg_rank = "N/A" if vis == 0 else result.get("avg_rank", "N/A")
+        responses_detail = result.get("responses_detail", [])
 
-    if has_result:
-        result=st.session_state.geo_result; page_data=st.session_state.geo_page_data; brand_url_=st.session_state.geo_url
-        geo=result.get("overall_geo_score",0); brand=result.get("brand_name",page_data["domain"]); brand_domain=page_data.get("domain","")
-        label,badge_color,badge_bg=score_badge(geo)
-        vis=result.get("context",0); cit=result.get("reliability",0); sent=result.get("exclusivity",0); prom=result.get("organization",0); sov=result.get("share_of_voice",0)
-        avg_rank="N/A" if vis==0 else result.get("avg_rank","N/A")
-        responses_detail=result.get("responses_detail",[])
+        tabs = st.tabs(["GEO Score","Competitors","Visibility","Sentiment","Citations","Prompts","Recommendations","Live Prompt"])
 
         with tabs[0]:
-            st.markdown("<div style='padding:32px 40px;max-width:900px;margin:0 auto;'>",unsafe_allow_html=True)
-            gauge_col,info_col=st.columns([1,2])
-            st.markdown("<div style='padding:24px 40px;max-width:1000px;margin:0 auto;'>",unsafe_allow_html=True)
-            domain_lower2=page_data["domain"].lower()
-            fin_kws2=["capital","chase","amex","citi","discover","bank","credit","card","finance","fargo"]
-            auto_kws2=["vw","volkswagen","toyota","ford","honda","bmw","tesla","auto","car","motor"]
+            st.markdown("<div style='padding:32px 40px;max-width:1000px;margin:0 auto;'>", unsafe_allow_html=True)
+            gauge_col, info_col = st.columns([1, 2])
+            with gauge_col:
+                fig_g = go.Figure(go.Indicator(mode="gauge+number", value=geo,
+                    number={'font':{'size':52,'color':'#7C3AED'}},
+                    domain={'x':[0,1],'y':[0,1]},
+                    title={'text':brand,'font':{'size':14,'color':'#374151'}},
+                    gauge={'axis':{'range':[0,100],'tickcolor':"#9CA3AF"},
+                           'bar':{'color':"#7C3AED"},'bgcolor':"white",
+                           'steps':[{'range':[0,44],'color':'#FEE2E2'},{'range':[44,69],'color':'#FEF3C7'},{'range':[69,80],'color':'#DBEAFE'},{'range':[80,100],'color':'#D1FAE5'}],
+                           'threshold':{'line':{'color':"#7C3AED",'width':4},'thickness':0.75,'value':geo}}))
+                fig_g.update_layout(height=280, margin=dict(l=20,r=20,t=40,b=10), paper_bgcolor='white')
+                st.plotly_chart(fig_g, use_container_width=True)
+            with info_col:
+                detail_parts = []
+                if cit < 40: detail_parts.append(f"Citation ({cit}): brand appears in lists but rarely as top pick")
+                if prom < 40: detail_parts.append(f"Prominence ({prom}): typically mentioned mid-list")
+                if sov < 20: detail_parts.append(f"Share of Voice ({sov}): competitors dominating AI conversation")
+                if sent < 50: detail_parts.append(f"Sentiment ({sent}): AI responses lack strong positive endorsement")
+                score_txt = (f"GEO Score of {geo} reflects {vis}% Visibility but is held back by: " + "; ".join(detail_parts) + "." if detail_parts else f"Strong performance: Visibility {vis}%, Citation {cit}, Sentiment {sent}, Prominence {prom}, SoV {sov}.")
+                st.markdown(f'<div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px 28px;"><div style="font-size:1.2rem;font-weight:800;color:#111827;margin-bottom:4px;">{brand}</div><a href="{brand_url_}" target="_blank" style="color:#7C3AED;font-size:0.82rem;">{brand_url_[:70]}{"..." if len(brand_url_)>70 else ""}</a><div style="margin:12px 0;"><span style="background:{badge_bg};color:{badge_color};padding:4px 14px;border-radius:50px;font-size:0.78rem;font-weight:700;">{label}</span></div><div style="font-size:0.82rem;color:#6B7280;line-height:1.6;border-top:1px solid #F3F4F6;padding-top:12px;">{score_txt}</div></div>', unsafe_allow_html=True)
+
+            st.markdown("<br>", unsafe_allow_html=True)
+            tooltip_defs = {"Visibility Score":"How many of 20 generic AI queries mentioned your brand.","Citation Score":"How authoritatively your brand was cited. Top recommendation = 65 to 85.","Sentiment Score":"Tone of AI responses when your brand appeared. Praised = 75 to 100.","Avg. Rank":"Average position your brand appeared. #1 = mentioned first."}
+            mc1, mc2, mc3, mc4 = st.columns(4)
+            for col, val, lbl, sub in [(mc1,vis,"Visibility Score","AI response presence"),(mc2,cit,"Citation Score","Source authority"),(mc3,sent,"Sentiment Score","Brand perception"),(mc4,avg_rank,"Avg. Rank","AI mention position")]:
+                tip = tooltip_defs.get(lbl, "")
+                with col:
+                    st.markdown(f'<div style="background:white;border-radius:10px;padding:18px 16px;border:1px solid #E5E7EB;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">{lbl}<span class="metric-tooltip"><span class="tooltip-icon">?</span><span class="tooltip-text">{tip}</span></span></div><div style="font-size:1.8rem;font-weight:800;color:#7C3AED;line-height:1;">{val}</div><div style="font-size:0.75rem;color:#9CA3AF;margin-top:3px;">{sub}</div></div>', unsafe_allow_html=True)
+
+            # Competitor table inside GEO Score tab
+            st.markdown("<div style='padding:24px 0;'>", unsafe_allow_html=True)
+            domain_lower2 = page_data["domain"].lower()
+            fin_kws2 = ["capital","chase","amex","citi","discover","bank","credit","card","finance","fargo"]
+            auto_kws2 = ["vw","volkswagen","toyota","ford","honda","bmw","tesla","auto","car","motor"]
             if any(x in domain_lower2 for x in fin_kws2):
-                top10_title="Financial Services"; competitor_brands=["Chase","American Express","Capital One","Citi","Discover","Wells Fargo","Bank of America","Synchrony","Barclays","USAA"]
-                comp_urls={"Chase":"chase.com","American Express":"americanexpress.com","Capital One":"capitalone.com","Citi":"citi.com","Discover":"discover.com","Wells Fargo":"wellsfargo.com","Bank of America":"bankofamerica.com","Synchrony":"synchrony.com","Barclays":"barclays.com","USAA":"usaa.com"}
+                top10_title = "Financial Services"
+                competitor_brands = ["Chase","American Express","Capital One","Citi","Discover","Wells Fargo","Bank of America","Synchrony","Barclays","USAA"]
+                comp_urls = {"Chase":"chase.com","American Express":"americanexpress.com","Capital One":"capitalone.com","Citi":"citi.com","Discover":"discover.com","Wells Fargo":"wellsfargo.com","Bank of America":"bankofamerica.com","Synchrony":"synchrony.com","Barclays":"barclays.com","USAA":"usaa.com"}
             elif any(x in domain_lower2 for x in auto_kws2):
-                top10_title="Automotive"; competitor_brands=["Tesla","Toyota","BMW","Honda","Ford","Mercedes","Hyundai","Kia","Nissan","Volkswagen"]
-                comp_urls={"Tesla":"tesla.com","Toyota":"toyota.com","BMW":"bmw.com","Honda":"honda.com","Ford":"ford.com","Mercedes":"mercedes-benz.com","Hyundai":"hyundai.com","Kia":"kia.com","Nissan":"nissanusa.com","Volkswagen":"vw.com"}
+                top10_title = "Automotive"
+                competitor_brands = ["Tesla","Toyota","BMW","Honda","Ford","Mercedes","Hyundai","Kia","Nissan","Volkswagen"]
+                comp_urls = {"Tesla":"tesla.com","Toyota":"toyota.com","BMW":"bmw.com","Honda":"honda.com","Ford":"ford.com","Mercedes":"mercedes-benz.com","Hyundai":"hyundai.com","Kia":"kia.com","Nissan":"nissanusa.com","Volkswagen":"vw.com"}
             else:
-                top10_title="General"; competitor_brands=[]; comp_urls={}
-            top10=[{"Brand":brand,"URL":brand_domain,"GEO":geo,"Vis":vis,"Cit":cit,"Sen":sent,"Sov":sov,"Rank":avg_rank}]
+                top10_title = "General"; competitor_brands = []; comp_urls = {}
+            top10 = [{"Brand":brand,"URL":brand_domain,"GEO":geo,"Vis":vis,"Cit":cit,"Sen":sent,"Sov":sov,"Rank":avg_rank}]
             for comp in competitor_brands:
-                if comp.lower()!=brand.lower():
-                    scored=score_competitor_from_responses(comp,responses_detail); scored["URL"]=comp_urls.get(comp,comp.lower().replace(" ","+")+".com"); top10.append(scored)
-            top10_sorted=sorted(top10,key=lambda x:x["GEO"],reverse=True)
-            t10_rows=""
-            for idx,c in enumerate(top10_sorted,1):
-                is_you=c["Brand"].lower()==brand.lower(); bg_r="#F5F3FF" if is_you else ("white" if idx%2==1 else "#FAFAFA"); bdr="border-left:3px solid #7C3AED;" if is_you else ""; fw="700" if is_you else "400"
-                gc=c["GEO"]; gcol="#10B981" if gc>=80 else "#F59E0B" if gc>=60 else "#EF4444"
-                you_badge=' <span style="background:#EDE9FE;color:#7C3AED;border-radius:4px;padding:1px 6px;font-size:0.7rem;font-weight:700;">You</span>' if is_you else ""
-                t10_rows+=f'<tr style="background:{bg_r};{bdr}"><td style="padding:10px 12px;font-size:0.8rem;color:#9CA3AF;font-weight:600;">{idx}</td><td style="padding:10px 12px;"><div style="font-size:0.84rem;font-weight:{fw};color:#111827;">{c["Brand"]}{you_badge}</div><div style="font-size:0.72rem;color:#9CA3AF;">{c.get("URL","")}</div></td><td style="padding:10px 12px;font-size:0.88rem;font-weight:700;color:{gcol};">{gc}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Vis"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Cit"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Sen"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c.get("Sov","")}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Rank"]}</td></tr>'
-            st.markdown(f'<div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px;"><div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">{brand_domain} vs Competitors — {top10_title}</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Real-time GEO scores. Highlighted row is you.</div><table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:1px solid #E5E7EB;"><th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">#</th><th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Brand</th><th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">GEO</th><th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Visibility</th><th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Citation</th><th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Sentiment</th><th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Share of Voice</th><th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Avg Rank</th></tr></thead><tbody>{t10_rows}</tbody></table></div>',unsafe_allow_html=True)
-            st.markdown("</div>",unsafe_allow_html=True)
+                if comp.lower() != brand.lower():
+                    scored = score_competitor_from_responses(comp, responses_detail)
+                    scored["URL"] = comp_urls.get(comp, comp.lower().replace(" ","+") + ".com")
+                    top10.append(scored)
+            top10_sorted = sorted(top10, key=lambda x: x["GEO"], reverse=True)
+            t10_rows = ""
+            for idx, c in enumerate(top10_sorted, 1):
+                is_you = c["Brand"].lower() == brand.lower()
+                bg_r = "#F5F3FF" if is_you else ("white" if idx%2==1 else "#FAFAFA")
+                bdr = "border-left:3px solid #7C3AED;" if is_you else ""
+                fw = "700" if is_you else "400"
+                gc = c["GEO"]; gcol = "#10B981" if gc>=80 else "#F59E0B" if gc>=60 else "#EF4444"
+                you_badge = ' <span style="background:#EDE9FE;color:#7C3AED;border-radius:4px;padding:1px 6px;font-size:0.7rem;font-weight:700;">You</span>' if is_you else ""
+                t10_rows += f'<tr style="background:{bg_r};{bdr}"><td style="padding:10px 12px;font-size:0.8rem;color:#9CA3AF;font-weight:600;">{idx}</td><td style="padding:10px 12px;"><div style="font-size:0.84rem;font-weight:{fw};color:#111827;">{c["Brand"]}{you_badge}</div><div style="font-size:0.72rem;color:#9CA3AF;">{c.get("URL","")}</div></td><td style="padding:10px 12px;font-size:0.88rem;font-weight:700;color:{gcol};">{gc}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Vis"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Cit"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Sen"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c.get("Sov","")}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Rank"]}</td></tr>'
+            st.markdown(f'<div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px;"><div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">{brand_domain} vs Competitors — {top10_title}</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Real-time GEO scores. Highlighted row is you.</div><table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:1px solid #E5E7EB;"><th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">#</th><th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Brand</th><th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">GEO</th><th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Visibility</th><th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Citation</th><th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Sentiment</th><th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Share of Voice</th><th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Avg Rank</th></tr></thead><tbody>{t10_rows}</tbody></table></div>', unsafe_allow_html=True)
+            st.markdown("</div></div>", unsafe_allow_html=True)
+
+        with tabs[1]:
+            st.markdown("<div style='padding:24px 40px;'>", unsafe_allow_html=True)
+            st.info("Competitor breakdown is shown in the GEO Score tab above.")
+            st.markdown("</div>", unsafe_allow_html=True)
 
         with tabs[2]:
-            st.markdown("<div style='padding:24px 40px;max-width:900px;margin:0 auto;'>",unsafe_allow_html=True)
-            st.markdown(f'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px;"><div style="background:white;border-radius:10px;border:1px solid #E5E7EB;padding:20px;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Visibility Score</div><div style="font-size:2rem;font-weight:800;color:#7C3AED;">{vis}%</div><div style="font-size:0.78rem;color:#6B7280;margin-top:3px;">Appeared in {result.get("responses_with_brand",0)} of 20 queries</div></div><div style="background:white;border-radius:10px;border:1px solid #E5E7EB;padding:20px;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Average Rank</div><div style="font-size:2rem;font-weight:800;color:#7C3AED;">{avg_rank}</div><div style="font-size:0.78rem;color:#6B7280;margin-top:3px;">Position when mentioned in AI responses</div></div><div style="background:white;border-radius:10px;border:1px solid #E5E7EB;padding:20px;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Query Appearances</div><div style="font-size:2rem;font-weight:800;color:#7C3AED;">{result.get("responses_with_brand",0)}/20</div><div style="font-size:0.78rem;color:#6B7280;margin-top:3px;">Out of 20 generic industry queries</div></div></div>',unsafe_allow_html=True)
-            internal_links=page_data.get("internal_links",[])
+            st.markdown("<div style='padding:24px 40px;max-width:900px;margin:0 auto;'>", unsafe_allow_html=True)
+            st.markdown(f'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px;"><div style="background:white;border-radius:10px;border:1px solid #E5E7EB;padding:20px;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Visibility Score</div><div style="font-size:2rem;font-weight:800;color:#7C3AED;">{vis}%</div><div style="font-size:0.78rem;color:#6B7280;margin-top:3px;">Appeared in {result.get("responses_with_brand",0)} of 20 queries</div></div><div style="background:white;border-radius:10px;border:1px solid #E5E7EB;padding:20px;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Average Rank</div><div style="font-size:2rem;font-weight:800;color:#7C3AED;">{avg_rank}</div><div style="font-size:0.78rem;color:#6B7280;margin-top:3px;">Position when mentioned in AI responses</div></div><div style="background:white;border-radius:10px;border:1px solid #E5E7EB;padding:20px;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Query Appearances</div><div style="font-size:2rem;font-weight:800;color:#7C3AED;">{result.get("responses_with_brand",0)}/20</div><div style="font-size:0.78rem;color:#6B7280;margin-top:3px;">Out of 20 generic industry queries</div></div></div>', unsafe_allow_html=True)
+            internal_links = page_data.get("internal_links", [])
             if internal_links:
-                page_intel=get_page_intelligence(internal_links,brand,responses_detail)
-                pi_rows=""
+                page_intel = get_page_intelligence(internal_links, brand, responses_detail)
+                pi_rows = ""
                 for p in page_intel:
-                    gc=p["geo"]; gcol="#10B981" if gc>=60 else "#F59E0B" if gc>=30 else "#EF4444"
-                    cited_badge=f'<span style="background:#D1FAE5;color:#065F46;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">Cited {p["cited"]}x</span>' if p["cited"]>0 else '<span style="background:#F3F4F6;color:#9CA3AF;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">Not Cited</span>'
-                    pi_rows+=f'<tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:10px 14px;"><div style="font-size:0.84rem;font-weight:600;color:#111827;">{p["label"]}</div><div style="font-size:0.72rem;color:#9CA3AF;">{p["path"]}</div></td><td style="padding:10px 14px;">{cited_badge}</td><td style="padding:10px 14px;font-size:0.88rem;font-weight:700;color:{gcol};">{gc}</td><td style="padding:10px 14px;font-size:0.82rem;color:#7C3AED;font-weight:600;">{p["citation_share"]}%</td><td style="padding:10px 14px;font-size:0.84rem;color:{p["color"]};font-weight:600;">{p["status"]}</td></tr>'
-                st.markdown(f'<div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px;"><div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Page Intelligence</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Which pages of {brand_domain} are being cited by AI.</div><table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:2px solid #E5E7EB;background:#FAFAFA;"><th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Page</th><th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">AI Citations</th><th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">GEO Score</th><th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Citation Share</th><th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Status</th></tr></thead><tbody>{pi_rows}</tbody></table></div>',unsafe_allow_html=True)
-            st.markdown("</div>",unsafe_allow_html=True)
+                    gc = p["geo"]; gcol = "#10B981" if gc>=60 else "#F59E0B" if gc>=30 else "#EF4444"
+                    cited_badge = f'<span style="background:#D1FAE5;color:#065F46;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">Cited {p["cited"]}x</span>' if p["cited"]>0 else '<span style="background:#F3F4F6;color:#9CA3AF;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">Not Cited</span>'
+                    pi_rows += f'<tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:10px 14px;"><div style="font-size:0.84rem;font-weight:600;color:#111827;">{p["label"]}</div><div style="font-size:0.72rem;color:#9CA3AF;">{p["path"]}</div></td><td style="padding:10px 14px;">{cited_badge}</td><td style="padding:10px 14px;font-size:0.88rem;font-weight:700;color:{gcol};">{gc}</td><td style="padding:10px 14px;font-size:0.82rem;color:#7C3AED;font-weight:600;">{p["citation_share"]}%</td><td style="padding:10px 14px;font-size:0.84rem;color:{p["color"]};font-weight:600;">{p["status"]}</td></tr>'
+                st.markdown(f'<div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px;"><div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Page Intelligence</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Which pages of {brand_domain} are being cited by AI.</div><table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:2px solid #E5E7EB;background:#FAFAFA;"><th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Page</th><th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">AI Citations</th><th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">GEO Score</th><th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Citation Share</th><th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Status</th></tr></thead><tbody>{pi_rows}</tbody></table></div>', unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)
 
         with tabs[3]:
-            st.markdown("<div style='padding:24px 40px;max-width:900px;margin:0 auto;'>",unsafe_allow_html=True)
-            st.markdown(f'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px;"><div style="background:white;border-radius:10px;border:1px solid #E5E7EB;padding:20px;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Sentiment Score</div><div style="font-size:2rem;font-weight:800;color:#10B981;">{sent}</div><div style="font-size:0.78rem;color:#6B7280;margin-top:3px;">{"Positive — AI speaks favorably" if sent>=70 else "Neutral — room to improve" if sent>=45 else "Needs attention"}</div></div><div style="background:white;border-radius:10px;border:1px solid #E5E7EB;padding:20px;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Prominence Score</div><div style="font-size:2rem;font-weight:800;color:#7C3AED;">{prom}</div><div style="font-size:0.78rem;color:#6B7280;margin-top:3px;">{"Named first — strong prominence" if prom>=70 else "Mid-list mentions" if prom>=45 else "Buried in responses"}</div></div><div style="background:white;border-radius:10px;border:1px solid #E5E7EB;padding:20px;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Average Rank</div><div style="font-size:2rem;font-weight:800;color:#3B82F6;">{avg_rank}</div><div style="font-size:0.78rem;color:#6B7280;margin-top:3px;">Average mention position in AI responses</div></div></div>',unsafe_allow_html=True)
-            strengths=result.get("strengths_list",[])[:3]
-            s_html="".join(f'<li style="padding:10px 0;font-size:0.84rem;color:#374151;display:flex;gap:12px;align-items:flex-start;border-bottom:1px solid #F0FDF4;"><span style="color:#10B981;font-weight:700;flex-shrink:0;">+</span><span>{s}</span></li>' for s in strengths)
-            st.markdown(f'<div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px;"><div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:16px;">Sentiment Strengths</div><ul style="list-style:none;padding:0;margin:0;">{s_html}</ul></div>',unsafe_allow_html=True)
-            st.markdown("</div>",unsafe_allow_html=True)
+            st.markdown("<div style='padding:24px 40px;max-width:900px;margin:0 auto;'>", unsafe_allow_html=True)
+            st.markdown(f'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px;"><div style="background:white;border-radius:10px;border:1px solid #E5E7EB;padding:20px;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Sentiment Score</div><div style="font-size:2rem;font-weight:800;color:#10B981;">{sent}</div><div style="font-size:0.78rem;color:#6B7280;margin-top:3px;">{"Positive — AI speaks favorably" if sent>=70 else "Neutral — room to improve" if sent>=45 else "Needs attention"}</div></div><div style="background:white;border-radius:10px;border:1px solid #E5E7EB;padding:20px;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Prominence Score</div><div style="font-size:2rem;font-weight:800;color:#7C3AED;">{prom}</div><div style="font-size:0.78rem;color:#6B7280;margin-top:3px;">{"Named first — strong prominence" if prom>=70 else "Mid-list mentions" if prom>=45 else "Buried in responses"}</div></div><div style="background:white;border-radius:10px;border:1px solid #E5E7EB;padding:20px;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Average Rank</div><div style="font-size:2rem;font-weight:800;color:#3B82F6;">{avg_rank}</div><div style="font-size:0.78rem;color:#6B7280;margin-top:3px;">Average mention position in AI responses</div></div></div>', unsafe_allow_html=True)
+            strengths = result.get("strengths_list", [])[:3]
+            s_html = "".join(f'<li style="padding:10px 0;font-size:0.84rem;color:#374151;display:flex;gap:12px;align-items:flex-start;border-bottom:1px solid #F0FDF4;"><span style="color:#10B981;font-weight:700;flex-shrink:0;">+</span><span>{s}</span></li>' for s in strengths)
+            st.markdown(f'<div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px;"><div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:16px;">Sentiment Strengths</div><ul style="list-style:none;padding:0;margin:0;">{s_html}</ul></div>', unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)
 
         with tabs[4]:
-            st.markdown("<div style='padding:24px 40px;max-width:900px;margin:0 auto;'>",unsafe_allow_html=True)
-            st.markdown(f'<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;"><div style="background:white;border-radius:10px;border:1px solid #E5E7EB;padding:20px;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Citation Score</div><div style="font-size:2rem;font-weight:800;color:#7C3AED;">{cit}</div><div style="font-size:0.78rem;color:#6B7280;margin-top:3px;">How authoritatively your brand was cited</div></div><div style="background:white;border-radius:10px;border:1px solid #E5E7EB;padding:20px;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Share of Voice</div><div style="font-size:2rem;font-weight:800;color:#7C3AED;">{sov}</div><div style="font-size:0.78rem;color:#6B7280;margin-top:3px;">Your brand mentions as % of all mentions</div></div></div>',unsafe_allow_html=True)
-            citation_sources=result.get("citation_sources",[])
+            st.markdown("<div style='padding:24px 40px;max-width:900px;margin:0 auto;'>", unsafe_allow_html=True)
+            st.markdown(f'<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;"><div style="background:white;border-radius:10px;border:1px solid #E5E7EB;padding:20px;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Citation Score</div><div style="font-size:2rem;font-weight:800;color:#7C3AED;">{cit}</div><div style="font-size:0.78rem;color:#6B7280;margin-top:3px;">How authoritatively your brand was cited</div></div><div style="background:white;border-radius:10px;border:1px solid #E5E7EB;padding:20px;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Share of Voice</div><div style="font-size:2rem;font-weight:800;color:#7C3AED;">{sov}</div><div style="font-size:0.78rem;color:#6B7280;margin-top:3px;">Your brand mentions as % of all mentions</div></div></div>', unsafe_allow_html=True)
+            citation_sources = result.get("citation_sources", [])
             if citation_sources:
-                st.markdown('<div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px;"><div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Sources AI is Pulling From</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Domains influencing AI knowledge about this brand.</div>',unsafe_allow_html=True)
+                st.markdown('<div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px;"><div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Sources AI is Pulling From</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Domains influencing AI knowledge about this brand.</div>', unsafe_allow_html=True)
                 for s in citation_sources:
-                    d=s.get("domain",""); cat_label,cat_color,cat_bg=classify_domain(d)
-                    share=s.get("citation_share",0); top_pages=s.get("top_pages",[])
-                    bar_w=min(share*3,100); favicon=f"https://www.google.com/s2/favicons?domain={d}&sz=14"
-                    pages_html=""
+                    d = s.get("domain",""); cat_label, cat_color, cat_bg = classify_domain(d)
+                    share = s.get("citation_share", 0); top_pages = s.get("top_pages", [])
+                    bar_w = min(share*3, 100); favicon = f"https://www.google.com/s2/favicons?domain={d}&sz=14"
+                    pages_html = ""
                     if top_pages:
-                        pages_html='<div style="margin-top:8px;padding-top:8px;border-top:0.5px solid #F3F4F6;">'
+                        pages_html = '<div style="margin-top:8px;padding-top:8px;border-top:0.5px solid #F3F4F6;">'
                         for pg in top_pages[:5]:
-                            pages_html+=f'<div style="font-size:0.75rem;color:#7C3AED;padding:2px 0;">{pg}</div>'
-                        pages_html+='</div>'
-                    st.markdown(f'<div style="border:1px solid #E5E7EB;border-radius:8px;padding:12px 16px;margin-bottom:8px;"><div style="display:flex;align-items:center;gap:10px;"><span style="font-size:0.78rem;color:#9CA3AF;font-weight:600;width:18px;">{s.get("rank","")}</span><img src="{favicon}" width="14" height="14" onerror="this.style.display=\'none\'"><span style="font-size:0.88rem;font-weight:600;color:#111827;flex:1;">{d}</span><span style="background:{cat_bg};color:{cat_color};border-radius:50px;padding:2px 10px;font-size:0.7rem;font-weight:600;">{cat_label}</span><div style="display:flex;align-items:center;gap:6px;"><div style="background:#F3F4F6;border-radius:4px;height:5px;width:80px;overflow:hidden;"><div style="background:#7C3AED;height:5px;border-radius:4px;width:{bar_w}px;"></div></div><span style="font-size:0.82rem;font-weight:700;color:#7C3AED;">{share}%</span></div></div>{pages_html}</div>',unsafe_allow_html=True)
-                st.markdown('</div>',unsafe_allow_html=True)
-            st.markdown("</div>",unsafe_allow_html=True)
+                            pages_html += f'<div style="font-size:0.75rem;color:#7C3AED;padding:2px 0;">{pg}</div>'
+                        pages_html += '</div>'
+                    st.markdown(f'<div style="border:1px solid #E5E7EB;border-radius:8px;padding:12px 16px;margin-bottom:8px;"><div style="display:flex;align-items:center;gap:10px;"><span style="font-size:0.78rem;color:#9CA3AF;font-weight:600;width:18px;">{s.get("rank","")}</span><img src="{favicon}" width="14" height="14" onerror="this.style.display=\'none\'"><span style="font-size:0.88rem;font-weight:600;color:#111827;flex:1;">{d}</span><span style="background:{cat_bg};color:{cat_color};border-radius:50px;padding:2px 10px;font-size:0.7rem;font-weight:600;">{cat_label}</span><div style="display:flex;align-items:center;gap:6px;"><div style="background:#F3F4F6;border-radius:4px;height:5px;width:80px;overflow:hidden;"><div style="background:#7C3AED;height:5px;border-radius:4px;width:{bar_w}px;"></div></div><span style="font-size:0.82rem;font-weight:700;color:#7C3AED;">{share}%</span></div></div>{pages_html}</div>', unsafe_allow_html=True)
+                st.markdown('</div>', unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)
 
         with tabs[5]:
-            st.markdown("<div style='padding:24px 40px;max-width:900px;margin:0 auto;'>",unsafe_allow_html=True)
-            categories=list(dict.fromkeys([r.get("category","General Consumer") for r in responses_detail]))
-            sel_cat=st.selectbox("Filter by category",["All"]+categories)
-            filtered=[r for r in responses_detail if sel_cat=="All" or r.get("category")==sel_cat][:10]
-            cat_summary={}
+            st.markdown("<div style='padding:24px 40px;max-width:900px;margin:0 auto;'>", unsafe_allow_html=True)
+            categories = list(dict.fromkeys([r.get("category","General Consumer") for r in responses_detail]))
+            sel_cat = st.selectbox("Filter by category", ["All"]+categories)
+            filtered = [r for r in responses_detail if sel_cat=="All" or r.get("category")==sel_cat][:10]
+            cat_summary = {}
             for r in responses_detail:
-                c=r.get("category","General Consumer")
-                if c not in cat_summary: cat_summary[c]={"total":0,"mentioned":0}
-                cat_summary[c]["total"]+=1
-                if r.get("mentioned"): cat_summary[c]["mentioned"]+=1
-            cat_html=""
-            for c,v in cat_summary.items():
-                vis_pct=round((v["mentioned"]/max(v["total"],1))*100)
-                cat_html+=f'<div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:14px 18px;"><div style="font-size:0.82rem;font-weight:600;color:#111827;margin-bottom:6px;">{c}</div><div style="display:flex;align-items:center;gap:8px;"><div style="background:#F3F4F6;border-radius:4px;height:5px;flex:1;overflow:hidden;"><div style="background:#7C3AED;height:5px;border-radius:4px;width:{vis_pct}%;"></div></div><span style="font-size:0.78rem;font-weight:700;color:#7C3AED;">{vis_pct}%</span></div><div style="font-size:0.72rem;color:#9CA3AF;margin-top:4px;">{v["mentioned"]} of {v["total"]} queries</div></div>'
-            st.markdown(f'<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:24px;">{cat_html}</div>',unsafe_allow_html=True)
-            q_rows=""
-            for idx,item in enumerate(filtered):
-                mentioned=item.get("mentioned",False); row_bg="#F5F3FF" if mentioned else "white"
-                real_pos=item.get("position",0); rank_display=f"#{real_pos}" if real_pos>0 else "N/A"
-                rank_color="#10B981" if real_pos==1 else "#7C3AED" if real_pos<=3 else "#F59E0B" if mentioned else "#9CA3AF"
-                appeared_badge='<span style="background:#D1FAE5;color:#065F46;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">Appeared</span>' if mentioned else '<span style="background:#F3F4F6;color:#9CA3AF;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">Not Mentioned</span>'
-                cat_badge=f'<span style="background:#EDE9FE;color:#5B21B6;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:600;">{item.get("category","")}</span>'
-                q_rows+=f'<tr style="background:{row_bg};border-bottom:1px solid #F3F4F6;"><td style="padding:10px 12px;font-size:0.78rem;color:#9CA3AF;font-weight:600;">{idx+1}</td><td style="padding:10px 14px;"><div style="display:flex;gap:6px;align-items:center;margin-bottom:5px;">{cat_badge}{appeared_badge}</div><div style="font-size:0.83rem;color:#374151;">{item.get("query","")}</div></td><td style="padding:10px 16px;text-align:center;"><div style="font-size:1.1rem;font-weight:800;color:{rank_color};">{rank_display}</div><div style="font-size:0.68rem;color:#9CA3AF;">Rank</div></td></tr>'
-            st.markdown(f'<div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px;"><div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Top 10 Prompts</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Generic consumer questions. No brand name used.</div><table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:2px solid #E5E7EB;background:#FAFAFA;"><th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">#</th><th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Query</th><th style="padding:8px 16px;text-align:center;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Rank</th></tr></thead><tbody>{q_rows}</tbody></table></div>',unsafe_allow_html=True)
-            st.markdown("</div>",unsafe_allow_html=True)
+                c = r.get("category","General Consumer")
+                if c not in cat_summary: cat_summary[c] = {"total":0,"mentioned":0}
+                cat_summary[c]["total"] += 1
+                if r.get("mentioned"): cat_summary[c]["mentioned"] += 1
+            cat_html = ""
+            for c, v in cat_summary.items():
+                vis_pct = round((v["mentioned"]/max(v["total"],1))*100)
+                cat_html += f'<div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:14px 18px;"><div style="font-size:0.82rem;font-weight:600;color:#111827;margin-bottom:6px;">{c}</div><div style="display:flex;align-items:center;gap:8px;"><div style="background:#F3F4F6;border-radius:4px;height:5px;flex:1;overflow:hidden;"><div style="background:#7C3AED;height:5px;border-radius:4px;width:{vis_pct}%;"></div></div><span style="font-size:0.78rem;font-weight:700;color:#7C3AED;">{vis_pct}%</span></div><div style="font-size:0.72rem;color:#9CA3AF;margin-top:4px;">{v["mentioned"]} of {v["total"]} queries</div></div>'
+            st.markdown(f'<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:24px;">{cat_html}</div>', unsafe_allow_html=True)
+            q_rows = ""
+            for idx, item in enumerate(filtered):
+                mentioned = item.get("mentioned", False); row_bg = "#F5F3FF" if mentioned else "white"
+                real_pos = item.get("position", 0); rank_display = f"#{real_pos}" if real_pos>0 else "N/A"
+                rank_color = "#10B981" if real_pos==1 else "#7C3AED" if real_pos<=3 else "#F59E0B" if mentioned else "#9CA3AF"
+                appeared_badge = '<span style="background:#D1FAE5;color:#065F46;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">Appeared</span>' if mentioned else '<span style="background:#F3F4F6;color:#9CA3AF;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">Not Mentioned</span>'
+                cat_badge = f'<span style="background:#EDE9FE;color:#5B21B6;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:600;">{item.get("category","")}</span>'
+                q_rows += f'<tr style="background:{row_bg};border-bottom:1px solid #F3F4F6;"><td style="padding:10px 12px;font-size:0.78rem;color:#9CA3AF;font-weight:600;">{idx+1}</td><td style="padding:10px 14px;"><div style="display:flex;gap:6px;align-items:center;margin-bottom:5px;">{cat_badge}{appeared_badge}</div><div style="font-size:0.83rem;color:#374151;">{item.get("query","")}</div></td><td style="padding:10px 16px;text-align:center;"><div style="font-size:1.1rem;font-weight:800;color:{rank_color};">{rank_display}</div><div style="font-size:0.68rem;color:#9CA3AF;">Rank</div></td></tr>'
+            st.markdown(f'<div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px;"><div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Top 10 Prompts</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Generic consumer questions. No brand name used.</div><table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:2px solid #E5E7EB;background:#FAFAFA;"><th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">#</th><th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Query</th><th style="padding:8px 16px;text-align:center;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Rank</th></tr></thead><tbody>{q_rows}</tbody></table></div>', unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)
 
         with tabs[6]:
-            st.markdown("<div style='padding:24px 40px;max-width:900px;margin:0 auto;'>",unsafe_allow_html=True)
-            strengths=result.get("strengths_list",[])[:3]; weaknesses=result.get("improvements_list",[])[:5]
-            s_html="".join(f'<li style="padding:10px 0;font-size:0.84rem;color:#374151;display:flex;gap:12px;align-items:flex-start;border-bottom:1px solid #F0FDF4;"><span style="color:#10B981;font-weight:700;flex-shrink:0;">+</span><span>{s}</span></li>' for s in strengths)
-            w_html="".join(f'<li style="padding:10px 0;font-size:0.84rem;color:#374151;display:flex;gap:12px;align-items:flex-start;border-bottom:1px solid #FFF1F2;"><span style="color:#EF4444;font-weight:700;flex-shrink:0;">x</span><span>{w}</span></li>' for w in weaknesses)
-            st.markdown(f'<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;"><div style="background:white;border:1px solid #E5E7EB;border-radius:12px;padding:24px;"><div style="font-size:0.9rem;font-weight:700;color:#065F46;margin-bottom:16px;">What is Working Well</div><ul style="list-style:none;padding:0;margin:0;">{s_html}</ul></div><div style="background:white;border:1px solid #E5E7EB;border-radius:12px;padding:24px;"><div style="font-size:0.9rem;font-weight:700;color:#9F1239;margin-bottom:16px;">What Needs Improvement</div><ul style="list-style:none;padding:0;margin:0;">{w_html}</ul></div></div>',unsafe_allow_html=True)
-            all_actions=result.get("actions",[]); deliverable_map={"High":("Workstream 01: ARD","AXO Baseline Report and Brand Ranking Index"),"Medium":("Workstream 02: AOP","LLM-Ready Content Package and Content Influence Blueprint"),"Low":("Workstream 03: DTI","Schema Optimization Guide and Metadata Remediation Plan")}
-            actions_html=""
+            st.markdown("<div style='padding:24px 40px;max-width:900px;margin:0 auto;'>", unsafe_allow_html=True)
+            strengths = result.get("strengths_list", [])[:3]
+            weaknesses = result.get("improvements_list", [])[:5]
+            s_html = "".join(f'<li style="padding:10px 0;font-size:0.84rem;color:#374151;display:flex;gap:12px;align-items:flex-start;border-bottom:1px solid #F0FDF4;"><span style="color:#10B981;font-weight:700;flex-shrink:0;">+</span><span>{s}</span></li>' for s in strengths)
+            w_html = "".join(f'<li style="padding:10px 0;font-size:0.84rem;color:#374151;display:flex;gap:12px;align-items:flex-start;border-bottom:1px solid #FFF1F2;"><span style="color:#EF4444;font-weight:700;flex-shrink:0;">x</span><span>{w}</span></li>' for w in weaknesses)
+            st.markdown(f'<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;"><div style="background:white;border:1px solid #E5E7EB;border-radius:12px;padding:24px;"><div style="font-size:0.9rem;font-weight:700;color:#065F46;margin-bottom:16px;">What is Working Well</div><ul style="list-style:none;padding:0;margin:0;">{s_html}</ul></div><div style="background:white;border:1px solid #E5E7EB;border-radius:12px;padding:24px;"><div style="font-size:0.9rem;font-weight:700;color:#9F1239;margin-bottom:16px;">What Needs Improvement</div><ul style="list-style:none;padding:0;margin:0;">{w_html}</ul></div></div>', unsafe_allow_html=True)
+            all_actions = result.get("actions", [])
+            deliverable_map = {"High":("Workstream 01: ARD","AXO Baseline Report and Brand Ranking Index"),"Medium":("Workstream 02: AOP","LLM-Ready Content Package and Content Influence Blueprint"),"Low":("Workstream 03: DTI","Schema Optimization Guide and Metadata Remediation Plan")}
+            actions_html = ""
             for a in all_actions:
-                pri=a.get("priority","Medium"); pk,deliv=deliverable_map.get(pri,("",""))
-                bg={"High":"#FEE2E2","Medium":"#FEF3C7","Low":"#DCFCE7"}.get(pri,"#F3F4F6"); tc={"High":"#991B1B","Medium":"#92400E","Low":"#166534"}.get(pri,"#374151")
-                actions_html+=f'<div style="display:grid;grid-template-columns:90px 1fr 1fr;gap:0;border-bottom:1px solid #F3F4F6;padding:14px 0;align-items:start;"><div><span style="background:{bg};color:{tc};border-radius:4px;padding:2px 10px;font-size:0.72rem;font-weight:700;">{pri}</span></div><div style="font-size:0.84rem;color:#374151;padding-right:16px;">{a["action"]}</div><div style="font-size:0.78rem;color:#7C3AED;font-weight:600;"><span style="background:#EDE9FE;border-radius:6px;padding:3px 10px;">{pk}</span><div style="font-size:0.75rem;color:#9CA3AF;font-weight:400;margin-top:4px;">{deliv}</div></div></div>'
-            st.markdown(f'<div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px 28px;"><div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Priority Actions</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:20px;">Each action mapped to the relevant Accenture workstream deliverable.</div><div style="display:grid;grid-template-columns:90px 1fr 1fr;border-bottom:2px solid #E5E7EB;padding-bottom:8px;margin-bottom:4px;"><div style="font-size:0.72rem;color:#9CA3AF;font-weight:600;">Priority</div><div style="font-size:0.72rem;color:#9CA3AF;font-weight:600;">Action</div><div style="font-size:0.72rem;color:#9CA3AF;font-weight:600;">Linked Deliverable</div></div>{actions_html}</div>',unsafe_allow_html=True)
-            st.markdown("</div>",unsafe_allow_html=True)
+                pri = a.get("priority","Medium"); pk, deliv = deliverable_map.get(pri,("",""))
+                bg = {"High":"#FEE2E2","Medium":"#FEF3C7","Low":"#DCFCE7"}.get(pri,"#F3F4F6")
+                tc = {"High":"#991B1B","Medium":"#92400E","Low":"#166534"}.get(pri,"#374151")
+                actions_html += f'<div style="display:grid;grid-template-columns:90px 1fr 1fr;gap:0;border-bottom:1px solid #F3F4F6;padding:14px 0;align-items:start;"><div><span style="background:{bg};color:{tc};border-radius:4px;padding:2px 10px;font-size:0.72rem;font-weight:700;">{pri}</span></div><div style="font-size:0.84rem;color:#374151;padding-right:16px;">{a["action"]}</div><div style="font-size:0.78rem;color:#7C3AED;font-weight:600;"><span style="background:#EDE9FE;border-radius:6px;padding:3px 10px;">{pk}</span><div style="font-size:0.75rem;color:#9CA3AF;font-weight:400;margin-top:4px;">{deliv}</div></div></div>'
+            st.markdown(f'<div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px 28px;"><div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Priority Actions</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:20px;">Each action mapped to the relevant Accenture workstream deliverable.</div><div style="display:grid;grid-template-columns:90px 1fr 1fr;border-bottom:2px solid #E5E7EB;padding-bottom:8px;margin-bottom:4px;"><div style="font-size:0.72rem;color:#9CA3AF;font-weight:600;">Priority</div><div style="font-size:0.72rem;color:#9CA3AF;font-weight:600;">Action</div><div style="font-size:0.72rem;color:#9CA3AF;font-weight:600;">Linked Deliverable</div></div>{actions_html}</div>', unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)
 
         with tabs[7]:
-            st.markdown("<div style='padding:24px 40px;max-width:900px;margin:0 auto;'>",unsafe_allow_html=True)
+            st.markdown("<div style='padding:24px 40px;max-width:900px;margin:0 auto;'>", unsafe_allow_html=True)
             st.markdown("""<div style="background:#7C3AED;border-radius:12px;padding:24px 28px;color:white;margin-bottom:20px;">
                 <h3 style="font-size:1.1rem;font-weight:800;color:white;margin:0 0 6px 0;">Live AI Prompt Lab</h3>
                 <p style="font-size:0.88rem;color:rgba(255,255,255,0.85);margin:0;">Type any prompt and see exactly how GPT-5.4 responds in real time.</p>
-            </div>""",unsafe_allow_html=True)
-            query=st.text_input("Enter a prompt","",placeholder="e.g. What is the best travel credit card for high net worth individuals?",label_visibility="collapsed")
+            </div>""", unsafe_allow_html=True)
+            query = st.text_input("Enter a prompt","", placeholder="e.g. What is the best travel credit card for high net worth individuals?", label_visibility="collapsed")
             if st.button("Run Prompt"):
                 if not query.strip(): st.warning("Please enter a prompt.")
                 else:
                     with st.spinner("Querying GPT-5.4..."):
                         try:
-                            resp=get_response(query,INTERNAL_API_KEY); st.session_state.ai_history.append({"q":query,"a":resp})
+                            resp = get_response(query, INTERNAL_API_KEY)
+                            st.session_state.ai_history.append({"q":query,"a":resp})
                         except Exception as e:
                             st.error(f"Error: {e}")
             for item in reversed(st.session_state.ai_history):
-                st.markdown(f'<div style="display:flex;justify-content:flex-end;margin:20px 0 10px 0;"><div style="background:#F4F4F4;color:#111827;border-radius:18px 18px 4px 18px;padding:12px 18px;max-width:60%;font-size:0.95rem;font-weight:500;">{item["q"]}</div></div>',unsafe_allow_html=True)
+                st.markdown(f'<div style="display:flex;justify-content:flex-end;margin:20px 0 10px 0;"><div style="background:#F4F4F4;color:#111827;border-radius:18px 18px 4px 18px;padding:12px 18px;max-width:60%;font-size:0.95rem;font-weight:500;">{item["q"]}</div></div>', unsafe_allow_html=True)
                 st.markdown(item["a"])
-                st.markdown('<hr style="border:none;border-top:1px solid #F3F4F6;margin:16px 0;">',unsafe_allow_html=True)
+                st.markdown('<hr style="border:none;border-top:1px solid #F3F4F6;margin:16px 0;">', unsafe_allow_html=True)
             if st.session_state.ai_history:
-                if st.button("Clear history",key="clr"): st.session_state.ai_history=[]; st.rerun()
-            st.markdown("</div>",unsafe_allow_html=True)
+                if st.button("Clear history", key="clr"): st.session_state.ai_history = []; st.rerun()
+            st.markdown("</div>", unsafe_allow_html=True)
 
 # ════════════════════════════════════════════════════════════
 # PAGE 3: GET SUPPORT
@@ -678,9 +700,8 @@ elif nav=="Get Support":
             <h1 style="font-size:2.8rem;font-weight:900;color:white;margin:0 0 14px 0;letter-spacing:-1px;">We've Got You Covered</h1>
             <p style="font-size:1rem;color:rgba(255,255,255,0.82);max-width:500px;margin:0 auto;line-height:1.8;">From GEO diagnostic to full optimization. Accenture's team handles everything, end to end.</p>
         </div>
-    </div>""",unsafe_allow_html=True)
+    </div>""", unsafe_allow_html=True)
 
-    # OUR APPROACH — left col + image + right col using Streamlit columns
     st.markdown("""
     <div style="background:white;padding:56px 40px 0 40px;border-bottom:0;">
         <div style="margin-bottom:40px;text-align:center;">
@@ -850,7 +871,7 @@ elif nav=="Get Support":
                 </ul>
             </div>
         </div>
-    </div>""",unsafe_allow_html=True)
+    </div>""", unsafe_allow_html=True)
 
     st.markdown("""
     <div style="background:white;padding:48px 40px;border-bottom:1px solid #E5E7EB;">
@@ -895,7 +916,7 @@ elif nav=="Get Support":
                 </div>
             </div>
         </div>
-    </div>""",unsafe_allow_html=True)
+    </div>""", unsafe_allow_html=True)
 
     st.markdown("""
     <div style="background:#7C3AED;padding:56px 40px;">
@@ -928,4 +949,4 @@ elif nav=="Get Support":
                 </div>
             </div>
         </div>
-    </div>""",unsafe_allow_html=True)
+    </div>""", unsafe_allow_html=True)
