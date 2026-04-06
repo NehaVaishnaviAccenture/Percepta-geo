@@ -23,17 +23,20 @@ footer{visibility:hidden;}
 section[data-testid="stSidebar"]{display:none!important;}
 div[data-testid="stTabs"] button{font-size:0.85rem!important;font-weight:600!important;padding:10px 20px!important;}
 div[data-testid="stTabs"] button[aria-selected="true"]{color:#7C3AED!important;border-bottom:2px solid #7C3AED!important;}
-section.main div[data-testid="stButton"]>button{border-radius:50px!important;font-weight:700!important;padding:14px 28px!important;font-size:1rem!important;transition:all 0.2s!important;}
-.btn-primary>button{background:#7C3AED!important;color:white!important;border:none!important;}
-.btn-primary>button:hover{background:#6D28D9!important;}
-.btn-secondary>button{background:white!important;color:#111827!important;border:1.5px solid #E5E7EB!important;}
-.btn-secondary>button:hover{border-color:#7C3AED!important;color:#7C3AED!important;}
+section.main div[data-testid="stButton"]>button{background:#7C3AED!important;color:white!important;border:none!important;border-radius:50px!important;font-weight:700!important;transition:background 0.2s!important;padding:14px 28px!important;font-size:1rem!important;}
+section.main div[data-testid="stButton"]>button:hover{background:#6D28D9!important;}
 .metric-tooltip{position:relative;display:inline-block;cursor:help;}
 .metric-tooltip .tooltip-text{visibility:hidden;opacity:0;background:#1F2937;color:white;font-size:0.75rem;line-height:1.5;border-radius:8px;padding:10px 14px;position:absolute;z-index:9999;bottom:130%;left:50%;transform:translateX(-50%);width:220px;text-align:left;box-shadow:0 4px 12px rgba(0,0,0,0.2);transition:opacity 0.2s;pointer-events:none;}
 .metric-tooltip .tooltip-text::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#1F2937;}
 .metric-tooltip:hover .tooltip-text{visibility:visible;opacity:1;}
 .tooltip-icon{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:#E5E7EB;color:#6B7280;font-size:0.65rem;font-weight:700;margin-left:5px;vertical-align:middle;cursor:help;}
 .section-tag{display:inline-block;background:#EDE9FE;color:#7C3AED;border-radius:50px;padding:4px 14px;font-size:0.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;}
+.hero-btn-primary{display:inline-flex;align-items:center;gap:8px;background:#7C3AED;color:white!important;border:none;border-radius:50px;padding:18px 36px;font-size:1.05rem;font-weight:700;cursor:pointer;text-decoration:none;transition:background 0.2s;}
+.hero-btn-primary:hover{background:#6D28D9;}
+.hero-btn-secondary{display:inline-flex;align-items:center;gap:8px;background:white;color:#111827!important;border:1.5px solid #D1D5DB;border-radius:50px;padding:18px 36px;font-size:1.05rem;font-weight:600;cursor:pointer;text-decoration:none;transition:all 0.2s;}
+.hero-btn-secondary:hover{border-color:#7C3AED;color:#7C3AED!important;}
+.cta-btn{display:inline-flex;align-items:center;gap:8px;background:#7C3AED;color:white!important;border:none;border-radius:50px;padding:18px 44px;font-size:1.05rem;font-weight:700;cursor:pointer;text-decoration:none;transition:background 0.2s;margin-top:36px;}
+.cta-btn:hover{background:#6D28D9;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -265,37 +268,38 @@ with sp_c:
 # ════════════════════════════════════════════════════════════
 if nav=="Overview":
 
-    # ── HERO ──────────────────────────────────────────────
+    # Check if geo hub nav was triggered by HTML button
+    if st.query_params.get("goto") == "geohub":
+        st.session_state.nav = "GEO Hub"
+        st.query_params.clear()
+        st.rerun()
+
     st.markdown("""
-<div style="background:linear-gradient(170deg,#ffffff 50%,#F3EEFF 100%);padding:72px 40px 0 40px;text-align:center;">
-  <div style="display:inline-flex;align-items:center;gap:8px;border:1px solid #DDD6FE;border-radius:50px;padding:7px 22px;font-size:0.72rem;font-weight:700;letter-spacing:.1em;color:#7C3AED;text-transform:uppercase;margin-bottom:40px;background:rgba(255,255,255,0.8);">
+<!-- HERO -->
+<div style="background:linear-gradient(170deg,#ffffff 55%,#F3EEFF 100%);padding:80px 40px 60px 40px;text-align:center;">
+
+  <div style="display:inline-flex;align-items:center;gap:8px;border:1px solid #DDD6FE;border-radius:50px;padding:8px 22px;font-size:0.72rem;font-weight:700;letter-spacing:.1em;color:#7C3AED;text-transform:uppercase;margin-bottom:44px;background:rgba(255,255,255,0.9);">
     ✦ &nbsp;AI-Powered Brand Intelligence &nbsp;·&nbsp; Powered by Accenture
   </div>
-  <div style="font-size:4.8rem;font-weight:900;color:#111827;line-height:1.0;letter-spacing:-3px;margin-bottom:0;">Your Brand's</div>
-  <div style="font-size:4.8rem;font-weight:900;color:#7C3AED;line-height:1.0;letter-spacing:-3px;margin-bottom:0;">GEO</div>
-  <div style="font-size:4.8rem;font-weight:900;color:#111827;line-height:1.0;letter-spacing:-3px;margin-bottom:40px;">Score</div>
-  <p style="font-size:1.1rem;color:#6B7280;max-width:660px;margin:0 auto 52px;line-height:1.8;">The Percepta GEO Score is a single 0–100 number that measures how often and how favorably your brand is cited in AI-generated responses — across ChatGPT, Gemini, and other major AI engines.</p>
+
+  <div style="font-size:5rem;font-weight:900;color:#111827;line-height:1.0;letter-spacing:-3px;margin-bottom:0;">Your Brand's</div>
+  <div style="font-size:5rem;font-weight:900;line-height:1.0;letter-spacing:-3px;margin-bottom:44px;">
+    <span style="color:#7C3AED;">GEO</span><span style="color:#111827;"> Score</span>
+  </div>
+
+  <p style="font-size:1.1rem;color:#6B7280;max-width:660px;margin:0 auto 52px;line-height:1.8;">
+    The Percepta GEO Score is a single 0–100 number that measures how often and how favorably your brand is cited in AI-generated responses — across ChatGPT, Gemini, and other major AI engines.
+  </p>
+
+  <div style="display:flex;gap:16px;justify-content:center;align-items:center;flex-wrap:wrap;">
+    <a href="?goto=geohub" class="hero-btn-primary">Get Your GEO Score &nbsp;→</a>
+    <a href="#process-section" class="hero-btn-secondary">See How It Works</a>
+  </div>
+
 </div>
-""", unsafe_allow_html=True)
 
-    # Hero buttons
-    _, b1, b2, _ = st.columns([1.6, 0.9, 0.75, 1.6])
-    with b1:
-        st.markdown('<div class="btn-primary">', unsafe_allow_html=True)
-        if st.button("Get Your GEO Score  →", key="hero_primary", use_container_width=True):
-            st.session_state.nav = "GEO Hub"; st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
-    with b2:
-        st.markdown('<div class="btn-secondary">', unsafe_allow_html=True)
-        if st.button("See How It Works", key="hero_secondary", use_container_width=True):
-            st.session_state.nav = "GEO Hub"; st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    st.markdown('<div style="background:linear-gradient(170deg,#ffffff 50%,#F3EEFF 100%);padding:48px 0 0 0;"></div>', unsafe_allow_html=True)
-
-    # ── PROCESS ───────────────────────────────────────────
-    st.markdown("""
-<div style="background:#F9F9FC;padding:80px 40px;border-top:1px solid #E5E7EB;">
+<!-- PROCESS -->
+<div id="process-section" style="background:#F9F9FC;padding:80px 40px;border-top:1px solid #E5E7EB;">
   <div style="text-align:center;margin-bottom:64px;">
     <div class="section-tag">Process</div>
     <h2 style="font-size:2.2rem;font-weight:900;color:#111827;margin:10px 0 14px;">How Percepta Works</h2>
@@ -395,21 +399,16 @@ if nav=="Overview":
 
 <!-- FINAL CTA -->
 <div style="background:white;padding:80px 40px;border-top:1px solid #E5E7EB;">
-  <div style="background:linear-gradient(135deg,#F8F5FF 0%,#EDE9FE 40%,#F3EEFF 100%);border:1.5px solid #C4B5FD;border-radius:28px;padding:80px 60px;text-align:center;">
+  <div style="background:linear-gradient(135deg,#F8F5FF 0%,#EDE9FE 45%,#F3EEFF 100%);border:1.5px solid #C4B5FD;border-radius:28px;padding:80px 60px;text-align:center;">
     <h2 style="font-size:3rem;font-weight:900;color:#111827;margin:0 0 4px;line-height:1.1;">Ready to Discover Your</h2>
     <h2 style="font-size:3rem;font-weight:900;color:#7C3AED;margin:0 0 28px;line-height:1.1;">GEO Score?</h2>
-    <p style="font-size:1rem;color:#6B7280;line-height:1.8;margin:0 auto 48px;max-width:520px;">Join forward-thinking brands that are optimizing for the new era of generative search. Get your Percepta GEO Score today — backed by Accenture.</p>
+    <p style="font-size:1rem;color:#6B7280;line-height:1.8;margin:0 auto;max-width:520px;">Join forward-thinking brands that are optimizing for the new era of generative search. Get your Percepta GEO Score today — backed by Accenture.</p>
+    <div style="margin-top:40px;">
+      <a href="?goto=geohub" class="cta-btn">Launch Percepta &nbsp;→</a>
+    </div>
   </div>
 </div>
 """, unsafe_allow_html=True)
-
-    # Final CTA button overlaid on top of the card bottom
-    _, fc2, _ = st.columns([2.4, 0.85, 2.4])
-    with fc2:
-        st.markdown('<div class="btn-primary">', unsafe_allow_html=True)
-        if st.button("Launch Percepta  →", key="final_cta", use_container_width=True):
-            st.session_state.nav = "GEO Hub"; st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
 
 # ════════════════════════════════════════════════════════════
 # PAGE 2: GEO HUB
