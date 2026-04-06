@@ -457,19 +457,42 @@ elif nav=="GEO Hub":
         """, unsafe_allow_html=True)
 
         st.markdown("""
-        <div style="background:#F3F4F6;padding:0 40px 48px 40px;">
-          <div style="background:white;border-radius:16px;border:1.5px solid #E5E7EB;padding:32px 36px;box-shadow:0 1px 4px rgba(0,0,0,0.06);">
-            <div style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:#9CA3AF;text-transform:uppercase;margin-bottom:16px;">Brand URL</div>
+        <style>
+        div[data-testid="stVerticalBlockBorderWrapper"] {
+            background: white !important;
+            border-radius: 16px !important;
+            border: 1.5px solid #E5E7EB !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07) !important;
+            padding: 8px 24px 24px 24px !important;
+            margin: 0 40px 48px 40px !important;
+        }
+        div[data-testid="stTextInput"] input {
+            border-radius: 10px !important;
+            border: 1.5px solid #E5E7EB !important;
+            padding: 14px 16px !important;
+            font-size: 0.95rem !important;
+            height: 52px !important;
+            background: white !important;
+        }
+        div[data-testid="stTextInput"] input:focus {
+            border-color: #7C3AED !important;
+            box-shadow: 0 0 0 3px rgba(124,58,237,0.12) !important;
+        }
+        </style>
+        <div style="background:#F3F4F6;padding:0 0 0 0;margin-bottom:0;">
+          <p style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:#9CA3AF;text-transform:uppercase;margin:0 40px 0 40px;padding-top:0px;">
+          </p>
+        </div>
         """, unsafe_allow_html=True)
 
-        url_col, btn_col = st.columns([3.5, 1])
-        with url_col:
-            brand_url = st.text_input("Brand URL", value=st.session_state.geo_url,
-                placeholder="https://www.capitalone.com/", label_visibility="collapsed")
-        with btn_col:
-            run_analysis = st.button("🔍  Run Live AI Analysis", use_container_width=True)
-
-        st.markdown("</div></div>", unsafe_allow_html=True)
+        with st.container(border=True):
+            st.markdown('<p style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:#9CA3AF;text-transform:uppercase;margin-bottom:4px;">BRAND URL</p>', unsafe_allow_html=True)
+            url_col, btn_col = st.columns([3.5, 1])
+            with url_col:
+                brand_url = st.text_input("Brand URL", value=st.session_state.geo_url,
+                    placeholder="https://www.capitalone.com/", label_visibility="collapsed")
+            with btn_col:
+                run_analysis = st.button("🔍  Run Live AI Analysis", use_container_width=True)
 
         if run_analysis:
             if not brand_url.strip() or not brand_url.startswith("http"):
