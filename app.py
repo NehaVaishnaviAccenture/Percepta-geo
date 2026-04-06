@@ -23,8 +23,9 @@ footer{visibility:hidden;}
 section[data-testid="stSidebar"]{display:none!important;}
 div[data-testid="stTabs"] button{font-size:0.85rem!important;font-weight:600!important;padding:10px 20px!important;}
 div[data-testid="stTabs"] button[aria-selected="true"]{color:#7C3AED!important;border-bottom:2px solid #7C3AED!important;}
-section.main div[data-testid="stButton"]>button{background:#7C3AED!important;color:white!important;border:none!important;border-radius:50px!important;font-weight:700!important;transition:background 0.2s!important;padding:14px 28px!important;font-size:1rem!important;}
-section.main div[data-testid="stButton"]>button:hover{background:#6D28D9!important;}
+section.main div[data-testid="stButton"]>button{background:#6B21E8!important;color:white!important;border:none!important;border-radius:50px!important;font-weight:700!important;transition:background 0.2s!important;padding:14px 28px!important;font-size:1rem!important;box-shadow:0 4px 14px rgba(107,33,232,0.35)!important;}
+section.main div[data-testid="stButton"]>button:hover{background:#5B21B6!important;}
+div[data-testid="stTextInput"] input{border-radius:10px!important;border:1.5px solid #E5E7EB!important;padding:12px 16px!important;font-size:0.95rem!important;}
 .metric-tooltip{position:relative;display:inline-block;cursor:help;}
 .metric-tooltip .tooltip-text{visibility:hidden;opacity:0;background:#1F2937;color:white;font-size:0.75rem;line-height:1.5;border-radius:8px;padding:10px 14px;position:absolute;z-index:9999;bottom:130%;left:50%;transform:translateX(-50%);width:220px;text-align:left;box-shadow:0 4px 12px rgba(0,0,0,0.2);transition:opacity 0.2s;pointer-events:none;}
 .metric-tooltip .tooltip-text::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#1F2937;}
@@ -255,7 +256,7 @@ else:
 st.markdown("""
 <style>
 div[data-testid="stHorizontalBlock"]:first-of-type{background:white!important;border-bottom:1px solid #E5E7EB!important;padding:12px 40px!important;margin:0!important;position:sticky!important;top:0!important;z-index:999!important;align-items:center!important;box-shadow:0 1px 3px rgba(0,0,0,0.06)!important;}
-div[data-testid="stHorizontalBlock"]:first-of-type button{border:none!important;border-radius:8px!important;font-size:0.88rem!important;font-weight:500!important;padding:7px 16px!important;cursor:pointer!important;width:100%!important;white-space:nowrap!important;}
+div[data-testid="stHorizontalBlock"]:first-of-type button{border:none!important;border-radius:8px!important;font-size:0.88rem!important;font-weight:500!important;padding:7px 16px!important;cursor:pointer!important;width:100%!important;white-space:nowrap!important;box-shadow:none!important;}
 div[data-testid="stHorizontalBlock"]:first-of-type button[kind="secondary"]{background:transparent!important;color:#6B7280!important;}
 div[data-testid="stHorizontalBlock"]:first-of-type button[kind="secondary"]:hover{background:#F5F3FF!important;color:#7C3AED!important;}
 div[data-testid="stHorizontalBlock"]:first-of-type button[kind="primary"]{background:#EDE9FE!important;color:#7C3AED!important;font-weight:700!important;}
@@ -351,25 +352,25 @@ if nav=="Overview":
     </div>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;">
-    <div style="background:#ECFDF5;border-radius:16px;padding:28px 24px;text-align:center;">
+    <div style="background:#ECFDF5;border-radius:16px;padding:28px 24px;text-align:center;border:1.5px solid #6EE7B7;">
       <div style="font-size:0.84rem;font-weight:700;color:#065F46;margin-bottom:8px;">80–100</div>
       <div style="font-size:1.4rem;font-weight:900;color:#065F46;margin-bottom:8px;">Excellent</div>
-      <div style="font-size:0.8rem;color:#065F46;opacity:0.8;">Well optimized for AI citation</div>
+      <div style="font-size:0.8rem;color:#065F46;">Well optimized for AI citation</div>
     </div>
-    <div style="background:#EFF6FF;border-radius:16px;padding:28px 24px;text-align:center;">
+    <div style="background:#EFF6FF;border-radius:16px;padding:28px 24px;text-align:center;border:1.5px solid #93C5FD;">
       <div style="font-size:0.84rem;font-weight:700;color:#1E40AF;margin-bottom:8px;">70–79</div>
       <div style="font-size:1.4rem;font-weight:900;color:#1E40AF;margin-bottom:8px;">Good</div>
-      <div style="font-size:0.8rem;color:#1E40AF;opacity:0.8;">Minor improvements recommended</div>
+      <div style="font-size:0.8rem;color:#1E40AF;">Minor improvements recommended</div>
     </div>
-    <div style="background:#FFFBEB;border-radius:16px;padding:28px 24px;text-align:center;">
+    <div style="background:#FFFBEB;border-radius:16px;padding:28px 24px;text-align:center;border:1.5px solid #FCD34D;">
       <div style="font-size:0.84rem;font-weight:700;color:#92400E;margin-bottom:8px;">45–69</div>
       <div style="font-size:1.4rem;font-weight:900;color:#92400E;margin-bottom:8px;">Needs Work</div>
-      <div style="font-size:0.8rem;color:#92400E;opacity:0.8;">Several issues to address</div>
+      <div style="font-size:0.8rem;color:#92400E;">Several issues to address</div>
     </div>
-    <div style="background:#FFF1F2;border-radius:16px;padding:28px 24px;text-align:center;">
+    <div style="background:#FFF1F2;border-radius:16px;padding:28px 24px;text-align:center;border:1.5px solid #FCA5A5;">
       <div style="font-size:0.84rem;font-weight:700;color:#991B1B;margin-bottom:8px;">0–44</div>
       <div style="font-size:1.4rem;font-weight:900;color:#991B1B;margin-bottom:8px;">Poor</div>
-      <div style="font-size:0.8rem;color:#991B1B;opacity:0.8;">Major optimization needed</div>
+      <div style="font-size:0.8rem;color:#991B1B;">Major optimization needed</div>
     </div>
   </div>
 </div>
@@ -470,32 +471,6 @@ elif nav=="GEO Hub":
 
         st.markdown("</div></div>", unsafe_allow_html=True)
 
-        # Force the button to match the screenshot exactly
-        st.markdown("""
-        <style>
-        section.main div[data-testid="stButton"]>button {
-            background:#6B21E8 !important;
-            color:white !important;
-            border:none !important;
-            border-radius:50px !important;
-            font-weight:700 !important;
-            font-size:1rem !important;
-            padding:14px 28px !important;
-            width:100% !important;
-            box-shadow:0 4px 14px rgba(107,33,232,0.35) !important;
-        }
-        section.main div[data-testid="stButton"]>button:hover {
-            background:#5B21B6 !important;
-        }
-        div[data-testid="stTextInput"] input {
-            border-radius:10px !important;
-            border:1.5px solid #E5E7EB !important;
-            padding:12px 16px !important;
-            font-size:0.95rem !important;
-        }
-        </style>
-        """, unsafe_allow_html=True)
-
         if run_analysis:
             if not brand_url.strip() or not brand_url.startswith("http"):
                 st.error("Please enter a valid URL starting with http:// or https://")
@@ -565,7 +540,6 @@ elif nav=="GEO Hub":
                 with col:
                     st.markdown(f'<div style="background:white;border-radius:10px;padding:18px 16px;border:1px solid #E5E7EB;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">{lbl}<span class="metric-tooltip"><span class="tooltip-icon">?</span><span class="tooltip-text">{tip}</span></span></div><div style="font-size:1.8rem;font-weight:800;color:#7C3AED;line-height:1;">{val}</div><div style="font-size:0.75rem;color:#9CA3AF;margin-top:3px;">{sub}</div></div>', unsafe_allow_html=True)
 
-            # Competitor table inside GEO Score tab
             st.markdown("<div style='padding:24px 0;'>", unsafe_allow_html=True)
             domain_lower2 = page_data["domain"].lower()
             fin_kws2 = ["capital","chase","amex","citi","discover","bank","credit","card","finance","fargo"]
