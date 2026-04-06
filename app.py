@@ -417,47 +417,85 @@ if nav=="Overview":
 # ════════════════════════════════════════════════════════════
 elif nav=="GEO Hub":
     st.markdown("""
-    <div style="background:#7C3AED;padding:48px 40px;">
-        <div style="max-width:900px;margin:0 auto;text-align:center;">
-            <div style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:rgba(255,255,255,0.65);text-transform:uppercase;margin-bottom:10px;">GEO Intelligence Hub</div>
-            <h1 style="font-size:2.4rem;font-weight:900;color:white;margin:0 0 10px 0;letter-spacing:-1px;">Measure. Benchmark. Improve.</h1>
-            <p style="font-size:0.95rem;color:rgba(255,255,255,0.82);margin:0;">Enter your brand URL and receive your complete GEO Score report in real time.</p>
+    <div style="background:linear-gradient(135deg,#7C3AED 0%,#9B59B6 100%);padding:56px 40px;text-align:center;">
+        <div style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,0.35);border-radius:50px;padding:7px 20px;font-size:0.78rem;font-weight:600;color:rgba(255,255,255,0.9);margin-bottom:24px;background:rgba(255,255,255,0.1);">
+            ✦ &nbsp;Real Time GEO Scoring
         </div>
-    </div>""",unsafe_allow_html=True)
+        <h1 style="font-size:3rem;font-weight:900;color:white;margin:0 0 12px;letter-spacing:-1px;">GEO Scorecard</h1>
+        <p style="font-size:1.05rem;color:rgba(255,255,255,0.82);margin:0;">Enter any brand URL · Discover your brand's AI presence</p>
+    </div>""", unsafe_allow_html=True)
 
     has_result = st.session_state.geo_result is not None
-    if has_result:
-        tabs = st.tabs(["GEO Score","Competitors","Visibility","Sentiment","Citations","Prompts","Recommendations","Live Prompt"])
-    else:
-        tabs = st.tabs(["Get Started"])
 
-    with tabs[0]:
-        st.markdown("<div style='padding:32px 40px;max-width:900px;margin:0 auto;'>",unsafe_allow_html=True)
-        if not has_result:
-            st.markdown("""<div style="text-align:center;padding:40px 0 24px 0;">
-                <h3 style="font-size:1.3rem;font-weight:800;color:#111827;margin:0 0 8px 0;">Analyze Your Brand's GEO Score</h3>
-                <p style="font-size:0.88rem;color:#6B7280;margin:0 0 24px 0;">Enter any brand URL below. Percepta will run 20 live AI queries and generate your complete GEO report.</p>
-            </div>""",unsafe_allow_html=True)
-            brand_url = st.text_input("Brand URL",value=st.session_state.geo_url,placeholder="https://www.chase.com/",label_visibility="collapsed")
-            run_analysis = st.button("Run GEO Analysis",use_container_width=True)
-            if run_analysis:
-                if not brand_url.strip() or not brand_url.startswith("http"):
-                    st.error("Please enter a valid URL starting with http:// or https://")
+    if not has_result:
+        # Score band cards
+        st.markdown("""
+        <div style="background:#F9F9FC;padding:40px 40px 0 40px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;margin-bottom:40px;">
+            <div style="background:#ECFDF5;border-radius:16px;padding:28px 24px;text-align:center;">
+              <div style="font-size:0.9rem;font-weight:700;color:#065F46;margin-bottom:8px;">80–100</div>
+              <div style="font-size:1.6rem;font-weight:900;color:#065F46;margin-bottom:8px;">Excellent</div>
+              <div style="font-size:0.85rem;color:#065F46;opacity:0.85;">Well optimized for AI citation</div>
+            </div>
+            <div style="background:#EFF6FF;border-radius:16px;padding:28px 24px;text-align:center;">
+              <div style="font-size:0.9rem;font-weight:700;color:#1E40AF;margin-bottom:8px;">70–79</div>
+              <div style="font-size:1.6rem;font-weight:900;color:#1E40AF;margin-bottom:8px;">Good</div>
+              <div style="font-size:0.85rem;color:#1E40AF;opacity:0.85;">Minor improvements recommended</div>
+            </div>
+            <div style="background:#FFFBEB;border-radius:16px;padding:28px 24px;text-align:center;">
+              <div style="font-size:0.9rem;font-weight:700;color:#92400E;margin-bottom:8px;">45–69</div>
+              <div style="font-size:1.6rem;font-weight:900;color:#92400E;margin-bottom:8px;">Needs Work</div>
+              <div style="font-size:0.85rem;color:#92400E;opacity:0.85;">Several issues to address</div>
+            </div>
+            <div style="background:#FFF1F2;border-radius:16px;padding:28px 24px;text-align:center;">
+              <div style="font-size:0.9rem;font-weight:700;color:#991B1B;margin-bottom:8px;">0–44</div>
+              <div style="font-size:1.6rem;font-weight:900;color:#991B1B;margin-bottom:8px;">Poor</div>
+              <div style="font-size:0.85rem;color:#991B1B;opacity:0.85;">Major optimization needed</div>
+            </div>
+          </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # URL input card
+        st.markdown("""
+        <div style="background:#F9F9FC;padding:0 40px 48px 40px;">
+          <div style="background:white;border-radius:16px;border:1px solid #E5E7EB;padding:32px 36px;">
+            <div style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:#9CA3AF;text-transform:uppercase;margin-bottom:12px;">Brand URL</div>
+        """, unsafe_allow_html=True)
+
+        url_col, btn_col = st.columns([3.5, 1])
+        with url_col:
+            brand_url = st.text_input("Brand URL", value=st.session_state.geo_url,
+                placeholder="https://www.capitalone.com/", label_visibility="collapsed")
+        with btn_col:
+            run_analysis = st.button("🔍  Run Live AI Analysis", use_container_width=True)
+
+        st.markdown("</div></div>", unsafe_allow_html=True)
+
+        if run_analysis:
+            if not brand_url.strip() or not brand_url.startswith("http"):
+                st.error("Please enter a valid URL starting with http:// or https://")
+            else:
+                with st.spinner("Identifying brand from URL..."):
+                    page_data = fetch_page_content(brand_url)
+                if not page_data["ok"]:
+                    st.error(f"Could not fetch URL: {page_data['error']}")
                 else:
-                    with st.spinner("Identifying brand from URL..."):
-                        page_data = fetch_page_content(brand_url)
-                    if not page_data["ok"]:
-                        st.error(f"Could not fetch URL: {page_data['error']}")
-                    else:
-                        with st.spinner("Running 20 live AI queries across 4 consumer categories..."):
-                            try:
-                                result = analyze_geo_with_ai(page_data)
-                                st.session_state.geo_result=result; st.session_state.geo_url=brand_url; st.session_state.geo_page_data=page_data
-                                st.success("Analysis complete. Explore the tabs for your full GEO report."); st.rerun()
-                            except Exception as e:
-                                st.error(f"Analysis failed: {e}")
-        else:
-            result=st.session_state.geo_result; page_data=st.session_state.geo_page_data; brand_url_=st.session_state.geo_url
+                    with st.spinner("Running 20 live AI queries across 4 consumer categories..."):
+                        try:
+                            result = analyze_geo_with_ai(page_data)
+                            st.session_state.geo_result = result
+                            st.session_state.geo_url = brand_url
+                            st.session_state.geo_page_data = page_data
+                            st.success("Analysis complete. Explore the tabs for your full GEO report.")
+                            st.rerun()
+                        except Exception as e:
+                            st.error(f"Analysis failed: {e}")
+
+    else:
+        tabs = st.tabs(["GEO Score","Competitors","Visibility","Sentiment","Citations","Prompts","Recommendations","Live Prompt"])
+        if has_result:
+        result=st.session_state.geo_result; page_data=st.session_state.geo_page_data; brand_url_=st.session_state.geo_url
             geo=result.get("overall_geo_score",0); brand=result.get("brand_name",page_data["domain"]); brand_domain=page_data.get("domain","")
             label,badge_color,badge_bg=score_badge(geo)
             vis=result.get("context",0); cit=result.get("reliability",0); sent=result.get("exclusivity",0); prom=result.get("organization",0); sov=result.get("share_of_voice",0)
@@ -493,7 +531,9 @@ elif nav=="GEO Hub":
         avg_rank="N/A" if vis==0 else result.get("avg_rank","N/A")
         responses_detail=result.get("responses_detail",[])
 
-        with tabs[1]:
+        with tabs[0]:
+            st.markdown("<div style='padding:32px 40px;max-width:900px;margin:0 auto;'>",unsafe_allow_html=True)
+            gauge_col,info_col=st.columns([1,2])
             st.markdown("<div style='padding:24px 40px;max-width:1000px;margin:0 auto;'>",unsafe_allow_html=True)
             domain_lower2=page_data["domain"].lower()
             fin_kws2=["capital","chase","amex","citi","discover","bank","credit","card","finance","fargo"]
