@@ -283,15 +283,9 @@ else:
     slug=rm.get(st.session_state.nav,"")
     if st.query_params.get("p")!=slug: st.query_params["p"]=slug
 
-# ── NAVBAR — NO type="primary", active state via CSS only ─────
+# ── NAVBAR ────────────────────────────────────────────────────
 nav=st.session_state.nav
 
-# Inject active nav highlight via CSS based on current page
-active_styles = {
-    "Overview": "#nb_ov",
-    "GEO Hub": "#nb_gh",
-    "Get Support": "#nb_sp"
-}
 st.markdown(f"""<style>
 div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]:nth-child({"2" if nav=="Overview" else "3" if nav=="GEO Hub" else "4"}) button{{
     background:#EDE9FE!important;color:#7C3AED!important;font-weight:700!important;
@@ -354,10 +348,12 @@ if nav=="Overview":
 # PAGE 2: GEO HUB
 # ════════════════════════════════════════════════════════════
 elif nav=="GEO Hub":
+    # ── ONLY CHANGE ON THIS PAGE: hero subtitle badge + stacked input/button ──
     st.markdown("""<div style="background:linear-gradient(135deg,#5B21B6 0%,#7C3AED 50%,#9333EA 100%);padding:64px 40px 56px;text-align:center;">
         <div style="display:inline-flex;align-items:center;gap:8px;border:1.5px solid rgba(255,255,255,0.5);border-radius:50px;padding:8px 24px;font-size:0.78rem;font-weight:700;color:white;margin-bottom:28px;background:rgba(255,255,255,0.15);">✦ &nbsp;Real Time GEO Scoring</div>
         <h1 style="font-size:3.4rem;font-weight:900;color:white;margin:0 0 14px;letter-spacing:-1.5px;">GEO Scorecard</h1>
-        <p style="font-size:1.05rem;color:rgba(255,255,255,0.88);margin:0;">Enter any brand URL · Discover your brand's AI presence</p>
+        <p style="font-size:1.05rem;color:rgba(255,255,255,0.88);margin:0 0 18px;">Enter any brand URL · Discover your brand's AI presence</p>
+        <div style="display:inline-flex;align-items:center;gap:8px;border:1.5px solid rgba(255,255,255,0.3);border-radius:50px;padding:7px 20px;font-size:0.78rem;color:rgba(255,255,255,0.75);background:rgba(255,255,255,0.1);">⏱ &nbsp;Live data · Updated in real-time · Not cached like competitors</div>
     </div>""", unsafe_allow_html=True)
 
     has_result=st.session_state.geo_result is not None
@@ -373,15 +369,11 @@ elif nav=="GEO Hub":
               <span style="font-size:0.7rem;font-weight:700;letter-spacing:.14em;color:#9CA3AF;text-transform:uppercase;">Brand URL</span>
             </div>
             """, unsafe_allow_html=True)
-            col_i, col_b = st.columns([3.5, 1])
-            with col_i:
-                brand_url = st.text_input("url", value=st.session_state.geo_url,
-                    placeholder="https://www.capitalone.com/", label_visibility="collapsed")
-            with col_b:
-                run = st.button("🔍  Run Live AI Analysis", use_container_width=True)
+            brand_url = st.text_input("url", value=st.session_state.geo_url,
+                placeholder="https://www.capitalone.com/", label_visibility="collapsed")
+            run = st.button("🔍  Run Live AI Analysis", use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
 
-        # Style the st.container border wrapper to look like the card
         st.markdown("""<style>
         div[data-testid="stVerticalBlockBorderWrapper"]{
             background:white!important;border-radius:16px!important;
