@@ -241,21 +241,17 @@ for k,v in [("nav","Overview"),("geo_result",None),("geo_url",""),("geo_page_dat
 # ── URL ROUTING ────────────────────────────────────────────
 page_map = {"geohub":"GEO Hub","getsupport":"Get Support"}
 reverse_map = {"GEO Hub":"geohub","Get Support":"getsupport"}
-
 url_page = st.query_params.get("p","")
 if url_page in page_map and st.session_state.nav != page_map[url_page]:
     st.session_state.nav = page_map[url_page]
-
 current_nav = st.session_state.nav
 if current_nav == "Overview":
-    if st.query_params.get("p"):
-        st.query_params.clear()
+    if st.query_params.get("p"): st.query_params.clear()
 else:
     slug = reverse_map.get(current_nav,"")
-    if st.query_params.get("p") != slug:
-        st.query_params["p"] = slug
+    if st.query_params.get("p") != slug: st.query_params["p"] = slug
 
-# ── NAVBAR ────────────────────────────────────────────────────
+# ── NAVBAR ──────────────────────────────────────────────────
 st.markdown("""
 <style>
 div[data-testid="stHorizontalBlock"]:first-of-type{background:white!important;border-bottom:1px solid #E5E7EB!important;padding:12px 40px!important;margin:0!important;position:sticky!important;top:0!important;z-index:999!important;align-items:center!important;box-shadow:0 1px 3px rgba(0,0,0,0.06)!important;}
@@ -349,9 +345,7 @@ if nav=="Overview":
     <div style="background:white;border-radius:20px;padding:44px 40px;box-shadow:0 8px 40px rgba(124,58,237,0.13);border:1px solid #F0EBFF;text-align:center;">
       <div style="font-size:0.7rem;font-weight:700;letter-spacing:.14em;color:#9CA3AF;text-transform:uppercase;margin-bottom:18px;">GEO SCORE</div>
       <div style="font-size:5.5rem;font-weight:900;color:#7C3AED;line-height:1;margin-bottom:20px;">78</div>
-      <div style="background:#F3F4F6;border-radius:50px;height:6px;width:100%;margin-bottom:10px;overflow:hidden;">
-        <div style="background:#7C3AED;height:6px;border-radius:50px;width:78%;"></div>
-      </div>
+      <div style="background:#F3F4F6;border-radius:50px;height:6px;width:100%;margin-bottom:10px;overflow:hidden;"><div style="background:#7C3AED;height:6px;border-radius:50px;width:78%;"></div></div>
       <div style="font-size:0.82rem;color:#9CA3AF;margin-bottom:20px;">out of 100</div>
       <span style="background:#EDE9FE;color:#7C3AED;border-radius:50px;padding:6px 22px;font-size:0.84rem;font-weight:700;">Good</span>
     </div>
@@ -417,8 +411,6 @@ if nav=="Overview":
   </div>
 </div>
 """, unsafe_allow_html=True)
-
-
 
 # ════════════════════════════════════════════════════════════
 # PAGE 2: GEO HUB
@@ -640,100 +632,79 @@ elif nav=="GEO Hub":
 # ════════════════════════════════════════════════════════════
 elif nav=="Get Support":
     st.markdown("""
-    <div style="background:#7C3AED;padding:72px 40px;">
-        <div style="max-width:900px;margin:0 auto;text-align:center;">
+    <div style="background:#7C3AED;padding:56px 40px;">
+        <div style="text-align:center;">
             <div style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:rgba(255,255,255,0.65);text-transform:uppercase;margin-bottom:10px;">Accenture GEO Services</div>
             <h1 style="font-size:2.8rem;font-weight:900;color:white;margin:0 0 14px 0;letter-spacing:-1px;">We've Got You Covered</h1>
             <p style="font-size:1rem;color:rgba(255,255,255,0.82);max-width:500px;margin:0 auto;line-height:1.8;">From GEO diagnostic to full optimization. Accenture's team handles everything, end to end.</p>
         </div>
     </div>""",unsafe_allow_html=True)
 
+    # OUR APPROACH — left col + image + right col using Streamlit columns
     st.markdown("""
-    <div style="background:white;padding:56px 40px 40px 40px;border-bottom:1px solid #E5E7EB;">
-        <div style="margin-bottom:36px;">
+    <div style="background:white;padding:56px 40px 0 40px;border-bottom:0;">
+        <div style="margin-bottom:40px;">
             <div class="section-tag">Our Approach</div>
-            <h2 style="font-size:2rem;font-weight:900;color:#111827;margin:8px 0 8px 0;">GEO is No Longer Optional</h2>
-            <p style="font-size:0.9rem;color:#6B7280;margin:0;line-height:1.7;">While search spend continues to rise, its impact is fading as AI agents increasingly shape the decisions search used to influence.</p>
+            <h2 style="font-size:2.4rem;font-weight:900;color:#111827;margin:10px 0 10px 0;">GEO is No Longer Optional</h2>
+            <p style="font-size:0.92rem;color:#6B7280;margin:0;line-height:1.7;">While search spend continues to rise, its impact is fading as AI agents increasingly shape the decisions search used to influence.</p>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 320px 1fr;gap:40px;align-items:center;margin-bottom:32px;">
-            <div style="display:flex;flex-direction:column;gap:28px;">
-                <div>
-                    <div style="font-size:0.9rem;font-weight:800;color:#111827;margin-bottom:2px;"><strong>Workstream 1:</strong></div>
-                    <div style="font-size:0.88rem;font-style:italic;color:#374151;margin-bottom:8px;">Agent Ranking Diagnostic (ARD)</div>
-                    <p style="font-size:0.82rem;color:#6B7280;line-height:1.65;margin:0;">Conduct the initial evaluation to <strong>establish the baseline ranking performance</strong> of AI agents when comparing your brand to competitive offerings across high-intent consumer scenarios.</p>
-                </div>
-                <div>
-                    <div style="font-size:0.9rem;font-weight:800;color:#111827;margin-bottom:2px;"><strong>Workstream 4:</strong></div>
-                    <div style="font-size:0.88rem;font-style:italic;color:#374151;margin-bottom:8px;">Impact Measurement (Re-Diagnostic)</div>
-                    <p style="font-size:0.82rem;color:#6B7280;line-height:1.65;margin:0;">Following the optimization activities, re-run the diagnostic to <strong>Re-measure performance</strong> to quantify improvements and establish ongoing program foundation.</p>
-                </div>
+    </div>""", unsafe_allow_html=True)
+
+    col_l, col_mid, col_r = st.columns([1, 1.1, 1])
+    with col_l:
+        st.markdown("""
+        <div style="padding:0 20px 0 40px;display:flex;flex-direction:column;gap:36px;">
+            <div>
+                <div style="font-size:0.95rem;font-weight:800;color:#111827;margin-bottom:3px;"><strong>Workstream 1:</strong></div>
+                <div style="font-size:0.88rem;font-style:italic;color:#374151;margin-bottom:10px;">Agent Ranking Diagnostic (ARD)</div>
+                <p style="font-size:0.82rem;color:#6B7280;line-height:1.7;margin:0;">Conduct the initial evaluation to <strong>establish the baseline ranking performance</strong> of AI agents when comparing your brand to competitive offerings across several high-intent consumer scenarios.</p>
             </div>
-            <div style="display:flex;align-items:center;justify-content:center;">
-                <svg width="320" height="220" viewBox="0 0 400 260" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <linearGradient id="loopGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" style="stop-color:#1a1a6e;stop-opacity:1"/>
-                      <stop offset="100%" style="stop-color:#4040cc;stop-opacity:1"/>
-                    </linearGradient>
-                    <linearGradient id="loopGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" style="stop-color:#4040cc;stop-opacity:1"/>
-                      <stop offset="100%" style="stop-color:#6060ee;stop-opacity:1"/>
-                    </linearGradient>
-                    <marker id="arrow1" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
-                      <path d="M0,0 L8,4 L0,8 Z" fill="#1a1a6e"/>
-                    </marker>
-                    <marker id="arrow2" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
-                      <path d="M0,0 L8,4 L0,8 Z" fill="#5555dd"/>
-                    </marker>
-                  </defs>
-                  <!-- Left loop -->
-                  <path d="M 50 130 C 50 70, 90 30, 140 30 C 190 30, 210 70, 200 130 C 190 190, 210 230, 260 230 C 310 230, 350 190, 350 130 C 350 70, 310 30, 260 30 C 210 30, 190 70, 200 130 C 210 190, 190 230, 140 230 C 90 230, 50 190, 50 130 Z"
-                    stroke="url(#loopGrad1)" stroke-width="28" fill="none" stroke-linecap="round"/>
-                  <!-- Arrow going right across center -->
-                  <path d="M 155 115 L 245 145" stroke="#1a1a6e" stroke-width="4" marker-end="url(#arrow1)"/>
-                  <!-- Arrow going left across center -->
-                  <path d="M 245 115 L 155 145" stroke="#5555dd" stroke-width="4" marker-end="url(#arrow2)"/>
-                  <!-- Dots at connection points -->
-                  <circle cx="140" cy="30" r="5" fill="white" stroke="#4040cc" stroke-width="2"/>
-                  <circle cx="260" cy="30" r="5" fill="white" stroke="#4040cc" stroke-width="2"/>
-                  <circle cx="140" cy="230" r="5" fill="white" stroke="#4040cc" stroke-width="2"/>
-                  <circle cx="260" cy="230" r="5" fill="white" stroke="#4040cc" stroke-width="2"/>
-                </svg>
+            <div>
+                <div style="font-size:0.95rem;font-weight:800;color:#111827;margin-bottom:3px;"><strong>Workstream 4:</strong></div>
+                <div style="font-size:0.88rem;font-style:italic;color:#374151;margin-bottom:10px;">Impact Measurement (Re-Diagnostic)</div>
+                <p style="font-size:0.82rem;color:#6B7280;line-height:1.7;margin:0;">Following the optimization activities, the Agent Ranking Diagnostic will be performed again to <strong>Re-measure performance</strong> to quantify improvements and establish ongoing program foundation.</p>
             </div>
-            <div style="display:flex;flex-direction:column;gap:28px;">
-                <div>
-                    <div style="font-size:0.9rem;font-weight:800;color:#111827;margin-bottom:2px;"><strong>Workstream 3:</strong></div>
-                    <div style="font-size:0.88rem;font-style:italic;color:#374151;margin-bottom:8px;">Distribution and Technical Influence Layer (DTI)</div>
-                    <p style="font-size:0.82rem;color:#6B7280;line-height:1.65;margin:0;">Pinpoint and <strong>propose specific technical and distribution improvements</strong> to maximize the chance that Large Language Models (LLMs) ingest and utilize your verified content.</p>
-                </div>
-                <div>
-                    <div style="font-size:0.9rem;font-weight:800;color:#111827;margin-bottom:2px;"><strong>Workstream 2:</strong></div>
-                    <div style="font-size:0.88rem;font-style:italic;color:#374151;margin-bottom:8px;">Agent Optimization Plan (AOP)</div>
-                    <p style="font-size:0.82rem;color:#6B7280;line-height:1.65;margin:0;">Based on the diagnostic findings, <strong>design and deploy a specific optimization strategy</strong> aimed at elevating agent recognition and positioning of your brand.</p>
-                </div>
+        </div>""", unsafe_allow_html=True)
+    with col_mid:
+        st.image("infinity.png", use_container_width=True)
+    with col_r:
+        st.markdown("""
+        <div style="padding:0 40px 0 20px;display:flex;flex-direction:column;gap:36px;">
+            <div>
+                <div style="font-size:0.95rem;font-weight:800;color:#111827;margin-bottom:3px;"><strong>Workstream 3:</strong></div>
+                <div style="font-size:0.88rem;font-style:italic;color:#374151;margin-bottom:10px;">Distribution and Technical Influence Layer (DTI)</div>
+                <p style="font-size:0.82rem;color:#6B7280;line-height:1.7;margin:0;">Pinpoint and <strong>propose specific technical and distribution improvements</strong> to maximize the chance that Large Language Models (LLMs) ingest and utilize your verified content.</p>
             </div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;gap:0;border-top:1px dashed #E5E7EB;padding-top:28px;">
+            <div>
+                <div style="font-size:0.95rem;font-weight:800;color:#111827;margin-bottom:3px;"><strong>Workstream 2:</strong></div>
+                <div style="font-size:0.88rem;font-style:italic;color:#374151;margin-bottom:10px;">Agent Optimization Plan (AOP)</div>
+                <p style="font-size:0.82rem;color:#6B7280;line-height:1.7;margin:0;">Based on the diagnostic findings, <strong>design and deploy a specific optimization strategy</strong> aimed at elevating agent recognition and positioning of your brand's offerings.</p>
+            </div>
+        </div>""", unsafe_allow_html=True)
+
+    st.markdown("""
+    <div style="background:white;padding:32px 40px 40px 40px;border-bottom:1px solid #E5E7EB;">
+        <div style="display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;gap:0;border-top:1px dashed #D1D5DB;padding-top:32px;">
             <div style="text-align:center;padding:0 20px;">
-                <div style="font-size:3rem;font-weight:900;color:#111827;line-height:1;">6</div>
-                <div style="font-size:0.95rem;font-weight:700;color:#111827;margin-top:4px;">Week Engagement</div>
-                <div style="font-size:0.78rem;color:#9CA3AF;margin-top:2px;">Phase 1</div>
+                <div style="font-size:3.2rem;font-weight:900;color:#111827;line-height:1;">6</div>
+                <div style="font-size:1rem;font-weight:700;color:#111827;margin-top:6px;">Week Engagement</div>
+                <div style="font-size:0.8rem;color:#9CA3AF;margin-top:3px;">Phase 1</div>
             </div>
             <div style="background:#E5E7EB;"></div>
             <div style="text-align:center;padding:0 20px;">
-                <div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Pilot Phase 1</div>
-                <div style="font-size:3rem;font-weight:900;color:#111827;line-height:1;">2</div>
-                <div style="font-size:0.95rem;font-weight:700;color:#111827;margin-top:4px;">AI Agents</div>
-                <div style="font-size:0.78rem;color:#9CA3AF;margin-top:2px;">ChatGPT & Gemini</div>
+                <div style="font-size:0.85rem;font-weight:700;color:#111827;margin-bottom:4px;">Pilot Phase 1</div>
+                <div style="font-size:3.2rem;font-weight:900;color:#111827;line-height:1;">2</div>
+                <div style="font-size:1rem;font-weight:700;color:#111827;margin-top:6px;">AI Agents</div>
+                <div style="font-size:0.8rem;color:#9CA3AF;margin-top:3px;">ChatGPT & Gemini</div>
             </div>
             <div style="background:#E5E7EB;"></div>
             <div style="text-align:center;padding:0 20px;">
-                <div style="font-size:3rem;font-weight:900;color:#111827;line-height:1;">4</div>
-                <div style="font-size:0.95rem;font-weight:700;color:#111827;margin-top:4px;">Workstreams</div>
-                <div style="font-size:0.78rem;color:#9CA3AF;margin-top:2px;">End to end coverage</div>
+                <div style="font-size:3.2rem;font-weight:900;color:#111827;line-height:1;">4</div>
+                <div style="font-size:1rem;font-weight:700;color:#111827;margin-top:6px;">Workstreams</div>
+                <div style="font-size:0.8rem;color:#9CA3AF;margin-top:3px;">End to end coverage</div>
             </div>
         </div>
-    </div>""",unsafe_allow_html=True)
+    </div>""", unsafe_allow_html=True)
 
     st.markdown("""
     <div style="background:#F9F9FC;padding:48px 40px;border-bottom:1px solid #E5E7EB;">
@@ -741,7 +712,6 @@ elif nav=="Get Support":
             <div class="section-tag">Deliverables</div>
             <h2 style="font-size:1.8rem;font-weight:800;color:#111827;margin:8px 0 0 0;">Activities and What We Deliver</h2>
         </div>
-        <!-- Header row -->
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:3px;margin-bottom:12px;">
             <div style="background:#1E1B5E;padding:20px 18px;border-radius:8px 0 0 0;clip-path:polygon(0 0,93% 0,100% 50%,93% 100%,0 100%);">
                 <div style="font-size:0.7rem;font-weight:600;color:rgba(255,255,255,0.65);margin-bottom:6px;text-transform:uppercase;letter-spacing:.07em;">Workstream 01</div>
@@ -760,7 +730,6 @@ elif nav=="Get Support":
                 <div style="font-size:0.9rem;font-weight:700;color:white;line-height:1.35;">Impact Measurement (Re-Diagnostic)</div>
             </div>
         </div>
-        <!-- Activities row -->
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:12px;">
             <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:18px;">
                 <div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:12px;text-align:center;">Activities</div>
@@ -800,7 +769,6 @@ elif nav=="Get Support":
                 </ul>
             </div>
         </div>
-        <!-- Deliverables row -->
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;">
             <div style="background:#EEEAF8;border:1px solid #DDD6FE;border-radius:8px;padding:18px;">
                 <div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #DDD6FE;padding-bottom:8px;margin-bottom:12px;text-align:center;">Deliverables</div>
@@ -849,7 +817,7 @@ elif nav=="Get Support":
         <div style="text-align:center;margin-bottom:36px;">
             <div class="section-tag">Explore Offers</div>
             <h2 style="font-size:1.8rem;font-weight:800;color:#111827;margin:8px 0 6px 0;">Choose Your Pilot Program</h2>
-            <p style="font-size:0.88rem;color:#6B7280;margin:0;">Start with what fits your timeline. Scale as you see results.</p>
+            <p style="font-size:0.88rem;color:#6B7280;max-width:420px;margin:0 auto;">Start with what fits your timeline. Scale as you see results.</p>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px;">
             <div style="border:1px solid #E5E7EB;border-radius:16px;padding:36px 32px;">
