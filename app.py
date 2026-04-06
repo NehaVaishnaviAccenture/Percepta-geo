@@ -23,8 +23,12 @@ footer{visibility:hidden;}
 section[data-testid="stSidebar"]{display:none!important;}
 div[data-testid="stTabs"] button{font-size:0.85rem!important;font-weight:600!important;padding:10px 20px!important;}
 div[data-testid="stTabs"] button[aria-selected="true"]{color:#7C3AED!important;border-bottom:2px solid #7C3AED!important;}
-section.main div[data-testid="stButton"]>button{background:#6B21E8!important;color:white!important;border:none!important;border-radius:50px!important;font-weight:700!important;transition:background 0.2s!important;padding:14px 28px!important;font-size:1rem!important;box-shadow:0 4px 14px rgba(107,33,232,0.35)!important;}
+section.main div[data-testid="stButton"]>button{background:#6B21E8!important;color:white!important;border:none!important;border-radius:50px!important;font-weight:700!important;transition:background 0.2s!important;padding:14px 28px!important;font-size:1rem!important;box-shadow:0 4px 18px rgba(107,33,232,0.45)!important;}
 section.main div[data-testid="stButton"]>button:hover{background:#5B21B6!important;}
+section.main div[data-testid="stButton"]>button p{color:white!important;font-weight:700!important;}
+/* Navbar buttons must NOT get the purple style */
+div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button{background:transparent!important;box-shadow:none!important;color:#6B7280!important;}
+div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button[kind="primary"]{background:#EDE9FE!important;color:#7C3AED!important;}
 div[data-testid="stTextInput"] input{border-radius:10px!important;border:1.5px solid #E5E7EB!important;padding:12px 16px!important;font-size:0.95rem!important;}
 .metric-tooltip{position:relative;display:inline-block;cursor:help;}
 .metric-tooltip .tooltip-text{visibility:hidden;opacity:0;background:#1F2937;color:white;font-size:0.75rem;line-height:1.5;border-radius:8px;padding:10px 14px;position:absolute;z-index:9999;bottom:130%;left:50%;transform:translateX(-50%);width:220px;text-align:left;box-shadow:0 4px 12px rgba(0,0,0,0.2);transition:opacity 0.2s;pointer-events:none;}
