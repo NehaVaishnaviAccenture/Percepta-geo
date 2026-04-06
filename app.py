@@ -118,7 +118,7 @@ def score_band_cards():
            ("#FFFBEB","#FCD34D","#92400E","45–69","Needs Work","Several issues to address"),
            ("#FFF1F2","#FCA5A5","#991B1B","0–44","Poor","Major optimization needed")]
     inner="".join(card(bg,border,f'<div style="font-size:0.82rem;font-weight:700;color:{c};margin-bottom:6px;">{rng}</div><div style="font-size:1.6rem;font-weight:900;color:{c};margin-bottom:6px;">{label}</div><div style="font-size:0.82rem;color:{c};">{desc}</div>') for bg,border,c,rng,label,desc in bands)
-    return f'<div style="background:#F3F4F6;padding:40px 40px 32px;"><div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:20px;">{inner}</div></div>'
+    return f'<div style="background:#F3F4F6;padding:24px 40px 16px;"><div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:20px;">{inner}</div></div>'
 
 def metric_card(label, val, sub, tip="", color="#7C3AED"):
     return f'<div style="background:white;border-radius:10px;padding:18px 16px;border:1px solid #E5E7EB;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">{label}<span class="metric-tooltip"><span class="tooltip-icon">?</span><span class="tooltip-text">{tip}</span></span></div><div style="font-size:1.8rem;font-weight:800;color:{color};line-height:1;">{val}</div><div style="font-size:0.75rem;color:#9CA3AF;margin-top:3px;">{sub}</div></div>'
@@ -361,10 +361,10 @@ elif nav=="GEO Hub":
     if not has_result:
         st.markdown(score_band_cards(), unsafe_allow_html=True)
 
-        st.markdown("<div style='background:#F3F4F6;padding:28px 40px 40px 40px;'>", unsafe_allow_html=True)
+        st.markdown("<div style='background:#F3F4F6;padding:16px 40px 40px 40px;'>", unsafe_allow_html=True)
         with st.container(border=True):
             st.markdown("""
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
               <div style="width:7px;height:7px;border-radius:50%;background:#7C3AED;flex-shrink:0;"></div>
               <span style="font-size:0.7rem;font-weight:700;letter-spacing:.14em;color:#9CA3AF;text-transform:uppercase;">Brand URL</span>
             </div>
