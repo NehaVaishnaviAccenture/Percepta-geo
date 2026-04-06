@@ -25,13 +25,15 @@ section.main div[data-testid="stButton"]>button{
     border-radius:50px!important;font-weight:700!important;font-size:1rem!important;
     padding:14px 28px!important;box-shadow:0 4px 14px rgba(124,58,237,0.4)!important;transition:background 0.2s!important;}
 section.main div[data-testid="stButton"]>button:hover{background:#6D28D9!important;}
-/* Navbar buttons: small transparent */
+/* Navbar buttons: no border, no shadow, plain text */
 div[data-testid="stAppViewBlockContainer"]>div>div>div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button{
-    background:transparent!important;color:#6B7280!important;border:1px solid #E5E7EB!important;
+    background:transparent!important;color:#6B7280!important;border:none!important;
     border-radius:8px!important;font-weight:500!important;font-size:0.88rem!important;
     padding:7px 16px!important;box-shadow:none!important;width:100%!important;height:auto!important;}
-div[data-testid="stAppViewBlockContainer"]>div>div>div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button:hover{background:#F5F3FF!important;color:#7C3AED!important;border-color:#7C3AED!important;}
-div[data-testid="stAppViewBlockContainer"]>div>div>div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"] button[kind="primary"]{background:#EDE9FE!important;color:#7C3AED!important;border:1px solid #DDD6FE!important;font-weight:700!important;}
+div[data-testid="stAppViewBlockContainer"]>div>div>div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button:hover{
+    background:#F5F3FF!important;color:#7C3AED!important;border:none!important;}
+div[data-testid="stAppViewBlockContainer"]>div>div>div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"] button[kind="primary"]{
+    background:#EDE9FE!important;color:#7C3AED!important;border:none!important;font-weight:700!important;}
 /* Navbar bar */
 div[data-testid="stHorizontalBlock"]:first-of-type{background:white!important;border-bottom:1px solid #E5E7EB!important;padding:12px 40px!important;margin:0!important;position:sticky!important;top:0!important;z-index:999!important;align-items:center!important;box-shadow:0 1px 3px rgba(0,0,0,0.06)!important;}
 /* Input */
@@ -74,8 +76,35 @@ def score_band_cards():
              ("#EFF6FF","#93C5FD","#1E40AF","70–79","Good","Minor improvements recommended"),
              ("#FFFBEB","#FCD34D","#92400E","45–69","Needs Work","Several issues to address"),
              ("#FFF1F2","#FCA5A5","#991B1B","0–44","Poor","Major optimization needed")]
-    inner = "".join(card(bg, border, f'<div style="font-size:0.8rem;font-weight:700;color:{c};margin-bottom:3px;">{rng}</div><div style="font-size:1.35rem;font-weight:900;color:{c};margin-bottom:3px;">{label}</div><div style="font-size:0.75rem;color:{c};">{desc}</div>') for bg,border,c,rng,label,desc in bands)
-    return f'<div style="background:#F3F4F6;padding:32px 40px 24px;"><div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;">{inner}</div></div><div style="background:#F3F4F6;padding:16px 40px 0;"></div>'
+    inner = "".join(card(bg, border, f'<div style="font-size:0.82rem;font-weight:700;color:{c};margin-bottom:6px;">{rng}</div><div style="font-size:1.6rem;font-weight:900;color:{c};margin-bottom:6px;">{label}</div><div style="font-size:0.82rem;color:{c};">{desc}</div>') for bg,border,c,rng,label,desc in bands)
+    return f'<div style="background:#F3F4F6;padding:40px 40px 0 40px;"><div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:20px;margin-bottom:32px;">{inner}</div></div>'
+
+FEATURE_CARDS = """
+<div style="background:#F3F4F6;padding:0 40px 40px 40px;">
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:20px;">
+    <div style="background:white;border-radius:14px;border:1px solid #E5E7EB;padding:28px 24px;">
+      <div style="font-size:1.4rem;margin-bottom:14px;">📈</div>
+      <div style="font-size:0.95rem;font-weight:700;color:#111827;margin-bottom:6px;">Real-Time AI Analysis</div>
+      <div style="font-size:0.82rem;color:#6B7280;line-height:1.6;">Live data, not cached — results as AI sees them now</div>
+    </div>
+    <div style="background:white;border-radius:14px;border:1px solid #E5E7EB;padding:28px 24px;">
+      <div style="font-size:1.4rem;margin-bottom:14px;">⚡</div>
+      <div style="font-size:0.95rem;font-weight:700;color:#111827;margin-bottom:6px;">Unified GEO Score</div>
+      <div style="font-size:0.82rem;color:#6B7280;line-height:1.6;">One number connecting visibility, citations &amp; sentiment</div>
+    </div>
+    <div style="background:white;border-radius:14px;border:1px solid #E5E7EB;padding:28px 24px;">
+      <div style="font-size:1.4rem;margin-bottom:14px;">👥</div>
+      <div style="font-size:0.95rem;font-weight:700;color:#111827;margin-bottom:6px;">Competitor Benchmarking</div>
+      <div style="font-size:0.82rem;color:#6B7280;line-height:1.6;">See exactly where you stand vs. industry peers</div>
+    </div>
+    <div style="background:white;border-radius:14px;border:1px solid #E5E7EB;padding:28px 24px;">
+      <div style="font-size:1.4rem;margin-bottom:14px;">✅</div>
+      <div style="font-size:0.95rem;font-weight:700;color:#111827;margin-bottom:6px;">Actionable Strategy</div>
+      <div style="font-size:0.82rem;color:#6B7280;line-height:1.6;">Recommendations backed by Accenture consultants</div>
+    </div>
+  </div>
+</div>
+"""
 
 def metric_card(label, val, sub, tip="", color="#7C3AED"):
     return f'<div style="background:white;border-radius:10px;padding:18px 16px;border:1px solid #E5E7EB;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">{label}<span class="metric-tooltip"><span class="tooltip-icon">?</span><span class="tooltip-text">{tip}</span></span></div><div style="font-size:1.8rem;font-weight:800;color:{color};line-height:1;">{val}</div><div style="font-size:0.75rem;color:#9CA3AF;margin-top:3px;">{sub}</div></div>'
@@ -329,11 +358,23 @@ elif nav=="GEO Hub":
 
     if not has_result:
         st.markdown(score_band_cards(), unsafe_allow_html=True)
-        st.markdown('<div style="background:white;border-radius:16px 16px 0 0;border:1.5px solid #E5E7EB;border-bottom:none;padding:20px 28px 8px;margin:0 40px;"><p style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:#9CA3AF;text-transform:uppercase;margin:0;">BRAND URL</p></div>', unsafe_allow_html=True)
-        uc,bc=st.columns([3.5,1])
-        with uc: brand_url=st.text_input("u",value=st.session_state.geo_url,placeholder="https://www.capitalone.com/",label_visibility="collapsed")
-        with bc: run=st.button("🔍  Run Live AI Analysis",use_container_width=True)
-        st.markdown("<div style='background:#F3F4F6;height:40px;'></div>", unsafe_allow_html=True)
+
+        # White URL card - label on top, input + button on same row inside card
+        st.markdown("""
+        <div style="background:#F3F4F6;padding:0 40px;">
+          <div style="background:white;border-radius:16px;border:1.5px solid #E5E7EB;
+                      box-shadow:0 2px 12px rgba(0,0,0,0.07);padding:24px 28px 28px;">
+            <p style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:#9CA3AF;
+                      text-transform:uppercase;margin:0 0 14px 0;">BRAND URL</p>
+          </div>
+        </div>
+        """, unsafe_allow_html=True)
+        # Input + button rendered by Streamlit — styled via CSS to sit flush under label
+        uc, bc = st.columns([3.5, 1])
+        with uc: brand_url = st.text_input("u", value=st.session_state.geo_url, placeholder="https://www.capitalone.com/", label_visibility="collapsed")
+        with bc: run = st.button("🔍  Run Live AI Analysis", use_container_width=True)
+
+        st.markdown(FEATURE_CARDS, unsafe_allow_html=True)
 
         if run:
             if not brand_url.strip() or not brand_url.startswith("http"):
