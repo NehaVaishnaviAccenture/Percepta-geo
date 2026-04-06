@@ -360,10 +360,64 @@ if nav=="Overview":
     </div>
     <div style="background:white;border-radius:20px;padding:44px 40px;box-shadow:0 8px 40px rgba(124,58,237,0.13);border:1px solid #F0EBFF;text-align:center;">
       <div style="font-size:0.7rem;font-weight:700;letter-spacing:.14em;color:#9CA3AF;text-transform:uppercase;margin-bottom:18px;">GEO SCORE</div>
-      <div style="font-size:5.5rem;font-weight:900;color:#7C3AED;line-height:1;margin-bottom:20px;">78</div>
-      <div style="background:#F3F4F6;border-radius:50px;height:6px;width:100%;margin-bottom:10px;overflow:hidden;"><div style="background:#7C3AED;height:6px;border-radius:50px;width:78%;"></div></div>
+      <div id="geo-score-number" style="font-size:5.5rem;font-weight:900;color:#7C3AED;line-height:1;margin-bottom:20px;">0</div>
+      <div style="background:#F3F4F6;border-radius:50px;height:6px;width:100%;margin-bottom:10px;overflow:hidden;">
+        <div id="geo-score-bar" style="background:#7C3AED;height:6px;border-radius:50px;width:0%;transition:width 0.1s;"></div>
+      </div>
       <div style="font-size:0.82rem;color:#9CA3AF;margin-bottom:20px;">out of 100</div>
       <span style="background:#EDE9FE;color:#7C3AED;border-radius:50px;padding:6px 22px;font-size:0.84rem;font-weight:700;">Good</span>
+      <script>
+        (function() {
+          var target = 78;
+          var duration = 1800;
+          var el = document.getElementById('geo-score-number');
+          var bar = document.getElementById('geo-score-bar');
+          var started = false;
+
+          function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+          function animateScore() {
+            var start = null;
+            function step(timestamp) {
+              if (!start) start = timestamp;
+              var elapsed = timestamp - start;
+              var progress = Math.min(elapsed / duration, 1);
+              var eased = easeOutCubic(progress);
+              var current = Math.round(eased * target);
+              el.textContent = current;
+              bar.style.width = (eased * target) + '%';
+              if (progress < 1) {
+                requestAnimationFrame(step);
+              } else {
+                el.textContent = target;
+                bar.style.width = target + '%';
+              }
+            }
+            requestAnimationFrame(step);
+          }
+
+          function onScroll() {
+            if (started) return;
+            var rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight - 50) {
+              started = true;
+              animateScore();
+              window.removeEventListener('scroll', onScroll);
+            }
+          }
+
+          // Try immediately in case already in view
+          setTimeout(function() {
+            var rect = el ? el.getBoundingClientRect() : null;
+            if (rect && rect.top < window.innerHeight - 50) {
+              started = true;
+              animateScore();
+            } else {
+              window.addEventListener('scroll', onScroll);
+            }
+          }, 400);
+        })();
+      </script>
     </div>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;">
