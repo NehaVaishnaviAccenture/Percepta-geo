@@ -36,19 +36,20 @@ section.main div[data-testid="stButton"]>button{
 }
 section.main div[data-testid="stButton"]>button:hover{background:#6D28D9!important;}
 
-/* ── NAVBAR BUTTONS: override to small unstyled ── */
-div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button{
+/* ── NAVBAR BUTTONS: only target the sticky navbar row ── */
+div[data-testid="stHorizontalBlock"].navbar-row div[data-testid="stButton"]>button,
+header + div div[data-testid="stHorizontalBlock"]:first-child div[data-testid="stButton"]>button,
+div[data-testid="stAppViewBlockContainer"] > div > div > div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button {
     background:transparent!important;color:#6B7280!important;
     border:1px solid #E5E7EB!important;border-radius:8px!important;
     font-weight:500!important;font-size:0.88rem!important;
     padding:7px 16px!important;box-shadow:none!important;
-    width:100%!important;
+    width:100%!important;height:auto!important;
 }
-div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button:hover{
+div[data-testid="stAppViewBlockContainer"] > div > div > div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button:hover{
     background:#F5F3FF!important;color:#7C3AED!important;border-color:#7C3AED!important;
 }
-/* active nav button */
-div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"] button[kind="primary"]{
+div[data-testid="stAppViewBlockContainer"] > div > div > div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"] button[kind="primary"]{
     background:#EDE9FE!important;color:#7C3AED!important;
     border:1px solid #DDD6FE!important;font-weight:700!important;
 }
@@ -453,35 +454,44 @@ elif nav=="GEO Hub":
         <div style="background:#F3F4F6;padding:16px 40px 0 40px;"></div>
         """, unsafe_allow_html=True)
 
-        # URL card
+        # Force the run button to be purple pill regardless of navbar override
         st.markdown("""
         <style>
-        /* White card container for URL input section */
-        .url-card-wrap {
-            background: white;
-            border-radius: 16px;
-            border: 1.5px solid #E5E7EB;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-            padding: 24px 28px 28px 28px;
-            margin: 0 40px 40px 40px;
-        }
-        /* Big purple pill button — scoped outside navbar */
-        .url-card-wrap + div div[data-testid="stButton"]>button,
-        div.url-btn div[data-testid="stButton"]>button {
+        /* Target run button specifically by its position after the input */
+        div[data-testid="stHorizontalBlock"]:not(:first-of-type) div[data-testid="stButton"]>button {
             background: #7C3AED !important;
             color: white !important;
             border: none !important;
             border-radius: 50px !important;
             font-weight: 700 !important;
             font-size: 1rem !important;
-            padding: 14px 20px !important;
+            padding: 0 20px !important;
+            height: 52px !important;
             box-shadow: 0 4px 14px rgba(124,58,237,0.4) !important;
             width: 100% !important;
-            height: 52px !important;
+        }
+        div[data-testid="stHorizontalBlock"]:not(:first-of-type) div[data-testid="stButton"]>button:hover {
+            background: #6D28D9 !important;
+        }
+        /* White card background behind input row */
+        div[data-testid="stHorizontalBlock"]:not(:first-of-type) {
+            background: white !important;
+            border-radius: 0 0 16px 16px !important;
+            padding: 0 28px 24px 28px !important;
+            margin: 0 40px !important;
+            border: 1.5px solid #E5E7EB !important;
+            border-top: none !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06) !important;
         }
         </style>
-        <div class="url-card-wrap">
-            <p style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:#9CA3AF;text-transform:uppercase;margin:0 0 12px 0;">BRAND URL</p>
+        """, unsafe_allow_html=True)
+
+        # Label row — top of white card
+        st.markdown("""
+        <div style="background:white;border-radius:16px 16px 0 0;border:1.5px solid #E5E7EB;border-bottom:none;
+                    padding:20px 28px 8px 28px;margin:0 40px;">
+            <p style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:#9CA3AF;
+                      text-transform:uppercase;margin:0;">BRAND URL</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -492,7 +502,7 @@ elif nav=="GEO Hub":
         with btn_col:
             run_analysis = st.button("🔍  Run Live AI Analysis", use_container_width=True)
 
-        st.markdown("<div style='background:#F3F4F6;height:40px;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='background:#F3F4F6;height:40px;margin:0;padding:0;'></div>", unsafe_allow_html=True)
 
         if run_analysis:
             if not brand_url.strip() or not brand_url.startswith("http"):
