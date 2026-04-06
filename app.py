@@ -643,10 +643,10 @@ elif nav=="Get Support":
     # OUR APPROACH — left col + image + right col using Streamlit columns
     st.markdown("""
     <div style="background:white;padding:56px 40px 0 40px;border-bottom:0;">
-        <div style="margin-bottom:40px;">
+        <div style="margin-bottom:40px;text-align:center;">
             <div class="section-tag">Our Approach</div>
             <h2 style="font-size:2.4rem;font-weight:900;color:#111827;margin:10px 0 10px 0;">GEO is No Longer Optional</h2>
-            <p style="font-size:0.92rem;color:#6B7280;margin:0;line-height:1.7;">While search spend continues to rise, its impact is fading as AI agents increasingly shape the decisions search used to influence.</p>
+            <p style="font-size:0.92rem;color:#6B7280;margin:0 auto;max-width:680px;line-height:1.7;">While search spend continues to rise, its impact is fading as AI agents increasingly shape the decisions search used to influence.</p>
         </div>
     </div>""", unsafe_allow_html=True)
 
