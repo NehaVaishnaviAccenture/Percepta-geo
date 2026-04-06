@@ -1,6 +1,7 @@
 # pip install openai streamlit pandas plotly requests beautifulsoup4
 
 import streamlit as st
+import streamlit.components.v1 as components
 import plotly.graph_objects as go
 import requests
 from bs4 import BeautifulSoup
@@ -242,12 +243,10 @@ for k,v in [("nav","Overview"),("geo_result",None),("geo_url",""),("geo_page_dat
 page_map = {"geohub":"GEO Hub","getsupport":"Get Support"}
 reverse_map = {"GEO Hub":"geohub","Get Support":"getsupport"}
 
-# Read page from URL on first load
 url_page = st.query_params.get("p","")
 if url_page in page_map and st.session_state.nav != page_map[url_page]:
     st.session_state.nav = page_map[url_page]
 
-# Sync URL: clear params for Overview, set ?p= for others
 current_nav = st.session_state.nav
 if current_nav == "Overview":
     if st.query_params.get("p"):
@@ -290,35 +289,26 @@ with sp_c:
 # ════════════════════════════════════════════════════════════
 if nav=="Overview":
 
-    # Check if geo hub nav was triggered by HTML button
-    if st.query_params.get("goto") == "geohub":
+    if st.query_params.get("p") == "geohub":
         st.session_state.nav = "GEO Hub"
-        st.query_params.clear()
         st.query_params["p"] = "geohub"
         st.rerun()
 
     st.markdown("""
-<!-- HERO -->
 <div style="background:linear-gradient(170deg,#ffffff 55%,#F3EEFF 100%);padding:52px 40px 40px 40px;text-align:center;">
-
   <div style="display:inline-flex;align-items:center;gap:8px;border:1px solid #DDD6FE;border-radius:50px;padding:8px 22px;font-size:0.72rem;font-weight:700;letter-spacing:.1em;color:#7C3AED;text-transform:uppercase;margin-bottom:44px;background:rgba(255,255,255,0.9);">
     ✦ &nbsp;AI-Powered Brand Intelligence &nbsp;·&nbsp; Powered by Accenture
   </div>
-
   <div style="font-size:4.6rem;font-weight:900;line-height:1.0;letter-spacing:-3px;margin-bottom:28px;">
     <span style="color:#111827;">Your Brand's </span><span style="color:#7C3AED;">GEO</span><span style="color:#111827;"> Score</span>
   </div>
-
   <p style="font-size:1.05rem;color:#6B7280;max-width:860px;margin:0 auto 36px;line-height:1.7;">The Percepta GEO Score is a single 0–100 number that measures how often and how favorably your brand<br>is cited in AI-generated responses — across ChatGPT, Gemini, and other major AI engines.</p>
-
   <div style="display:flex;gap:16px;justify-content:center;align-items:center;flex-wrap:wrap;">
     <a href="?p=geohub" class="hero-btn-primary" target="_self">Get Your GEO Score &nbsp;→</a>
     <a href="#process-section" class="hero-btn-secondary">See How It Works</a>
   </div>
-
 </div>
 
-<!-- PROCESS -->
 <div id="process-section" style="background:#F9F9FC;padding:80px 40px;border-top:1px solid #E5E7EB;">
   <div style="text-align:center;margin-bottom:64px;">
     <div class="section-tag">Process</div>
@@ -350,7 +340,6 @@ if nav=="Overview":
   </div>
 </div>
 
-<!-- THE GEO SCORE -->
 <div style="background:white;padding:80px 40px;border-top:1px solid #E5E7EB;">
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-bottom:56px;">
     <div>
@@ -360,64 +349,12 @@ if nav=="Overview":
     </div>
     <div style="background:white;border-radius:20px;padding:44px 40px;box-shadow:0 8px 40px rgba(124,58,237,0.13);border:1px solid #F0EBFF;text-align:center;">
       <div style="font-size:0.7rem;font-weight:700;letter-spacing:.14em;color:#9CA3AF;text-transform:uppercase;margin-bottom:18px;">GEO SCORE</div>
-      <div id="geo-score-number" style="font-size:5.5rem;font-weight:900;color:#7C3AED;line-height:1;margin-bottom:20px;">0</div>
+      <div id="geo-num" style="font-size:5.5rem;font-weight:900;color:#7C3AED;line-height:1;margin-bottom:20px;">0</div>
       <div style="background:#F3F4F6;border-radius:50px;height:6px;width:100%;margin-bottom:10px;overflow:hidden;">
-        <div id="geo-score-bar" style="background:#7C3AED;height:6px;border-radius:50px;width:0%;transition:width 0.1s;"></div>
+        <div id="geo-bar" style="background:#7C3AED;height:6px;border-radius:50px;width:0%;transition:width 0.05s linear;"></div>
       </div>
       <div style="font-size:0.82rem;color:#9CA3AF;margin-bottom:20px;">out of 100</div>
       <span style="background:#EDE9FE;color:#7C3AED;border-radius:50px;padding:6px 22px;font-size:0.84rem;font-weight:700;">Good</span>
-      <script>
-        (function() {
-          var target = 78;
-          var duration = 1800;
-          var el = document.getElementById('geo-score-number');
-          var bar = document.getElementById('geo-score-bar');
-          var started = false;
-
-          function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
-
-          function animateScore() {
-            var start = null;
-            function step(timestamp) {
-              if (!start) start = timestamp;
-              var elapsed = timestamp - start;
-              var progress = Math.min(elapsed / duration, 1);
-              var eased = easeOutCubic(progress);
-              var current = Math.round(eased * target);
-              el.textContent = current;
-              bar.style.width = (eased * target) + '%';
-              if (progress < 1) {
-                requestAnimationFrame(step);
-              } else {
-                el.textContent = target;
-                bar.style.width = target + '%';
-              }
-            }
-            requestAnimationFrame(step);
-          }
-
-          function onScroll() {
-            if (started) return;
-            var rect = el.getBoundingClientRect();
-            if (rect.top < window.innerHeight - 50) {
-              started = true;
-              animateScore();
-              window.removeEventListener('scroll', onScroll);
-            }
-          }
-
-          // Try immediately in case already in view
-          setTimeout(function() {
-            var rect = el ? el.getBoundingClientRect() : null;
-            if (rect && rect.top < window.innerHeight - 50) {
-              started = true;
-              animateScore();
-            } else {
-              window.addEventListener('scroll', onScroll);
-            }
-          }, 400);
-        })();
-      </script>
     </div>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;">
@@ -444,7 +381,6 @@ if nav=="Overview":
   </div>
 </div>
 
-<!-- WHAT YOU GAIN -->
 <div style="background:#F9F9FC;padding:80px 40px;border-top:1px solid #E5E7EB;">
   <div style="text-align:center;margin-bottom:52px;">
     <div class="section-tag">What You Gain</div>
@@ -471,7 +407,6 @@ if nav=="Overview":
   </div>
 </div>
 
-<!-- FINAL CTA -->
 <div style="background:white;padding:80px 40px;border-top:1px solid #E5E7EB;">
   <div style="background:linear-gradient(135deg,#F8F5FF 0%,#EDE9FE 45%,#F3EEFF 100%);border:1.5px solid #C4B5FD;border-radius:28px;padding:52px 60px;text-align:center;">
     <h2 style="font-size:3rem;font-weight:900;color:#111827;margin:0 0 4px;line-height:1.1;">Ready to Discover Your</h2>
@@ -483,6 +418,59 @@ if nav=="Overview":
   </div>
 </div>
 """, unsafe_allow_html=True)
+
+    # ── ANIMATED GEO SCORE ── injected via components.html so JS executes
+    components.html("""
+<script>
+(function() {
+  var target = 78;
+  var duration = 1800;
+  var started = false;
+
+  function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+  function animateScore() {
+    var el = window.parent.document.getElementById('geo-num');
+    var bar = window.parent.document.getElementById('geo-bar');
+    if (!el || !bar) return;
+    var start = null;
+    function step(ts) {
+      if (!start) start = ts;
+      var progress = Math.min((ts - start) / duration, 1);
+      var eased = easeOutCubic(progress);
+      var cur = Math.round(eased * target);
+      el.textContent = cur;
+      bar.style.width = (eased * target) + '%';
+      if (progress < 1) { window.parent.requestAnimationFrame(step); }
+      else { el.textContent = target; bar.style.width = target + '%'; }
+    }
+    window.parent.requestAnimationFrame(step);
+  }
+
+  function checkVisible() {
+    var el = window.parent.document.getElementById('geo-num');
+    if (!el) return false;
+    var rect = el.getBoundingClientRect();
+    return rect.top < window.parent.innerHeight - 50;
+  }
+
+  function tryStart() {
+    if (started) return;
+    if (checkVisible()) {
+      started = true;
+      animateScore();
+    }
+  }
+
+  // Check immediately and on parent scroll
+  setTimeout(tryStart, 500);
+  window.parent.addEventListener('scroll', function onScroll() {
+    if (started) { window.parent.removeEventListener('scroll', onScroll); return; }
+    tryStart();
+  });
+})();
+</script>
+""", height=0)
 
 # ════════════════════════════════════════════════════════════
 # PAGE 2: GEO HUB
