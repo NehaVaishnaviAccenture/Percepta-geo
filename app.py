@@ -453,15 +453,44 @@ elif nav=="GEO Hub":
         <div style="background:#F3F4F6;padding:16px 40px 0 40px;"></div>
         """, unsafe_allow_html=True)
 
-        # URL card — use st.container so widgets are truly inside
-        with st.container(border=True):
-            st.markdown('<p style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:#9CA3AF;text-transform:uppercase;margin:0 0 8px 0;">BRAND URL</p>', unsafe_allow_html=True)
-            url_col, btn_col = st.columns([3.5, 1])
-            with url_col:
-                brand_url = st.text_input("Brand URL", value=st.session_state.geo_url,
-                    placeholder="https://www.capitalone.com/", label_visibility="collapsed")
-            with btn_col:
-                run_analysis = st.button("🔍  Run Live AI Analysis", use_container_width=True)
+        # URL card
+        st.markdown("""
+        <style>
+        /* White card container for URL input section */
+        .url-card-wrap {
+            background: white;
+            border-radius: 16px;
+            border: 1.5px solid #E5E7EB;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+            padding: 24px 28px 28px 28px;
+            margin: 0 40px 40px 40px;
+        }
+        /* Big purple pill button — scoped outside navbar */
+        .url-card-wrap + div div[data-testid="stButton"]>button,
+        div.url-btn div[data-testid="stButton"]>button {
+            background: #7C3AED !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 50px !important;
+            font-weight: 700 !important;
+            font-size: 1rem !important;
+            padding: 14px 20px !important;
+            box-shadow: 0 4px 14px rgba(124,58,237,0.4) !important;
+            width: 100% !important;
+            height: 52px !important;
+        }
+        </style>
+        <div class="url-card-wrap">
+            <p style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:#9CA3AF;text-transform:uppercase;margin:0 0 12px 0;">BRAND URL</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+        url_col, btn_col = st.columns([3.5, 1])
+        with url_col:
+            brand_url = st.text_input("Brand URL", value=st.session_state.geo_url,
+                placeholder="https://www.capitalone.com/", label_visibility="collapsed")
+        with btn_col:
+            run_analysis = st.button("🔍  Run Live AI Analysis", use_container_width=True)
 
         st.markdown("<div style='background:#F3F4F6;height:40px;'></div>", unsafe_allow_html=True)
 
