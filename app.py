@@ -10,7 +10,6 @@ from urllib.parse import urlparse, urljoin
 INTERNAL_API_KEY = os.environ.get("OPENROUTER_API_KEY")
 st.set_page_config(page_title="Percepta | GEO Intelligence", page_icon="🧠", layout="wide")
 
-# ── GLOBAL CSS ────────────────────────────────────────────────
 st.markdown("""<style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 *{font-family:'Inter',sans-serif;box-sizing:border-box;}
@@ -25,24 +24,22 @@ section.main div[data-testid="stButton"]>button{
     border-radius:50px!important;font-weight:700!important;font-size:1rem!important;
     padding:14px 28px!important;box-shadow:0 4px 14px rgba(124,58,237,0.4)!important;transition:background 0.2s!important;}
 section.main div[data-testid="stButton"]>button:hover{background:#6D28D9!important;}
-/* Navbar buttons: no border, no shadow, plain text */
+/* Navbar buttons: no border, no shadow */
 div[data-testid="stAppViewBlockContainer"]>div>div>div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button{
     background:transparent!important;color:#6B7280!important;border:none!important;
     border-radius:8px!important;font-weight:500!important;font-size:0.88rem!important;
     padding:7px 16px!important;box-shadow:none!important;width:100%!important;height:auto!important;}
-div[data-testid="stAppViewBlockContainer"]>div>div>div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button:hover{
-    background:#F5F3FF!important;color:#7C3AED!important;border:none!important;}
-div[data-testid="stAppViewBlockContainer"]>div>div>div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"] button[kind="primary"]{
-    background:#EDE9FE!important;color:#7C3AED!important;border:none!important;font-weight:700!important;}
+div[data-testid="stAppViewBlockContainer"]>div>div>div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button:hover{background:#F5F3FF!important;color:#7C3AED!important;}
+div[data-testid="stAppViewBlockContainer"]>div>div>div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"] button[kind="primary"]{background:#EDE9FE!important;color:#7C3AED!important;font-weight:700!important;}
 /* Navbar bar */
 div[data-testid="stHorizontalBlock"]:first-of-type{background:white!important;border-bottom:1px solid #E5E7EB!important;padding:12px 40px!important;margin:0!important;position:sticky!important;top:0!important;z-index:999!important;align-items:center!important;box-shadow:0 1px 3px rgba(0,0,0,0.06)!important;}
-/* Input */
-div[data-testid="stTextInput"] input{border-radius:10px!important;border:1.5px solid #C4B5FD!important;padding:14px 16px!important;font-size:0.95rem!important;height:52px!important;}
-div[data-testid="stTextInput"] input:focus{border-color:#7C3AED!important;box-shadow:0 0 0 3px rgba(124,58,237,0.15)!important;}
-/* URL card bottom half */
-div[data-testid="stHorizontalBlock"]:not(:first-of-type){background:white!important;border-radius:0 0 16px 16px!important;padding:0 28px 24px 28px!important;margin:0 40px!important;border:1.5px solid #E5E7EB!important;border-top:none!important;box-shadow:0 4px 12px rgba(0,0,0,0.06)!important;}
-/* Recolor non-navbar run button */
-div[data-testid="stHorizontalBlock"]:not(:first-of-type) div[data-testid="stButton"]>button{background:#7C3AED!important;color:white!important;border:none!important;border-radius:50px!important;font-weight:700!important;font-size:1rem!important;padding:0 20px!important;height:52px!important;box-shadow:0 4px 14px rgba(124,58,237,0.4)!important;width:100%!important;}
+/* Input styling */
+div[data-testid="stTextInput"] input{border-radius:0!important;border:none!important;border-top:1px solid #E5E7EB!important;border-bottom:1px solid #E5E7EB!important;padding:14px 20px!important;font-size:0.95rem!important;height:52px!important;background:#FAFAFA!important;width:100%!important;}
+div[data-testid="stTextInput"] input:focus{border-color:#7C3AED!important;box-shadow:none!important;background:white!important;}
+/* URL row columns: transparent, no card */
+div[data-testid="stHorizontalBlock"]:not(:first-of-type){background:transparent!important;border:none!important;box-shadow:none!important;border-radius:0!important;padding:0!important;margin:0!important;}
+/* Run button purple pill */
+div[data-testid="stHorizontalBlock"]:not(:first-of-type) div[data-testid="stButton"]>button{background:#7C3AED!important;color:white!important;border:none!important;border-radius:50px!important;font-weight:700!important;font-size:1rem!important;height:52px!important;width:100%!important;box-shadow:0 4px 14px rgba(124,58,237,0.4)!important;padding:0 28px!important;}
 div[data-testid="stHorizontalBlock"]:not(:first-of-type) div[data-testid="stButton"]>button:hover{background:#6D28D9!important;}
 .section-tag{display:inline-block;background:#EDE9FE;color:#7C3AED;border-radius:50px;padding:4px 14px;font-size:0.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;}
 .hero-btn-primary{display:inline-flex;align-items:center;gap:8px;background:#7C3AED;color:white!important;border:none;border-radius:50px;padding:18px 36px;font-size:1.05rem;font-weight:700;cursor:pointer;text-decoration:none;}
@@ -69,47 +66,22 @@ def get_response(prompt, api_key=INTERNAL_API_KEY):
                   {"role":"user","content":prompt}], temperature=0.2, max_tokens=2048)
     return r.choices[0].message.content
 
-def card(bg, border, content): return f'<div style="background:{bg};border-radius:14px;padding:16px 20px;text-align:center;border:1.5px solid {border};">{content}</div>'
+def card(bg, border, content):
+    return f'<div style="background:{bg};border-radius:14px;padding:28px 24px;text-align:center;border:1.5px solid {border};">{content}</div>'
 
 def score_band_cards():
     bands = [("#ECFDF5","#6EE7B7","#065F46","80–100","Excellent","Well optimized for AI citation"),
              ("#EFF6FF","#93C5FD","#1E40AF","70–79","Good","Minor improvements recommended"),
              ("#FFFBEB","#FCD34D","#92400E","45–69","Needs Work","Several issues to address"),
              ("#FFF1F2","#FCA5A5","#991B1B","0–44","Poor","Major optimization needed")]
-    inner = "".join(card(bg, border, f'<div style="font-size:0.82rem;font-weight:700;color:{c};margin-bottom:6px;">{rng}</div><div style="font-size:1.6rem;font-weight:900;color:{c};margin-bottom:6px;">{label}</div><div style="font-size:0.82rem;color:{c};">{desc}</div>') for bg,border,c,rng,label,desc in bands)
-    return f'<div style="background:#F3F4F6;padding:40px 40px 0 40px;"><div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:20px;margin-bottom:32px;">{inner}</div></div>'
-
-FEATURE_CARDS = """
-<div style="background:#F3F4F6;padding:0 40px 40px 40px;">
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:20px;">
-    <div style="background:white;border-radius:14px;border:1px solid #E5E7EB;padding:28px 24px;">
-      <div style="font-size:1.4rem;margin-bottom:14px;">📈</div>
-      <div style="font-size:0.95rem;font-weight:700;color:#111827;margin-bottom:6px;">Real-Time AI Analysis</div>
-      <div style="font-size:0.82rem;color:#6B7280;line-height:1.6;">Live data, not cached — results as AI sees them now</div>
-    </div>
-    <div style="background:white;border-radius:14px;border:1px solid #E5E7EB;padding:28px 24px;">
-      <div style="font-size:1.4rem;margin-bottom:14px;">⚡</div>
-      <div style="font-size:0.95rem;font-weight:700;color:#111827;margin-bottom:6px;">Unified GEO Score</div>
-      <div style="font-size:0.82rem;color:#6B7280;line-height:1.6;">One number connecting visibility, citations &amp; sentiment</div>
-    </div>
-    <div style="background:white;border-radius:14px;border:1px solid #E5E7EB;padding:28px 24px;">
-      <div style="font-size:1.4rem;margin-bottom:14px;">👥</div>
-      <div style="font-size:0.95rem;font-weight:700;color:#111827;margin-bottom:6px;">Competitor Benchmarking</div>
-      <div style="font-size:0.82rem;color:#6B7280;line-height:1.6;">See exactly where you stand vs. industry peers</div>
-    </div>
-    <div style="background:white;border-radius:14px;border:1px solid #E5E7EB;padding:28px 24px;">
-      <div style="font-size:1.4rem;margin-bottom:14px;">✅</div>
-      <div style="font-size:0.95rem;font-weight:700;color:#111827;margin-bottom:6px;">Actionable Strategy</div>
-      <div style="font-size:0.82rem;color:#6B7280;line-height:1.6;">Recommendations backed by Accenture consultants</div>
-    </div>
-  </div>
-</div>
-"""
+    inner = "".join(card(bg,border,f'<div style="font-size:0.82rem;font-weight:700;color:{c};margin-bottom:6px;">{rng}</div><div style="font-size:1.6rem;font-weight:900;color:{c};margin-bottom:6px;">{label}</div><div style="font-size:0.82rem;color:{c};">{desc}</div>') for bg,border,c,rng,label,desc in bands)
+    return f'<div style="background:#F3F4F6;padding:40px 20px 32px 20px;"><div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:20px;">{inner}</div></div>'
 
 def metric_card(label, val, sub, tip="", color="#7C3AED"):
     return f'<div style="background:white;border-radius:10px;padding:18px 16px;border:1px solid #E5E7EB;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">{label}<span class="metric-tooltip"><span class="tooltip-icon">?</span><span class="tooltip-text">{tip}</span></span></div><div style="font-size:1.8rem;font-weight:800;color:{color};line-height:1;">{val}</div><div style="font-size:0.75rem;color:#9CA3AF;margin-top:3px;">{sub}</div></div>'
 
-def white_card(content, extra=""): return f'<div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px;{extra}">{content}</div>'
+def white_card(content, extra=""):
+    return f'<div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px;{extra}">{content}</div>'
 
 def score_badge(score):
     if score>=80: return "Excellent","#065F46","#D1FAE5"
@@ -206,8 +178,8 @@ def score_competitor_from_responses(name, responses):
     gfloors={"chase":75,"american express":64}
     gcaps={"american express":74,"capital one":54,"bank of america":52,"wells fargo":50,"citi":58,"discover":55,"synchrony":35,"barclays":32,"usaa":30,"kia":48,"nissan":45,"hyundai":55}
     fv=floors.get(nl,18)
-    blv=max(10,min(80,fv+random.randint(-4,4))) if mentions==0 else round((mentions/20)*100*0.8+fv*0.2)
-    if mentions==0: random.seed(hash(name)%9999)
+    if mentions==0: random.seed(hash(name)%9999); blv=max(10,min(80,fv+random.randint(-4,4)))
+    else: blv=round((mentions/20)*100*0.8+fv*0.2)
     cv=blv; cc=min(92,round(cv*0.93+mentions*1.8)); cs=min(92,round(cv*0.88+mentions*1.4)); cp=min(92,round(cv*0.78)); csov=min(92,round(cv*0.63))
     geo=round(cv*0.30+cs*0.20+cp*0.20+cc*0.15+csov*0.15)
     if gfloors.get(nl) and geo<gfloors[nl]: geo=gfloors[nl]
@@ -217,28 +189,9 @@ def score_competitor_from_responses(name, responses):
     return {"Brand":name,"GEO":geo,"Vis":cv,"Cit":cc,"Sen":cs,"Sov":csov,"Rank":f"#{avg}" if avg>0 else "N/A"}
 
 INDUSTRY_DATA = {
-    "fin": {
-        "name": "financial services / credit cards",
-        "kws": ["capital","chase","amex","citi","discover","bank","credit","card","finance","fargo","visa","master","barclays","synchrony","usaa","wellsfargo"],
-        "queries": [("General Consumer","What is the best credit card for travel rewards in 2025?"),("General Consumer","Which bank offers the best rewards checking account?"),("General Consumer","What credit card should I get for everyday cash back?"),("General Consumer","Best credit cards with no annual fee right now"),("General Consumer","Which bank is best for first-time credit card applicants?"),("Expert Recommendation","Top credit cards recommended by financial experts"),("Expert Recommendation","What is the best bank for online banking and mobile app?"),("Expert Recommendation","Which credit card has the best sign-up bonus?"),("Expert Recommendation","Best credit cards for people with good credit scores"),("Expert Recommendation","What bank should I choose for savings and checking?"),("Product Comparison","Which credit card is best for dining and restaurants?"),("Product Comparison","Top recommended credit cards for business expenses"),("Product Comparison","What are the most trusted banks in the US?"),("Product Comparison","Best credit cards for balance transfers with low interest"),("Product Comparison","Which bank has the lowest fees for everyday banking?"),("Affluent / High Net Worth","What credit card do financial advisors recommend most?"),("Affluent / High Net Worth","Best cards for earning points on groceries and gas"),("Affluent / High Net Worth","Which banks are best for customer service?"),("Affluent / High Net Worth","Top credit cards for international travelers with no foreign fees"),("Affluent / High Net Worth","What is the best overall credit card for 2025?")],
-        "comps": ["Chase","American Express","Capital One","Citi","Discover","Wells Fargo","Bank of America","Synchrony","Barclays","USAA"],
-        "comp_urls": {"Chase":"chase.com","American Express":"americanexpress.com","Capital One":"capitalone.com","Citi":"citi.com","Discover":"discover.com","Wells Fargo":"wellsfargo.com","Bank of America":"bankofamerica.com","Synchrony":"synchrony.com","Barclays":"barclays.com","USAA":"usaa.com"},
-        "label": "Financial Services"
-    },
-    "auto": {
-        "name": "automotive",
-        "kws": ["toyota","ford","honda","bmw","tesla","vw","volkswagen","auto","car","motor","hyundai","kia","nissan","mercedes","audi"],
-        "queries": [("General Consumer","What is the best car to buy in 2025?"),("General Consumer","Which electric vehicle has the longest range?"),("General Consumer","Best SUV for families right now"),("General Consumer","What car brand is most reliable long term?"),("General Consumer","Top recommended cars under $40,000"),("Expert Recommendation","Best cars for fuel efficiency in 2025"),("Expert Recommendation","Which car brand has the best safety ratings?"),("Expert Recommendation","What is the best luxury car for the money?"),("Expert Recommendation","Top car brands recommended by consumer experts"),("Expert Recommendation","Best hybrid cars available today"),("Product Comparison","Which car manufacturer has the best warranty?"),("Product Comparison","What cars are best for first-time buyers?"),("Product Comparison","Top rated trucks for towing and hauling"),("Product Comparison","Best car brands for resale value"),("Product Comparison","Which electric car brand leads in technology?"),("Affluent / High Net Worth","What cars do mechanics recommend for reliability?"),("Affluent / High Net Worth","Best compact cars for city driving"),("Affluent / High Net Worth","Which car brands have the fewest recalls?"),("Affluent / High Net Worth","Top recommended cars for long road trips"),("Affluent / High Net Worth","What is the most popular car brand in America?")],
-        "comps": ["Tesla","Toyota","BMW","Honda","Ford","Mercedes","Hyundai","Kia","Nissan","Volkswagen"],
-        "comp_urls": {"Tesla":"tesla.com","Toyota":"toyota.com","BMW":"bmw.com","Honda":"honda.com","Ford":"ford.com","Mercedes":"mercedes-benz.com","Hyundai":"hyundai.com","Kia":"kia.com","Nissan":"nissanusa.com","Volkswagen":"vw.com"},
-        "label": "Automotive"
-    },
-    "gen": {
-        "name": "consumer brands",
-        "kws": [],
-        "queries": [("General Consumer","What are the most trusted brands in the US right now?"),("General Consumer","Which companies are known for the best customer service?"),("General Consumer","Top recommended brands for quality and value"),("General Consumer","What brands do consumers recommend most in 2025?"),("General Consumer","Best companies for online shopping and delivery"),("Expert Recommendation","Which brands are leading in sustainability and ethics?"),("Expert Recommendation","Top rated consumer brands by customer satisfaction"),("Expert Recommendation","What companies have the best return and refund policies?"),("Expert Recommendation","Best brands recommended by consumer advocacy groups"),("Expert Recommendation","Which companies are growing fastest in their industry?"),("Product Comparison","Top brands for loyalty programs and rewards"),("Product Comparison","What brands are considered industry leaders right now?"),("Product Comparison","Best companies for quality products at fair prices"),("Product Comparison","Which brands have the most loyal customer base?"),("Product Comparison","Top consumer brands with the best warranties"),("Affluent / High Net Worth","What companies do financial analysts recommend?"),("Affluent / High Net Worth","Best brands for first-time buyers in their category"),("Affluent / High Net Worth","Which companies are most recommended by experts?"),("Affluent / High Net Worth","Top rated brands for innovation and technology"),("Affluent / High Net Worth","What is the most trusted brand in this space right now?")],
-        "comps": [], "comp_urls": {}, "label": "General"
-    }
+    "fin":{"name":"financial services / credit cards","kws":["capital","chase","amex","citi","discover","bank","credit","card","finance","fargo","visa","master","barclays","synchrony","usaa","wellsfargo"],"queries":[("General Consumer","What is the best credit card for travel rewards in 2025?"),("General Consumer","Which bank offers the best rewards checking account?"),("General Consumer","What credit card should I get for everyday cash back?"),("General Consumer","Best credit cards with no annual fee right now"),("General Consumer","Which bank is best for first-time credit card applicants?"),("Expert Recommendation","Top credit cards recommended by financial experts"),("Expert Recommendation","What is the best bank for online banking and mobile app?"),("Expert Recommendation","Which credit card has the best sign-up bonus?"),("Expert Recommendation","Best credit cards for people with good credit scores"),("Expert Recommendation","What bank should I choose for savings and checking?"),("Product Comparison","Which credit card is best for dining and restaurants?"),("Product Comparison","Top recommended credit cards for business expenses"),("Product Comparison","What are the most trusted banks in the US?"),("Product Comparison","Best credit cards for balance transfers with low interest"),("Product Comparison","Which bank has the lowest fees for everyday banking?"),("Affluent / High Net Worth","What credit card do financial advisors recommend most?"),("Affluent / High Net Worth","Best cards for earning points on groceries and gas"),("Affluent / High Net Worth","Which banks are best for customer service?"),("Affluent / High Net Worth","Top credit cards for international travelers with no foreign fees"),("Affluent / High Net Worth","What is the best overall credit card for 2025?")],"comps":["Chase","American Express","Capital One","Citi","Discover","Wells Fargo","Bank of America","Synchrony","Barclays","USAA"],"comp_urls":{"Chase":"chase.com","American Express":"americanexpress.com","Capital One":"capitalone.com","Citi":"citi.com","Discover":"discover.com","Wells Fargo":"wellsfargo.com","Bank of America":"bankofamerica.com","Synchrony":"synchrony.com","Barclays":"barclays.com","USAA":"usaa.com"},"label":"Financial Services"},
+    "auto":{"name":"automotive","kws":["toyota","ford","honda","bmw","tesla","vw","volkswagen","auto","car","motor","hyundai","kia","nissan","mercedes","audi"],"queries":[("General Consumer","What is the best car to buy in 2025?"),("General Consumer","Which electric vehicle has the longest range?"),("General Consumer","Best SUV for families right now"),("General Consumer","What car brand is most reliable long term?"),("General Consumer","Top recommended cars under $40,000"),("Expert Recommendation","Best cars for fuel efficiency in 2025"),("Expert Recommendation","Which car brand has the best safety ratings?"),("Expert Recommendation","What is the best luxury car for the money?"),("Expert Recommendation","Top car brands recommended by consumer experts"),("Expert Recommendation","Best hybrid cars available today"),("Product Comparison","Which car manufacturer has the best warranty?"),("Product Comparison","What cars are best for first-time buyers?"),("Product Comparison","Top rated trucks for towing and hauling"),("Product Comparison","Best car brands for resale value"),("Product Comparison","Which electric car brand leads in technology?"),("Affluent / High Net Worth","What cars do mechanics recommend for reliability?"),("Affluent / High Net Worth","Best compact cars for city driving"),("Affluent / High Net Worth","Which car brands have the fewest recalls?"),("Affluent / High Net Worth","Top recommended cars for long road trips"),("Affluent / High Net Worth","What is the most popular car brand in America?")],"comps":["Tesla","Toyota","BMW","Honda","Ford","Mercedes","Hyundai","Kia","Nissan","Volkswagen"],"comp_urls":{"Tesla":"tesla.com","Toyota":"toyota.com","BMW":"bmw.com","Honda":"honda.com","Ford":"ford.com","Mercedes":"mercedes-benz.com","Hyundai":"hyundai.com","Kia":"kia.com","Nissan":"nissanusa.com","Volkswagen":"vw.com"},"label":"Automotive"},
+    "gen":{"name":"consumer brands","kws":[],"queries":[("General Consumer","What are the most trusted brands in the US right now?"),("General Consumer","Which companies are known for the best customer service?"),("General Consumer","Top recommended brands for quality and value"),("General Consumer","What brands do consumers recommend most in 2025?"),("General Consumer","Best companies for online shopping and delivery"),("Expert Recommendation","Which brands are leading in sustainability and ethics?"),("Expert Recommendation","Top rated consumer brands by customer satisfaction"),("Expert Recommendation","What companies have the best return and refund policies?"),("Expert Recommendation","Best brands recommended by consumer advocacy groups"),("Expert Recommendation","Which companies are growing fastest in their industry?"),("Product Comparison","Top brands for loyalty programs and rewards"),("Product Comparison","What brands are considered industry leaders right now?"),("Product Comparison","Best companies for quality products at fair prices"),("Product Comparison","Which brands have the most loyal customer base?"),("Product Comparison","Top consumer brands with the best warranties"),("Affluent / High Net Worth","What companies do financial analysts recommend?"),("Affluent / High Net Worth","Best brands for first-time buyers in their category"),("Affluent / High Net Worth","Which companies are most recommended by experts?"),("Affluent / High Net Worth","Top rated brands for innovation and technology"),("Affluent / High Net Worth","What is the most trusted brand in this space right now?")],"comps":[],"comp_urls":{},"label":"General"}
 }
 
 def get_industry(domain):
@@ -248,8 +201,7 @@ def get_industry(domain):
 
 def analyze_geo_with_ai(page_data):
     brand=extract_brand_from_page(page_data); domain=page_data.get("domain","").lower(); bl=brand.lower()
-    client=get_client(); ind_key=get_industry(domain); ind=INDUSTRY_DATA[ind_key]
-    queries=ind["queries"]; all_qa=[]
+    client=get_client(); ind_key=get_industry(domain); ind=INDUSTRY_DATA[ind_key]; queries=ind["queries"]; all_qa=[]
     for i in range(0,20,5):
         batch=queries[i:i+5]
         ql="\n\n".join(f"Q{j+1}: {q[1]}" for j,q in enumerate(batch))
@@ -260,8 +212,7 @@ def analyze_geo_with_ai(page_data):
             if f"A{j}:" in bt:
                 s=bt.index(f"A{j}:")+len(f"A{j}:"); e=bt.index(f"A{j+1}:") if f"A{j+1}:" in bt else len(bt); ans=bt[s:e].strip()
             all_qa.append({"category":batch[j-1][0],"q":batch[j-1][1],"a":ans})
-    mentions=sum(1 for p in all_qa if bl in p["a"].lower())
-    visibility=round((mentions/20)*100)
+    mentions=sum(1 for p in all_qa if bl in p["a"].lower()); visibility=round((mentions/20)*100)
     if mentions==0:
         sc={"citation_share":0,"sentiment":0,"prominence":0,"share_of_voice":0,"avg_rank":"N/A","strengths":["Brand not yet appearing in AI responses.","Baseline established, clear room to grow.","Competitors present, confirming category is AI-discoverable."],"improvements":["Not mentioned in 20 generic queries.","AI not associating brand with key questions.","No citation authority.","Competitors appearing instead.","Content not structured for AI discovery."],"actions":[{"priority":"High","action":"Create FAQ and comparison pages targeting queries in this analysis."},{"priority":"High","action":"Publish LLM-ready Best X for Y guides positioning brand as top recommendation."},{"priority":"Medium","action":"Add structured data (schema markup) to key pages."},{"priority":"Medium","action":"Build presence on sites AI cites: Reddit, Wikipedia, review sites."},{"priority":"Low","action":"Audit backlinks and create content hubs reinforcing brand authority."}]}
     else:
@@ -314,7 +265,7 @@ if nav=="Overview":
 <div style="background:linear-gradient(170deg,#fff 55%,#F3EEFF 100%);padding:52px 40px 40px;text-align:center;">
   <div style="display:inline-flex;align-items:center;gap:8px;border:1px solid #DDD6FE;border-radius:50px;padding:8px 22px;font-size:0.72rem;font-weight:700;letter-spacing:.1em;color:#7C3AED;text-transform:uppercase;margin-bottom:44px;background:rgba(255,255,255,0.9);">✦ &nbsp;AI-Powered Brand Intelligence &nbsp;·&nbsp; Powered by Accenture</div>
   <div style="font-size:4.6rem;font-weight:900;line-height:1.0;letter-spacing:-3px;margin-bottom:28px;"><span style="color:#111827;">Your Brand's </span><span style="color:#7C3AED;">GEO</span><span style="color:#111827;"> Score</span></div>
-  <p style="font-size:1.05rem;color:#6B7280;max-width:860px;margin:0 auto 36px;line-height:1.7;">The Percepta GEO Score measures how often and favorably your brand is cited in AI-generated responses — across ChatGPT, Gemini, and other major AI engines.</p>
+  <p style="font-size:1.05rem;color:#6B7280;max-width:860px;margin:0 auto 36px;line-height:1.7;">The Percepta GEO Score measures how often and favorably your brand is cited in AI-generated responses.</p>
   <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
     <a href="?p=geohub" class="hero-btn-primary" target="_self">Get Your GEO Score &nbsp;→</a>
     <a href="#how" class="hero-btn-secondary">See How It Works</a>
@@ -354,64 +305,19 @@ elif nav=="GEO Hub":
         <p style="font-size:1.05rem;color:rgba(255,255,255,0.88);margin:0;">Enter any brand URL · Discover your brand's AI presence</p>
     </div>""", unsafe_allow_html=True)
 
-    has_result=st.session_state.geo_result is not None
+    has_result = st.session_state.geo_result is not None
 
     if not has_result:
+        # Score band cards
         st.markdown(score_band_cards(), unsafe_allow_html=True)
 
-        # Full-width label + input + button — no card wrapper
+        # Brand URL label
         st.markdown("""
-        <style>
-        /* Full width input */
-        div[data-testid="stTextInput"] { padding: 0 !important; }
-        div[data-testid="stTextInput"] input {
-            border-radius: 0 !important;
-            border: none !important;
-            border-top: 1px solid #E5E7EB !important;
-            border-bottom: 1px solid #E5E7EB !important;
-            padding: 14px 20px !important;
-            font-size:0.95rem !important;
-            height: 52px !important;
-            background: #FAFAFA !important;
-            width: 100% !important;
-        }
-        div[data-testid="stTextInput"] input:focus {
-            border-color: #7C3AED !important;
-            box-shadow: none !important;
-            background: white !important;
-        }
-        /* Hide the columns wrapper styling for this section */
-        div[data-testid="stHorizontalBlock"]:not(:first-of-type) {
-            background: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
-            border-radius: 0 !important;
-            padding: 0 !important;
-            margin: 0 !important;
-        }
-        /* Purple pill run button centered */
-        div[data-testid="stHorizontalBlock"]:not(:first-of-type) div[data-testid="stButton"]>button {
-            background: #7C3AED !important;
-            color: white !important;
-            border: none !important;
-            border-radius: 50px !important;
-            font-weight: 700 !important;
-            font-size: 1rem !important;
-            height: 52px !important;
-            width: 100% !important;
-            box-shadow: 0 4px 14px rgba(124,58,237,0.4) !important;
-            padding: 0 28px !important;
-        }
-        div[data-testid="stHorizontalBlock"]:not(:first-of-type) div[data-testid="stButton"]>button:hover {
-            background: #6D28D9 !important;
-        }
-        </style>
-        <div style="background:#F3F4F6;padding:24px 20px 8px 20px;">
-          <p style="font-size:0.78rem;font-weight:600;letter-spacing:.08em;color:#9CA3AF;
-                    text-transform:uppercase;margin:0 0 8px 0;">Brand URL</p>
-        </div>
-        """, unsafe_allow_html=True)
+        <div style="background:#F3F4F6;padding:0 20px 8px 20px;">
+          <p style="font-size:0.78rem;font-weight:600;letter-spacing:.08em;color:#9CA3AF;text-transform:uppercase;margin:0;">Brand URL</p>
+        </div>""", unsafe_allow_html=True)
 
+        # Input + button (full width, no card wrapper)
         uc, bc = st.columns([4.5, 1])
         with uc:
             brand_url = st.text_input("u", value=st.session_state.geo_url,
@@ -419,8 +325,9 @@ elif nav=="GEO Hub":
         with bc:
             run = st.button("🔍  Run Live AI Analysis", use_container_width=True)
 
+        # Feature cards
         st.markdown("""
-        <div style="background:#F3F4F6;padding:32px 20px 40px 20px;">
+        <div style="background:#F3F4F6;padding:24px 20px 40px 20px;">
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;">
             <div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px 20px;">
               <div style="width:36px;height:36px;background:#F3F0FF;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:12px;">📊</div>
@@ -443,20 +350,19 @@ elif nav=="GEO Hub":
               <div style="font-size:0.8rem;color:#6B7280;line-height:1.6;">Recommendations backed by Accenture consultants</div>
             </div>
           </div>
-        </div>
-        """, unsafe_allow_html=True)
+        </div>""", unsafe_allow_html=True)
 
         if run:
             if not brand_url.strip() or not brand_url.startswith("http"):
                 st.error("Please enter a valid URL starting with http:// or https://")
             else:
                 with st.spinner("Identifying brand from URL..."):
-                    page_data=fetch_page_content(brand_url)
+                    page_data = fetch_page_content(brand_url)
                 if not page_data["ok"]: st.error(f"Could not fetch URL: {page_data['error']}")
                 else:
                     with st.spinner("Running 20 live AI queries across 4 consumer categories..."):
                         try:
-                            result=analyze_geo_with_ai(page_data)
+                            result = analyze_geo_with_ai(page_data)
                             st.session_state.geo_result=result; st.session_state.geo_url=brand_url; st.session_state.geo_page_data=page_data
                             st.success("Analysis complete. Explore the tabs for your full GEO report."); st.rerun()
                         except Exception as e: st.error(f"Analysis failed: {e}")
@@ -477,16 +383,14 @@ elif nav=="GEO Hub":
                 fig=go.Figure(go.Indicator(mode="gauge+number",value=geo,number={'font':{'size':52,'color':'#7C3AED'}},domain={'x':[0,1],'y':[0,1]},title={'text':brand,'font':{'size':14,'color':'#374151'}},gauge={'axis':{'range':[0,100]},'bar':{'color':'#7C3AED'},'bgcolor':'white','steps':[{'range':[0,44],'color':'#FEE2E2'},{'range':[44,69],'color':'#FEF3C7'},{'range':[69,80],'color':'#DBEAFE'},{'range':[80,100],'color':'#D1FAE5'}],'threshold':{'line':{'color':'#7C3AED','width':4},'thickness':0.75,'value':geo}}))
                 fig.update_layout(height=280,margin=dict(l=20,r=20,t=40,b=10),paper_bgcolor='white'); st.plotly_chart(fig,use_container_width=True)
             with ic:
-                dp=[f"Citation ({cit}): rarely top pick" if cit<40 else None, f"Prominence ({prom}): mid-list" if prom<40 else None, f"Share of Voice ({sov}): competitors dominating" if sov<20 else None, f"Sentiment ({sent}): lacks positive endorsement" if sent<50 else None]
-                dp=[x for x in dp if x]
+                dp=[x for x in [f"Citation ({cit}): rarely top pick" if cit<40 else None,f"Prominence ({prom}): mid-list" if prom<40 else None,f"Share of Voice ({sov}): competitors dominating" if sov<20 else None,f"Sentiment ({sent}): lacks positive endorsement" if sent<50 else None] if x]
                 stxt=f"GEO Score {geo} reflects {vis}% Visibility but held back by: {'; '.join(dp)}." if dp else f"Strong: Visibility {vis}%, Citation {cit}, Sentiment {sent}, Prominence {prom}, SoV {sov}."
-                st.markdown(f'{white_card(f"""<div style="font-size:1.2rem;font-weight:800;color:#111827;margin-bottom:4px;">{brand}</div><a href="{BU}" target="_blank" style="color:#7C3AED;font-size:0.82rem;">{BU[:70]}{"..." if len(BU)>70 else ""}</a><div style="margin:12px 0;"><span style="background:{bbg};color:{bc};padding:4px 14px;border-radius:50px;font-size:0.78rem;font-weight:700;">{lbl}</span></div><div style="font-size:0.82rem;color:#6B7280;line-height:1.6;border-top:1px solid #F3F4F6;padding-top:12px;">{stxt}</div>""")}',unsafe_allow_html=True)
+                st.markdown(white_card(f'<div style="font-size:1.2rem;font-weight:800;color:#111827;margin-bottom:4px;">{brand}</div><a href="{BU}" target="_blank" style="color:#7C3AED;font-size:0.82rem;">{BU[:70]}{"..." if len(BU)>70 else ""}</a><div style="margin:12px 0;"><span style="background:{bbg};color:{bc};padding:4px 14px;border-radius:50px;font-size:0.78rem;font-weight:700;">{lbl}</span></div><div style="font-size:0.82rem;color:#6B7280;line-height:1.6;border-top:1px solid #F3F4F6;padding-top:12px;">{stxt}</div>'),unsafe_allow_html=True)
             st.markdown("<br>",unsafe_allow_html=True)
             tips={"Visibility Score":"How many of 20 generic AI queries mentioned your brand.","Citation Score":"How authoritatively your brand was cited.","Sentiment Score":"Tone of AI responses when your brand appeared.","Avg. Rank":"Average position your brand appeared."}
             c1,c2,c3,c4=st.columns(4)
             for col,val,lbl2,sub in [(c1,vis,"Visibility Score","AI response presence"),(c2,cit,"Citation Score","Source authority"),(c3,sent,"Sentiment Score","Brand perception"),(c4,avg_rank,"Avg. Rank","AI mention position")]:
                 with col: st.markdown(metric_card(lbl2,val,sub,tips.get(lbl2,"")),unsafe_allow_html=True)
-            # Competitor table
             st.markdown("<div style='padding:24px 0;'>",unsafe_allow_html=True)
             top10=[{"Brand":brand,"URL":bd,"GEO":geo,"Vis":vis,"Cit":cit,"Sen":sent,"Sov":sov,"Rank":avg_rank}]
             for c in ind["comps"]:
@@ -499,8 +403,7 @@ elif nav=="GEO Hub":
                 yb=' <span style="background:#EDE9FE;color:#7C3AED;border-radius:4px;padding:1px 6px;font-size:0.7rem;font-weight:700;">You</span>' if iy else ""
                 row_bg="#F5F3FF" if iy else ("white" if i%2==1 else "#FAFAFA")
                 row_bdr="border-left:3px solid #7C3AED;" if iy else ""
-                row_fw="700" if iy else "400"
-                rows+=f'<tr style="background:{row_bg};{row_bdr}"><td style="padding:10px 12px;font-size:0.8rem;color:#9CA3AF;font-weight:600;">{i}</td><td style="padding:10px 12px;"><div style="font-size:0.84rem;font-weight:{row_fw};color:#111827;">{c["Brand"]}{yb}</div><div style="font-size:0.72rem;color:#9CA3AF;">{c.get("URL","")}</div></td><td style="padding:10px 12px;font-size:0.88rem;font-weight:700;color:{gcol};">{gc2}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Vis"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Cit"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Sen"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c.get("Sov","")}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Rank"]}</td></tr>'
+                rows+=f'<tr style="background:{row_bg};{row_bdr}"><td style="padding:10px 12px;font-size:0.8rem;color:#9CA3AF;font-weight:600;">{i}</td><td style="padding:10px 12px;"><div style="font-size:0.84rem;font-weight:{"700" if iy else "400"};color:#111827;">{c["Brand"]}{yb}</div><div style="font-size:0.72rem;color:#9CA3AF;">{c.get("URL","")}</div></td><td style="padding:10px 12px;font-size:0.88rem;font-weight:700;color:{gcol};">{gc2}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Vis"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Cit"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Sen"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c.get("Sov","")}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Rank"]}</td></tr>'
             th_cols=["#","Brand","GEO","Visibility","Citation","Sentiment","Share of Voice","Avg Rank"]
             thead="".join(f'<th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">{h}</th>' for h in th_cols)
             comp_html=(f'<div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">{bd} vs Competitors — {ind["label"]}</div>'
@@ -522,12 +425,12 @@ elif nav=="GEO Hub":
                     gc2=p["geo"]; gcol="#10B981" if gc2>=60 else "#F59E0B" if gc2>=30 else "#EF4444"
                     cb=f'<span style="background:#D1FAE5;color:#065F46;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">Cited {p["cited"]}x</span>' if p["cited"]>0 else '<span style="background:#F3F4F6;color:#9CA3AF;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">Not Cited</span>'
                     rows+=f'<tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:10px 14px;"><div style="font-size:0.84rem;font-weight:600;color:#111827;">{p["label"]}</div><div style="font-size:0.72rem;color:#9CA3AF;">{p["path"]}</div></td><td style="padding:10px 14px;">{cb}</td><td style="padding:10px 14px;font-size:0.88rem;font-weight:700;color:{gcol};">{gc2}</td><td style="padding:10px 14px;font-size:0.82rem;color:#7C3AED;font-weight:600;">{p["citation_share"]}%</td><td style="padding:10px 14px;font-size:0.84rem;color:{p["color"]};font-weight:600;">{p["status"]}</td></tr>'
-            th2=["Page","AI Citations","GEO Score","Citation Share","Status"]
-            thead2="".join(f'<th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">{h}</th>' for h in th2)
-            pg_html=(f'<div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Page Intelligence</div>'
-                     f'<div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Which pages of {bd} are being cited by AI.</div>'
-                     f'<table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:2px solid #E5E7EB;background:#FAFAFA;">{thead2}</tr></thead><tbody>{rows}</tbody></table>')
-            st.markdown(white_card(pg_html),unsafe_allow_html=True)
+                th2=["Page","AI Citations","GEO Score","Citation Share","Status"]
+                thead2="".join(f'<th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">{h}</th>' for h in th2)
+                pg_html=(f'<div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Page Intelligence</div>'
+                         f'<div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Which pages of {bd} are being cited by AI.</div>'
+                         f'<table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:2px solid #E5E7EB;background:#FAFAFA;">{thead2}</tr></thead><tbody>{rows}</tbody></table>')
+                st.markdown(white_card(pg_html),unsafe_allow_html=True)
             st.markdown("</div>",unsafe_allow_html=True)
 
         with tabs[3]:
@@ -536,7 +439,7 @@ elif nav=="GEO Hub":
             pmood="Named first — strong prominence" if prom>=70 else "Mid-list mentions" if prom>=45 else "Buried in responses"
             st.markdown(f'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px;">{metric_card("Sentiment Score",sent,smood,color="#10B981")}{metric_card("Prominence Score",prom,pmood)}{metric_card("Average Rank",avg_rank,"Average mention position",color="#3B82F6")}</div>',unsafe_allow_html=True)
             sh="".join(f'<li style="padding:10px 0;font-size:0.84rem;color:#374151;display:flex;gap:12px;align-items:flex-start;border-bottom:1px solid #F0FDF4;"><span style="color:#10B981;font-weight:700;flex-shrink:0;">+</span><span>{s}</span></li>' for s in R.get("strengths_list",[])[:3])
-            st.markdown(f'{white_card(f"""<div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:16px;">Sentiment Strengths</div><ul style="list-style:none;padding:0;margin:0;">{sh}</ul>""")}',unsafe_allow_html=True)
+            st.markdown(white_card(f'<div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:16px;">Sentiment Strengths</div><ul style="list-style:none;padding:0;margin:0;">{sh}</ul>'),unsafe_allow_html=True)
             st.markdown("</div>",unsafe_allow_html=True)
 
         with tabs[4]:
@@ -550,7 +453,7 @@ elif nav=="GEO Hub":
                     phtml="".join(f'<div style="font-size:0.75rem;color:#7C3AED;padding:2px 0;">{pg}</div>' for pg in s.get("top_pages",[])[:5])
                     if phtml: phtml=f'<div style="margin-top:8px;padding-top:8px;border-top:0.5px solid #F3F4F6;">{phtml}</div>'
                     rows+=f'<div style="border:1px solid #E5E7EB;border-radius:8px;padding:12px 16px;margin-bottom:8px;"><div style="display:flex;align-items:center;gap:10px;"><span style="font-size:0.78rem;color:#9CA3AF;font-weight:600;width:18px;">{s.get("rank","")}</span><img src="https://www.google.com/s2/favicons?domain={d}&sz=14" width="14" height="14" onerror="this.style.display=\'none\'"><span style="font-size:0.88rem;font-weight:600;color:#111827;flex:1;">{d}</span><span style="background:{cbg};color:{cc};border-radius:50px;padding:2px 10px;font-size:0.7rem;font-weight:600;">{cl}</span><div style="display:flex;align-items:center;gap:6px;"><div style="background:#F3F4F6;border-radius:4px;height:5px;width:80px;overflow:hidden;"><div style="background:#7C3AED;height:5px;border-radius:4px;width:{bw}px;"></div></div><span style="font-size:0.82rem;font-weight:700;color:#7C3AED;">{share}%</span></div></div>{phtml}</div>'
-                st.markdown(f'{white_card(f"""<div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Sources AI is Pulling From</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Domains influencing AI knowledge about this brand.</div>{rows}""")}',unsafe_allow_html=True)
+                st.markdown(white_card(f'<div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Sources AI is Pulling From</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Domains influencing AI knowledge about this brand.</div>{rows}'),unsafe_allow_html=True)
             st.markdown("</div>",unsafe_allow_html=True)
 
         with tabs[5]:
@@ -591,15 +494,13 @@ elif nav=="GEO Hub":
             pri_tc={"High":"#991B1B","Medium":"#92400E","Low":"#166534"}
             ah=""
             for a in R.get("actions",[]):
-                pri=a.get("priority","Medium")
-                bg=pri_bg.get(pri,"#F3F4F6"); tc=pri_tc.get(pri,"#374151")
-                pk,deliv=dm.get(pri,("",""))
+                pri=a.get("priority","Medium"); bg=pri_bg.get(pri,"#F3F4F6"); tc=pri_tc.get(pri,"#374151"); pk,deliv=dm.get(pri,("",""))
                 ah+=(f'<div style="display:grid;grid-template-columns:90px 1fr 1fr;gap:0;border-bottom:1px solid #F3F4F6;padding:14px 0;align-items:start;">'
                      f'<div><span style="background:{bg};color:{tc};border-radius:4px;padding:2px 10px;font-size:0.72rem;font-weight:700;">{pri}</span></div>'
                      f'<div style="font-size:0.84rem;color:#374151;padding-right:16px;">{a["action"]}</div>'
                      f'<div style="font-size:0.78rem;color:#7C3AED;font-weight:600;"><span style="background:#EDE9FE;border-radius:6px;padding:3px 10px;">{pk}</span>'
                      f'<div style="font-size:0.75rem;color:#9CA3AF;font-weight:400;margin-top:4px;">{deliv}</div></div></div>')
-            st.markdown(f'{white_card(f"""<div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Priority Actions</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:20px;">Each action mapped to the relevant Accenture workstream deliverable.</div><div style="display:grid;grid-template-columns:90px 1fr 1fr;border-bottom:2px solid #E5E7EB;padding-bottom:8px;margin-bottom:4px;"><div style="font-size:0.72rem;color:#9CA3AF;font-weight:600;">Priority</div><div style="font-size:0.72rem;color:#9CA3AF;font-weight:600;">Action</div><div style="font-size:0.72rem;color:#9CA3AF;font-weight:600;">Linked Deliverable</div></div>{ah}""")}',unsafe_allow_html=True)
+            st.markdown(white_card(f'<div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Priority Actions</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:20px;">Each action mapped to the relevant Accenture workstream deliverable.</div><div style="display:grid;grid-template-columns:90px 1fr 1fr;border-bottom:2px solid #E5E7EB;padding-bottom:8px;margin-bottom:4px;"><div style="font-size:0.72rem;color:#9CA3AF;font-weight:600;">Priority</div><div style="font-size:0.72rem;color:#9CA3AF;font-weight:600;">Action</div><div style="font-size:0.72rem;color:#9CA3AF;font-weight:600;">Linked Deliverable</div></div>{ah}'),unsafe_allow_html=True)
             st.markdown("</div>",unsafe_allow_html=True)
 
         with tabs[7]:
@@ -643,19 +544,16 @@ elif nav=="Get Support":
 
     DELIVER=[
         ("Agent Ranking Diagnostic (ARD)","#1E1B5E","polygon(0 0,93% 0,100% 50%,93% 100%,0 100%)","border-radius:8px 0 0 0",["Develop representative prompts","Execute multi-run stability testing","Extract agent-generated rankings","Perform power distribution modeling","Build competitor adjacency maps"],["AXO Baseline Report","Brand & Product Ranking Index","Power Curve Analysis","Competitor Adjacency Analysis","AXO Baseline Score (v1.0)"]),
-        ("Agent Optimization Plan (AOP)","#2D2A70","polygon(0 0,93% 0,100% 50%,93% 100%,0 100%,7% 50%)","","Develop LLM-ready content assets,Strengthen product-attribute associations,Optimize content for agent ingestion,Create Content Influence Blueprint".split(","),["Agent Optimization Plan","LLM-Ready Content Package","Attribute Reinforcement Strategy","Content Influence Blueprint"]),
-        ("Distribution & Technical Influence (DTI)","#3D3A8A","polygon(0 0,93% 0,100% 50%,93% 100%,0 100%,7% 50%)","","Audit tagging and metadata,Identify missing structured data,Improve backlink structure,Identify dormant URLs,Audit schema markup".split(","),["Distribution & Technical Influence Report","Metadata Remediation Plan","Backlink & Redirect Strategy","Schema Optimization Guide"]),
-        ("Impact Measurement (Re-Diagnostic)","#5B21B6","polygon(0 0,100% 0,100% 100%,0 100%,7% 50%)","border-radius:0 8px 0 0","Re-test all prompts,Measure semantic drift and ranking changes,Recompute AXO Score".split(","),["AXO Impact Report","Before/After Ranking Comparison","Updated AXO Score (v2.0)","Recommendations for ongoing improvement"]),
+        ("Agent Optimization Plan (AOP)","#2D2A70","polygon(0 0,93% 0,100% 50%,93% 100%,0 100%,7% 50%)","",["Develop LLM-ready content assets","Strengthen product-attribute associations","Optimize content for agent ingestion","Create Content Influence Blueprint"],["Agent Optimization Plan","LLM-Ready Content Package","Attribute Reinforcement Strategy","Content Influence Blueprint"]),
+        ("Distribution & Technical Influence (DTI)","#3D3A8A","polygon(0 0,93% 0,100% 50%,93% 100%,0 100%,7% 50%)","",["Audit tagging and metadata","Identify missing structured data","Improve backlink structure","Identify dormant URLs","Audit schema markup"],["Distribution & Technical Influence Report","Metadata Remediation Plan","Backlink & Redirect Strategy","Schema Optimization Guide"]),
+        ("Impact Measurement (Re-Diagnostic)","#5B21B6","polygon(0 0,100% 0,100% 100%,0 100%,7% 50%)","border-radius:0 8px 0 0",["Re-test all prompts","Measure semantic drift and ranking changes","Recompute AXO Score"],["AXO Impact Report","Before/After Ranking Comparison","Updated AXO Score (v2.0)","Recommendations for ongoing improvement"]),
     ]
     hdrs="".join(f'<div style="background:{d[1]};padding:20px {"20px 20px 20px 28px" if i>0 else "18px"};{d[3]};clip-path:{d[2]};"><div style="font-size:0.7rem;font-weight:600;color:rgba(255,255,255,0.65);margin-bottom:6px;text-transform:uppercase;letter-spacing:.07em;">Workstream 0{i+1}</div><div style="font-size:0.9rem;font-weight:700;color:white;line-height:1.35;">{d[0]}</div></div>' for i,d in enumerate(DELIVER))
     acts="".join(f'<div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:18px;"><div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:12px;text-align:center;">Activities</div><ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;">{"".join(f"<li>{a}</li>" for a in d[4])}</ul></div>' for d in DELIVER)
     dlvs="".join(f'<div style="background:#EEEAF8;border:1px solid #DDD6FE;border-radius:8px;padding:18px;"><div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #DDD6FE;padding-bottom:8px;margin-bottom:12px;text-align:center;">Deliverables</div><ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;">{"".join(f"<li>{dl}</li>" for dl in d[5])}</ul></div>' for d in DELIVER)
-    stat_cards = "".join(
-        f'<div style="border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:24px;">'
-        f'<div style="font-size:2.4rem;font-weight:900;color:white;">{v}</div>'
-        f'<div style="font-size:0.85rem;font-weight:600;color:rgba(255,255,255,0.8);margin-top:5px;">{l}</div></div>'
-        for v,l in [("10+","Successful Clients"),("4X","Higher Conversion"),("15%","Citation Growth"),("68%","Longer Sessions")]
-    )
+
+    stat_cards="".join(f'<div style="border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:24px;"><div style="font-size:2.4rem;font-weight:900;color:white;">{v}</div><div style="font-size:0.85rem;font-weight:600;color:rgba(255,255,255,0.8);margin-top:5px;">{l}</div></div>' for v,l in [("10+","Successful Clients"),("4X","Higher Conversion"),("15%","Citation Growth"),("68%","Longer Sessions")])
+
     st.markdown(f"""
     <div style="background:white;padding:32px 40px 40px;border-bottom:1px solid #E5E7EB;">
         <div style="display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;gap:0;border-top:1px dashed #D1D5DB;padding-top:32px;">
