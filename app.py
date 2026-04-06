@@ -379,16 +379,16 @@ if nav=="Overview":
 </div>
 
 <!-- FINAL CTA -->
-<div style="background:linear-gradient(135deg,#F5F3FF 0%,#EDE9FE 60%,#F5F3FF 100%);padding:80px 40px;border-top:1px solid #E5E7EB;">
-  <div style="max-width:680px;margin:0 auto;border:1.5px solid #DDD6FE;border-radius:24px;padding:72px 56px;background:rgba(255,255,255,0.55);text-align:center;">
-    <h2 style="font-size:2.5rem;font-weight:900;color:#111827;margin:0 0 4px;line-height:1.2;">Ready to Discover Your</h2>
-    <h2 style="font-size:2.5rem;font-weight:900;color:#7C3AED;margin:0 0 24px;line-height:1.2;">AI Visibility Score?</h2>
-    <p style="font-size:0.97rem;color:#6B7280;line-height:1.8;margin:0;">Join forward-thinking brands that are optimizing for the new era of generative search. Get your Percepta GEO Score today — backed by Accenture.</p>
+<div style="background:white;padding:60px 40px;border-top:1px solid #E5E7EB;">
+  <div style="border:1.5px solid #DDD6FE;border-radius:24px;padding:80px 40px;background:linear-gradient(160deg,#ffffff 50%,#F5F3FF 100%);text-align:center;">
+    <h2 style="font-size:2.8rem;font-weight:900;color:#111827;margin:0 0 4px;line-height:1.2;">Ready to Discover Your</h2>
+    <h2 style="font-size:2.8rem;font-weight:900;color:#7C3AED;margin:0 0 28px;line-height:1.2;">GEO Score?</h2>
+    <p style="font-size:1rem;color:#6B7280;line-height:1.8;max-width:560px;margin:0 auto 48px;">Join forward-thinking brands that are optimizing for the new era of generative search. Get your Percepta GEO Score today — backed by Accenture.</p>
   </div>
 </div>
 """, unsafe_allow_html=True)
 
-    _, fc2, _ = st.columns([2, 1, 2])
+    _, fc2, _ = st.columns([2.2, 0.8, 2.2])
     with fc2:
         if st.button("Launch Percepta  →", key="final_cta", use_container_width=True):
             st.session_state.nav = "GEO Hub"; st.rerun()
