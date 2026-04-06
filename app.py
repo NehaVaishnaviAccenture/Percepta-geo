@@ -846,7 +846,7 @@ elif nav=="Get Support":
 
     st.markdown("""
     <div style="background:white;padding:48px 40px;border-bottom:1px solid #E5E7EB;">
-        <div style="text-align:left;margin-bottom:36px;">
+        <div style="text-align:center;margin-bottom:36px;">
             <div class="section-tag">Explore Offers</div>
             <h2 style="font-size:1.8rem;font-weight:800;color:#111827;margin:8px 0 6px 0;">Choose Your Pilot Program</h2>
             <p style="font-size:0.88rem;color:#6B7280;margin:0;">Start with what fits your timeline. Scale as you see results.</p>
