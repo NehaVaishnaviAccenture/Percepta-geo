@@ -354,31 +354,44 @@ elif nav=="GEO Hub":
     if not has_result:
         st.markdown(score_band_cards(), unsafe_allow_html=True)
 
-        # ── BRAND URL SECTION ──────────────────────────────────
-        st.markdown("""
-        <div style="background:#F3F4F6;padding:28px 40px 0 40px;">
-          <div style="background:white;border-radius:16px 16px 0 0;border:1px solid #E5E7EB;border-bottom:none;
-                      box-shadow:0 -2px 12px rgba(0,0,0,0.04);padding:28px 32px 20px 32px;">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-              <div style="width:7px;height:7px;border-radius:50%;background:#7C3AED;"></div>
+        st.markdown("<div style='background:#F3F4F6;padding:28px 40px 40px 40px;'>", unsafe_allow_html=True)
+        with st.container(border=True):
+            st.markdown("""
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;">
+              <div style="width:7px;height:7px;border-radius:50%;background:#7C3AED;flex-shrink:0;"></div>
               <span style="font-size:0.7rem;font-weight:700;letter-spacing:.14em;color:#9CA3AF;text-transform:uppercase;">Brand URL</span>
             </div>
-            <p style="font-size:0.85rem;color:#9CA3AF;margin:0 0 0 15px;line-height:1.5;">Paste your brand website to analyze AI visibility across ChatGPT, Gemini &amp; more</p>
-          </div>
-        </div>
-        <div style="background:#F3F4F6;padding:0 40px;">
-          <div style="background:white;border-left:1px solid #E5E7EB;border-right:1px solid #E5E7EB;border-bottom:1px solid #E5E7EB;border-radius:0 0 16px 16px;padding:0 32px 28px 32px;box-shadow:0 4px 12px rgba(0,0,0,0.05);">
-        </div></div>
-        """, unsafe_allow_html=True)
+            <p style="font-size:0.85rem;color:#9CA3AF;margin:2px 0 16px 16px;line-height:1.5;">
+              Paste your brand website to analyze AI visibility across ChatGPT, Gemini &amp; more
+            </p>
+            """, unsafe_allow_html=True)
+            col_i, col_b = st.columns([3.5, 1])
+            with col_i:
+                brand_url = st.text_input("url", value=st.session_state.geo_url,
+                    placeholder="https://www.capitalone.com/", label_visibility="collapsed")
+            with col_b:
+                run = st.button("🔍  Run Live AI Analysis", use_container_width=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
-        col_i, col_b = st.columns([3.5, 1])
-        with col_i:
-            brand_url=st.text_input("url", value=st.session_state.geo_url,
-                placeholder="https://www.capitalone.com/", label_visibility="collapsed")
-        with col_b:
-            run=st.button("🔍  Run Live AI Analysis", use_container_width=True)
-
-        st.markdown("<div style='background:#F3F4F6;height:40px;'></div>", unsafe_allow_html=True)
+        # Style the st.container border wrapper to look like the card
+        st.markdown("""<style>
+        div[data-testid="stVerticalBlockBorderWrapper"]{
+            background:white!important;border-radius:16px!important;
+            border:1px solid #E5E7EB!important;
+            box-shadow:0 4px 20px rgba(124,58,237,0.07)!important;
+            padding:24px 28px!important;
+            margin:0 40px 40px 40px!important;
+        }
+        div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stButton"]>button{
+            background:#7C3AED!important;color:white!important;border:none!important;
+            border-radius:12px!important;font-weight:700!important;font-size:0.95rem!important;
+            height:52px!important;width:100%!important;
+            box-shadow:0 4px 16px rgba(124,58,237,0.45)!important;
+        }
+        div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stButton"]>button:hover{
+            background:#6D28D9!important;
+        }
+        </style>""", unsafe_allow_html=True)
 
         if run:
             if not brand_url.strip() or not brand_url.startswith("http"):
