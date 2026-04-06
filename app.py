@@ -239,18 +239,23 @@ for k,v in [("nav","Overview"),("geo_result",None),("geo_url",""),("geo_page_dat
     if k not in st.session_state: st.session_state[k] = v
 
 # ── URL ROUTING ────────────────────────────────────────────
-page_map = {"overview":"Overview","geohub":"GEO Hub","support":"Get Support"}
-reverse_map = {"Overview":"overview","GEO Hub":"geohub","Get Support":"support"}
+page_map = {"geohub":"GEO Hub","getsupport":"Get Support"}
+reverse_map = {"GEO Hub":"geohub","Get Support":"getsupport"}
 
 # Read page from URL on first load
-url_page = st.query_params.get("p","overview")
+url_page = st.query_params.get("p","")
 if url_page in page_map and st.session_state.nav != page_map[url_page]:
     st.session_state.nav = page_map[url_page]
 
-# Sync URL to match current nav
-current_slug = reverse_map.get(st.session_state.nav,"overview")
-if st.query_params.get("p") != current_slug:
-    st.query_params["p"] = current_slug
+# Sync URL: clear params for Overview, set ?p= for others
+current_nav = st.session_state.nav
+if current_nav == "Overview":
+    if st.query_params.get("p"):
+        st.query_params.clear()
+else:
+    slug = reverse_map.get(current_nav,"")
+    if st.query_params.get("p") != slug:
+        st.query_params["p"] = slug
 
 # ── NAVBAR ────────────────────────────────────────────────────
 st.markdown("""
@@ -272,13 +277,13 @@ with nb_c:
     st.markdown("""<div class="percepta-brand-wrap"><div class="percepta-icon"><svg width="16" height="16" viewBox="0 0 22 22" fill="none"><circle cx="9.5" cy="9.5" r="5.5" stroke="white" stroke-width="1.8" fill="none"/><line x1="13.5" y1="13.5" x2="18" y2="18" stroke="white" stroke-width="1.8" stroke-linecap="round"/><path d="M7 9.5 Q8.5 7 9.5 9.5 Q10.5 12 12 9.5" stroke="white" stroke-width="1.3" fill="none" stroke-linecap="round" opacity="0.9"/></svg></div><span class="percepta-title">Percepta</span></div>""",unsafe_allow_html=True)
 with ov_c:
     if st.button("Overview",key="nb_ov",type="primary" if nav=="Overview" else "secondary",use_container_width=True):
-        st.session_state.nav="Overview"; st.query_params["p"]="overview"; st.rerun()
+        st.session_state.nav="Overview"; st.query_params.clear(); st.rerun()
 with gh_c:
     if st.button("GEO Hub",key="nb_gh",type="primary" if nav=="GEO Hub" else "secondary",use_container_width=True):
         st.session_state.nav="GEO Hub"; st.query_params["p"]="geohub"; st.rerun()
 with sp_c:
     if st.button("Get Support",key="nb_sp",type="primary" if nav=="Get Support" else "secondary",use_container_width=True):
-        st.session_state.nav="Get Support"; st.query_params["p"]="support"; st.rerun()
+        st.session_state.nav="Get Support"; st.query_params["p"]="getsupport"; st.rerun()
 
 # ════════════════════════════════════════════════════════════
 # PAGE 1: OVERVIEW
@@ -307,7 +312,7 @@ if nav=="Overview":
   <p style="font-size:1.05rem;color:#6B7280;max-width:860px;margin:0 auto 36px;line-height:1.7;">The Percepta GEO Score is a single 0–100 number that measures how often and how favorably your brand<br>is cited in AI-generated responses — across ChatGPT, Gemini, and other major AI engines.</p>
 
   <div style="display:flex;gap:16px;justify-content:center;align-items:center;flex-wrap:wrap;">
-    <a href="?goto=geohub" class="hero-btn-primary" target="_self">Get Your GEO Score &nbsp;→</a>
+    <a href="?p=geohub" class="hero-btn-primary" target="_self">Get Your GEO Score &nbsp;→</a>
     <a href="#process-section" class="hero-btn-secondary">See How It Works</a>
   </div>
 
@@ -419,7 +424,7 @@ if nav=="Overview":
     <h2 style="font-size:3rem;font-weight:900;color:#7C3AED;margin:0 0 28px;line-height:1.1;">GEO Score?</h2>
     <p style="font-size:1rem;color:#6B7280;line-height:1.7;margin:0 auto;max-width:600px;">Join forward-thinking brands optimizing for the new era of generative search.<br>Get your Percepta GEO Score today — backed by Accenture.</p>
     <div style="margin-top:40px;">
-      <a href="?goto=geohub" class="cta-btn" target="_self">Launch Percepta &nbsp;→</a>
+      <a href="?p=geohub" class="cta-btn" target="_self">Launch Percepta &nbsp;→</a>
     </div>
   </div>
 </div>
