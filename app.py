@@ -737,27 +737,110 @@ elif nav=="Get Support":
 
     st.markdown("""
     <div style="background:#F9F9FC;padding:48px 40px;border-bottom:1px solid #E5E7EB;">
-        <div style="text-align:left;margin-bottom:32px;">
+        <div style="text-align:center;margin-bottom:32px;">
             <div class="section-tag">Deliverables</div>
             <h2 style="font-size:1.8rem;font-weight:800;color:#111827;margin:8px 0 0 0;">Activities and What We Deliver</h2>
         </div>
+        <!-- Header row -->
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:3px;margin-bottom:12px;">
-            <div style="background:#1E1B5E;padding:18px 16px;border-radius:8px 0 0 0;clip-path:polygon(0 0,93% 0,100% 50%,93% 100%,0 100%);"><div style="font-size:0.68rem;font-weight:600;color:rgba(255,255,255,0.6);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em;">Workstream 01</div><div style="font-size:0.85rem;font-weight:700;color:white;line-height:1.3;">Agent Ranking Diagnostic</div></div>
-            <div style="background:#2D2A70;padding:18px 18px 18px 24px;clip-path:polygon(0 0,93% 0,100% 50%,93% 100%,0 100%,7% 50%);"><div style="font-size:0.68rem;font-weight:600;color:rgba(255,255,255,0.6);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em;">Workstream 02</div><div style="font-size:0.85rem;font-weight:700;color:white;line-height:1.3;">Agent Optimization Plan</div></div>
-            <div style="background:#3D3A8A;padding:18px 18px 18px 24px;clip-path:polygon(0 0,93% 0,100% 50%,93% 100%,0 100%,7% 50%);"><div style="font-size:0.68rem;font-weight:600;color:rgba(255,255,255,0.6);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em;">Workstream 03</div><div style="font-size:0.85rem;font-weight:700;color:white;line-height:1.3;">Distribution and Technical</div></div>
-            <div style="background:#5B21B6;padding:18px 18px 18px 24px;border-radius:0 8px 0 0;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,7% 50%);"><div style="font-size:0.68rem;font-weight:600;color:rgba(255,255,255,0.6);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em;">Workstream 04</div><div style="font-size:0.85rem;font-weight:700;color:white;line-height:1.3;">Impact Measurement</div></div>
+            <div style="background:#1E1B5E;padding:20px 18px;border-radius:8px 0 0 0;clip-path:polygon(0 0,93% 0,100% 50%,93% 100%,0 100%);">
+                <div style="font-size:0.7rem;font-weight:600;color:rgba(255,255,255,0.65);margin-bottom:6px;text-transform:uppercase;letter-spacing:.07em;">Workstream 01</div>
+                <div style="font-size:0.9rem;font-weight:700;color:white;line-height:1.35;">Agent Ranking Diagnostic (ARD)</div>
+            </div>
+            <div style="background:#2D2A70;padding:20px 20px 20px 28px;clip-path:polygon(0 0,93% 0,100% 50%,93% 100%,0 100%,7% 50%);">
+                <div style="font-size:0.7rem;font-weight:600;color:rgba(255,255,255,0.65);margin-bottom:6px;text-transform:uppercase;letter-spacing:.07em;">Workstream 02</div>
+                <div style="font-size:0.9rem;font-weight:700;color:white;line-height:1.35;">Agent Optimization Plan (AOP)</div>
+            </div>
+            <div style="background:#3D3A8A;padding:20px 20px 20px 28px;clip-path:polygon(0 0,93% 0,100% 50%,93% 100%,0 100%,7% 50%);">
+                <div style="font-size:0.7rem;font-weight:600;color:rgba(255,255,255,0.65);margin-bottom:6px;text-transform:uppercase;letter-spacing:.07em;">Workstream 03</div>
+                <div style="font-size:0.9rem;font-weight:700;color:white;line-height:1.35;">Distribution and Technical Influence Layer (DTI)</div>
+            </div>
+            <div style="background:#5B21B6;padding:20px 20px 20px 28px;border-radius:0 8px 0 0;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,7% 50%);">
+                <div style="font-size:0.7rem;font-weight:600;color:rgba(255,255,255,0.65);margin-bottom:6px;text-transform:uppercase;letter-spacing:.07em;">Workstream 04</div>
+                <div style="font-size:0.9rem;font-weight:700;color:white;line-height:1.35;">Impact Measurement (Re-Diagnostic)</div>
+            </div>
         </div>
+        <!-- Activities row -->
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:12px;">
-            <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:16px;"><div style="font-size:0.8rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:10px;">Activities</div><ul style="list-style:disc;padding-left:14px;margin:0;font-size:0.76rem;color:#374151;line-height:1.7;"><li>Representative prompts across personas</li><li>Multi-run stability testing</li><li>Agent-generated rankings</li><li>Power distribution modeling</li><li>Competitor adjacency maps</li></ul></div>
-            <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:16px;"><div style="font-size:0.8rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:10px;">Activities</div><ul style="list-style:disc;padding-left:14px;margin:0;font-size:0.76rem;color:#374151;line-height:1.7;"><li>LLM-ready content: FAQs, Top 10 lists</li><li>Product-attribute associations</li><li>Content for agent ingestion</li><li>Content Influence Blueprint</li></ul></div>
-            <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:16px;"><div style="font-size:0.8rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:10px;">Activities</div><ul style="list-style:disc;padding-left:14px;margin:0;font-size:0.76rem;color:#374151;line-height:1.7;"><li>Tagging, metadata, and taxonomy</li><li>Missing structured data</li><li>Backlink improvements</li><li>Schema markup audit</li></ul></div>
-            <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:16px;"><div style="font-size:0.8rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:10px;">Activities</div><ul style="list-style:disc;padding-left:14px;margin:0;font-size:0.76rem;color:#374151;line-height:1.7;"><li>Re-test all prompts</li><li>Semantic drift and ranking changes</li><li>Recompute AXO Score</li></ul></div>
+            <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:18px;">
+                <div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:12px;text-align:center;">Activities</div>
+                <ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;">
+                    <li>Develop representative prompts across key personas and use cases</li>
+                    <li>Execute multi-run stability testing across ChatGPT and Perplexity</li>
+                    <li>Extract agent-generated rankings of brands, models, and attributes</li>
+                    <li>Perform power distribution modeling and co-sign similarity analysis</li>
+                    <li>Build competitor adjacency maps and Evidence Graphs</li>
+                </ul>
+            </div>
+            <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:18px;">
+                <div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:12px;text-align:center;">Activities</div>
+                <ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;">
+                    <li>Develop LLM-ready content assets including FAQs, Top 10 lists, Buying guides, Product comparison pages</li>
+                    <li>Strengthen associations between your products and target attributes</li>
+                    <li>Optimize content structure for agent ingestion</li>
+                    <li>Create a Content Influence Blueprint showing exact assets to be published or updated</li>
+                </ul>
+            </div>
+            <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:18px;">
+                <div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:12px;text-align:center;">Activities</div>
+                <ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;">
+                    <li>Audit tagging, metadata, and taxonomy consistency</li>
+                    <li>Identify weak or missing structured data</li>
+                    <li>Recommend improvements to backlink structure and domain authority</li>
+                    <li>Identify dormant or legacy URLs and propose redirects to new agent-ready content hubs</li>
+                    <li>Audit schema markup (e.g., Product, FAQ, How to schemas)</li>
+                </ul>
+            </div>
+            <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:18px;">
+                <div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:12px;text-align:center;">Activities</div>
+                <ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;">
+                    <li>Re-test all prompts across ChatGPT and Perplexity</li>
+                    <li>Measure semantic drift, ranking changes, attribute alignment, and evidence graph updates</li>
+                    <li>Recompute AXO Score</li>
+                </ul>
+            </div>
         </div>
+        <!-- Deliverables row -->
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;">
-            <div style="background:#F0EEF8;border:1px solid #E5E7EB;border-radius:8px;padding:16px;"><div style="font-size:0.8rem;font-weight:700;color:#111827;border-bottom:1px solid #E5E7EB;padding-bottom:8px;margin-bottom:10px;">Deliverables</div><ul style="list-style:disc;padding-left:14px;margin:0;font-size:0.76rem;color:#374151;line-height:1.7;"><li>AXO Baseline Report</li><li>Brand Ranking Index</li><li>Power Curve Analysis</li><li>Attribute Influence Map</li><li>AXO Baseline Score v1.0</li></ul></div>
-            <div style="background:#F0EEF8;border:1px solid #E5E7EB;border-radius:8px;padding:16px;"><div style="font-size:0.8rem;font-weight:700;color:#111827;border-bottom:1px solid #E5E7EB;padding-bottom:8px;margin-bottom:10px;">Deliverables</div><ul style="list-style:disc;padding-left:14px;margin:0;font-size:0.76rem;color:#374151;line-height:1.7;"><li>Agent Optimization Plan</li><li>LLM-Ready Content Package</li><li>Attribute Reinforcement Strategy</li><li>Content Influence Blueprint</li></ul></div>
-            <div style="background:#F0EEF8;border:1px solid #E5E7EB;border-radius:8px;padding:16px;"><div style="font-size:0.8rem;font-weight:700;color:#111827;border-bottom:1px solid #E5E7EB;padding-bottom:8px;margin-bottom:10px;">Deliverables</div><ul style="list-style:disc;padding-left:14px;margin:0;font-size:0.76rem;color:#374151;line-height:1.7;"><li>DTI Report</li><li>Metadata Remediation Plan</li><li>Backlink and Redirect Strategy</li><li>Schema Optimization Guide</li></ul></div>
-            <div style="background:#F0EEF8;border:1px solid #E5E7EB;border-radius:8px;padding:16px;"><div style="font-size:0.8rem;font-weight:700;color:#111827;border-bottom:1px solid #E5E7EB;padding-bottom:8px;margin-bottom:10px;">Deliverables</div><ul style="list-style:disc;padding-left:14px;margin:0;font-size:0.76rem;color:#374151;line-height:1.7;"><li>AXO Impact Report</li><li>Before and After Ranking Comparison</li><li>Updated AXO Score v2.0</li><li>Ongoing recommendations</li></ul></div>
+            <div style="background:#EEEAF8;border:1px solid #DDD6FE;border-radius:8px;padding:18px;">
+                <div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #DDD6FE;padding-bottom:8px;margin-bottom:12px;text-align:center;">Deliverables</div>
+                <ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;">
+                    <li>AXO Baseline Report</li>
+                    <li>Brand &amp; Product Ranking Index</li>
+                    <li>Power Curve Analysis</li>
+                    <li>Co-Sign Similarity Maps</li>
+                    <li>Attribute Influence Map</li>
+                    <li>Competitor Adjacency Analysis</li>
+                    <li>AXO Baseline Score (v1.0)</li>
+                </ul>
+            </div>
+            <div style="background:#EEEAF8;border:1px solid #DDD6FE;border-radius:8px;padding:18px;">
+                <div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #DDD6FE;padding-bottom:8px;margin-bottom:12px;text-align:center;">Deliverables</div>
+                <ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;">
+                    <li>Agent Optimization Plan</li>
+                    <li>LLM-Ready Content Package</li>
+                    <li>Attribute Reinforcement Strategy</li>
+                    <li>Content Influence Blueprint</li>
+                </ul>
+            </div>
+            <div style="background:#EEEAF8;border:1px solid #DDD6FE;border-radius:8px;padding:18px;">
+                <div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #DDD6FE;padding-bottom:8px;margin-bottom:12px;text-align:center;">Deliverables</div>
+                <ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;">
+                    <li>Distribution &amp; Technical Influence Report</li>
+                    <li>Metadata Remediation Plan</li>
+                    <li>Backlink &amp; Redirect Strategy</li>
+                    <li>Schema Optimization Guide</li>
+                </ul>
+            </div>
+            <div style="background:#EEEAF8;border:1px solid #DDD6FE;border-radius:8px;padding:18px;">
+                <div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #DDD6FE;padding-bottom:8px;margin-bottom:12px;text-align:center;">Deliverables</div>
+                <ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;">
+                    <li>AXO Impact Report</li>
+                    <li>Before/After Ranking Comparison</li>
+                    <li>Updated AXO Score (v2.0)</li>
+                    <li>Recommendations for ongoing improvement</li>
+                </ul>
+            </div>
         </div>
     </div>""",unsafe_allow_html=True)
 
@@ -807,35 +890,33 @@ elif nav=="Get Support":
     </div>""",unsafe_allow_html=True)
 
     st.markdown("""
-    <div style="background:#7C3AED;padding:72px 40px;">
-        <div style="max-width:900px;margin:0 auto;">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
-                <div>
-                    <div style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:rgba(255,255,255,0.6);text-transform:uppercase;margin-bottom:10px;">Proven Results</div>
-                    <h2 style="font-size:1.8rem;font-weight:800;color:white;margin:0 0 14px 0;line-height:1.25;">Validated Impact Across<br>10+ Client Engagements</h2>
-                    <p style="font-size:0.9rem;color:rgba(255,255,255,0.8);line-height:1.8;margin:0;">Across retail, travel, financial services, and hospitality, Percepta has consistently delivered measurable improvements in AI brand visibility.</p>
+    <div style="background:#7C3AED;padding:56px 40px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;">
+            <div>
+                <div style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:rgba(255,255,255,0.6);text-transform:uppercase;margin-bottom:10px;">Proven Results</div>
+                <h2 style="font-size:2rem;font-weight:800;color:white;margin:0 0 14px 0;line-height:1.25;">Validated Impact Across<br>10+ Client Engagements</h2>
+                <p style="font-size:0.92rem;color:rgba(255,255,255,0.8);line-height:1.8;margin:0;">Across retail, travel, financial services, and hospitality, Percepta has consistently delivered measurable improvements in AI brand visibility.</p>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                <div style="border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:24px;">
+                    <div style="font-size:2.4rem;font-weight:900;color:white;">10+</div>
+                    <div style="font-size:0.85rem;font-weight:600;color:rgba(255,255,255,0.8);margin-top:5px;">Successful Clients</div>
+                    <div style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:2px;">Across retail, travel, hospitality</div>
                 </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
-                    <div style="border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:22px;">
-                        <div style="font-size:2.2rem;font-weight:900;color:white;">10+</div>
-                        <div style="font-size:0.8rem;font-weight:600;color:rgba(255,255,255,0.8);margin-top:5px;">Successful Clients</div>
-                        <div style="font-size:0.72rem;color:rgba(255,255,255,0.5);margin-top:2px;">Across retail, travel, hospitality</div>
-                    </div>
-                    <div style="border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:22px;">
-                        <div style="font-size:2.2rem;font-weight:900;color:white;">4X</div>
-                        <div style="font-size:0.8rem;font-weight:600;color:rgba(255,255,255,0.8);margin-top:5px;">Higher Conversion</div>
-                        <div style="font-size:0.72rem;color:rgba(255,255,255,0.5);margin-top:2px;">From ChatGPT vs traditional search</div>
-                    </div>
-                    <div style="border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:22px;">
-                        <div style="font-size:2.2rem;font-weight:900;color:white;">15%</div>
-                        <div style="font-size:0.8rem;font-weight:600;color:rgba(255,255,255,0.8);margin-top:5px;">Citation Growth</div>
-                        <div style="font-size:0.72rem;color:rgba(255,255,255,0.5);margin-top:2px;">Improved brand authority in AI</div>
-                    </div>
-                    <div style="border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:22px;">
-                        <div style="font-size:2.2rem;font-weight:900;color:white;">68%</div>
-                        <div style="font-size:0.8rem;font-weight:600;color:rgba(255,255,255,0.8);margin-top:5px;">Longer Sessions</div>
-                        <div style="font-size:0.72rem;color:rgba(255,255,255,0.5);margin-top:2px;">Through AI-optimized content</div>
-                    </div>
+                <div style="border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:24px;">
+                    <div style="font-size:2.4rem;font-weight:900;color:white;">4X</div>
+                    <div style="font-size:0.85rem;font-weight:600;color:rgba(255,255,255,0.8);margin-top:5px;">Higher Conversion</div>
+                    <div style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:2px;">From ChatGPT vs traditional search</div>
+                </div>
+                <div style="border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:24px;">
+                    <div style="font-size:2.4rem;font-weight:900;color:white;">15%</div>
+                    <div style="font-size:0.85rem;font-weight:600;color:rgba(255,255,255,0.8);margin-top:5px;">Citation Growth</div>
+                    <div style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:2px;">Improved brand authority in AI</div>
+                </div>
+                <div style="border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:24px;">
+                    <div style="font-size:2.4rem;font-weight:900;color:white;">68%</div>
+                    <div style="font-size:0.85rem;font-weight:600;color:rgba(255,255,255,0.8);margin-top:5px;">Longer Sessions</div>
+                    <div style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:2px;">Through AI-optimized content</div>
                 </div>
             </div>
         </div>
