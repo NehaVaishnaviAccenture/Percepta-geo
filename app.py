@@ -24,15 +24,17 @@ section.main div[data-testid="stButton"]>button{
     border-radius:50px!important;font-weight:700!important;font-size:1rem!important;
     padding:14px 28px!important;box-shadow:0 4px 14px rgba(124,58,237,0.4)!important;transition:background 0.2s!important;}
 section.main div[data-testid="stButton"]>button:hover{background:#6D28D9!important;}
-/* Navbar buttons: no border, no shadow */
+/* Navbar buttons: no border, no shadow, no red */
 div[data-testid="stAppViewBlockContainer"]>div>div>div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button{
     background:transparent!important;color:#6B7280!important;border:none!important;
     border-radius:8px!important;font-weight:500!important;font-size:0.88rem!important;
-    padding:7px 16px!important;box-shadow:none!important;width:100%!important;height:auto!important;}
-div[data-testid="stAppViewBlockContainer"]>div>div>div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button:hover{background:#F5F3FF!important;color:#7C3AED!important;}
-div[data-testid="stAppViewBlockContainer"]>div>div>div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"] button[kind="primary"]{background:#EDE9FE!important;color:#7C3AED!important;font-weight:700!important;}
-/* Navbar bar */
-div[data-testid="stHorizontalBlock"]:first-of-type{background:white!important;border-bottom:1px solid #E5E7EB!important;padding:12px 40px!important;margin:0!important;position:sticky!important;top:0!important;z-index:999!important;align-items:center!important;box-shadow:0 1px 3px rgba(0,0,0,0.06)!important;}
+    padding:7px 20px!important;box-shadow:none!important;width:100%!important;height:auto!important;}
+div[data-testid="stAppViewBlockContainer"]>div>div>div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button:hover{
+    background:#EDE9FE!important;color:#7C3AED!important;box-shadow:none!important;}
+div[data-testid="stAppViewBlockContainer"]>div>div>div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"] button[kind="primary"]{
+    background:#EDE9FE!important;color:#7C3AED!important;font-weight:700!important;box-shadow:none!important;}
+/* Navbar bar — no bottom border */
+div[data-testid="stHorizontalBlock"]:first-of-type{background:white!important;border-bottom:none!important;padding:12px 40px!important;margin:0!important;position:sticky!important;top:0!important;z-index:999!important;align-items:center!important;box-shadow:0 1px 6px rgba(0,0,0,0.06)!important;}
 /* Input styling */
 div[data-testid="stTextInput"] input{border-radius:0!important;border:none!important;border-top:1px solid #E5E7EB!important;border-bottom:1px solid #E5E7EB!important;padding:14px 20px!important;font-size:0.95rem!important;height:52px!important;background:#FAFAFA!important;width:100%!important;}
 div[data-testid="stTextInput"] input:focus{border-color:#7C3AED!important;box-shadow:none!important;background:white!important;}
@@ -300,7 +302,7 @@ if nav=="Overview":
 # ════════════════════════════════════════════════════════════
 elif nav=="GEO Hub":
     st.markdown("""<div style="background:linear-gradient(135deg,#5B21B6 0%,#7C3AED 50%,#9333EA 100%);padding:64px 40px 56px;text-align:center;">
-        <div style="display:inline-flex;align-items:center;gap:8px;border:1.5px solid rgba(255,255,255,0.5);border-radius:50px;padding:8px 24px;font-size:0.78rem;font-weight:700;color:white;margin-bottom:28px;background:rgba(255,255,255,0.15);">✦ &nbsp;Real GEO Scoring</div>
+        <div style="display:inline-flex;align-items:center;gap:8px;border:1.5px solid rgba(255,255,255,0.5);border-radius:50px;padding:8px 24px;font-size:0.78rem;font-weight:700;color:white;margin-bottom:28px;background:rgba(255,255,255,0.15);">✦ &nbsp;Real Time GEO Scoring</div>
         <h1 style="font-size:3.4rem;font-weight:900;color:white;margin:0 0 14px;letter-spacing:-1.5px;">GEO Scorecard</h1>
         <p style="font-size:1.05rem;color:rgba(255,255,255,0.88);margin:0;">Enter any brand URL · Discover your brand's AI presence</p>
     </div>""", unsafe_allow_html=True)
@@ -311,46 +313,70 @@ elif nav=="GEO Hub":
         # Score band cards
         st.markdown(score_band_cards(), unsafe_allow_html=True)
 
-        # Brand URL label
+        # Professional URL input section
         st.markdown("""
-        <div style="background:#F3F4F6;padding:0 20px 8px 20px;">
-          <p style="font-size:0.78rem;font-weight:600;letter-spacing:.08em;color:#9CA3AF;text-transform:uppercase;margin:0;">Brand URL</p>
-        </div>""", unsafe_allow_html=True)
+        <div style="background:#F3F4F6;padding:32px 40px 40px 40px;">
+          <div style="background:white;border-radius:20px;border:1px solid #E5E7EB;
+                      box-shadow:0 4px 24px rgba(124,58,237,0.08);padding:36px 40px;">
+            <div style="margin-bottom:6px;">
+              <span style="font-size:0.7rem;font-weight:700;letter-spacing:.12em;color:#9CA3AF;text-transform:uppercase;">Brand URL</span>
+            </div>
+            <p style="font-size:0.92rem;color:#6B7280;margin:0 0 20px 0;line-height:1.5;">
+              Enter your brand's website URL to analyze its AI visibility across ChatGPT, Gemini, and other major AI engines.
+            </p>
+        </div></div>
+        <style>
+        /* Override input inside card */
+        div[data-testid="stTextInput"] input {
+            border-radius: 12px !important;
+            border: 1.5px solid #DDD6FE !important;
+            padding: 14px 18px !important;
+            font-size: 0.95rem !important;
+            height: 52px !important;
+            background: #FAFAFE !important;
+        }
+        div[data-testid="stTextInput"] input:focus {
+            border-color: #7C3AED !important;
+            box-shadow: 0 0 0 3px rgba(124,58,237,0.12) !important;
+            background: white !important;
+        }
+        /* Columns row: transparent */
+        div[data-testid="stHorizontalBlock"]:not(:first-of-type) {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            padding: 0 40px !important;
+            margin: -72px 0 0 0 !important;
+        }
+        /* Purple pill run button */
+        div[data-testid="stHorizontalBlock"]:not(:first-of-type) div[data-testid="stButton"]>button {
+            background: #7C3AED !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 50px !important;
+            font-weight: 700 !important;
+            font-size: 0.95rem !important;
+            height: 52px !important;
+            width: 100% !important;
+            box-shadow: 0 4px 16px rgba(124,58,237,0.45) !important;
+            letter-spacing: 0.01em !important;
+        }
+        div[data-testid="stHorizontalBlock"]:not(:first-of-type) div[data-testid="stButton"]>button:hover {
+            background: #6D28D9 !important;
+            box-shadow: 0 6px 20px rgba(124,58,237,0.55) !important;
+        }
+        </style>
+        """, unsafe_allow_html=True)
 
-        # Input + button (full width, no card wrapper)
-        uc, bc = st.columns([4.5, 1])
+        uc, bc = st.columns([3.5, 1])
         with uc:
             brand_url = st.text_input("u", value=st.session_state.geo_url,
                 placeholder="https://www.capitalone.com/", label_visibility="collapsed")
         with bc:
             run = st.button("🔍  Run Live AI Analysis", use_container_width=True)
 
-        # Feature cards
-        st.markdown("""
-        <div style="background:#F3F4F6;padding:24px 20px 40px 20px;">
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;">
-            <div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px 20px;">
-              <div style="width:36px;height:36px;background:#F3F0FF;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:12px;">📊</div>
-              <div style="font-size:0.92rem;font-weight:700;color:#111827;margin-bottom:5px;">Real-Time AI Analysis</div>
-              <div style="font-size:0.8rem;color:#6B7280;line-height:1.6;">Live data, not cached — results as AI sees them now</div>
-            </div>
-            <div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px 20px;">
-              <div style="width:36px;height:36px;background:#FFF7ED;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:12px;">⚡</div>
-              <div style="font-size:0.92rem;font-weight:700;color:#111827;margin-bottom:5px;">Unified GEO Score</div>
-              <div style="font-size:0.8rem;color:#6B7280;line-height:1.6;">One number connecting visibility, citations &amp; sentiment</div>
-            </div>
-            <div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px 20px;">
-              <div style="width:36px;height:36px;background:#EEF2FF;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:12px;">👥</div>
-              <div style="font-size:0.92rem;font-weight:700;color:#111827;margin-bottom:5px;">Competitor Benchmarking</div>
-              <div style="font-size:0.8rem;color:#6B7280;line-height:1.6;">See exactly where you stand vs. industry peers</div>
-            </div>
-            <div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px 20px;">
-              <div style="width:36px;height:36px;background:#F0FDF4;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:12px;">✅</div>
-              <div style="font-size:0.92rem;font-weight:700;color:#111827;margin-bottom:5px;">Actionable Strategy</div>
-              <div style="font-size:0.8rem;color:#6B7280;line-height:1.6;">Recommendations backed by Accenture consultants</div>
-            </div>
-          </div>
-        </div>""", unsafe_allow_html=True)
+        st.markdown("<div style='background:#F3F4F6;height:40px;'></div>", unsafe_allow_html=True)
 
         if run:
             if not brand_url.strip() or not brand_url.startswith("http"):
