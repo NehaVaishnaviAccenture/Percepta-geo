@@ -276,7 +276,7 @@ if nav=="Overview":
 
     st.markdown("""
 <!-- HERO -->
-<div style="background:linear-gradient(170deg,#ffffff 55%,#F3EEFF 100%);padding:80px 40px 60px 40px;text-align:center;">
+<div style="background:linear-gradient(170deg,#ffffff 55%,#F3EEFF 100%);padding:52px 40px 40px 40px;text-align:center;">
 
   <div style="display:inline-flex;align-items:center;gap:8px;border:1px solid #DDD6FE;border-radius:50px;padding:8px 22px;font-size:0.72rem;font-weight:700;letter-spacing:.1em;color:#7C3AED;text-transform:uppercase;margin-bottom:44px;background:rgba(255,255,255,0.9);">
     ✦ &nbsp;AI-Powered Brand Intelligence &nbsp;·&nbsp; Powered by Accenture
@@ -292,7 +292,7 @@ if nav=="Overview":
   </p>
 
   <div style="display:flex;gap:16px;justify-content:center;align-items:center;flex-wrap:wrap;">
-    <a href="?goto=geohub" class="hero-btn-primary">Get Your GEO Score &nbsp;→</a>
+    <a href="?goto=geohub" class="hero-btn-primary" target="_self">Get Your GEO Score &nbsp;→</a>
     <a href="#process-section" class="hero-btn-secondary">See How It Works</a>
   </div>
 
@@ -399,12 +399,12 @@ if nav=="Overview":
 
 <!-- FINAL CTA -->
 <div style="background:white;padding:80px 40px;border-top:1px solid #E5E7EB;">
-  <div style="background:linear-gradient(135deg,#F8F5FF 0%,#EDE9FE 45%,#F3EEFF 100%);border:1.5px solid #C4B5FD;border-radius:28px;padding:80px 60px;text-align:center;">
+  <div style="background:linear-gradient(135deg,#F8F5FF 0%,#EDE9FE 45%,#F3EEFF 100%);border:1.5px solid #C4B5FD;border-radius:28px;padding:52px 60px;text-align:center;">
     <h2 style="font-size:3rem;font-weight:900;color:#111827;margin:0 0 4px;line-height:1.1;">Ready to Discover Your</h2>
     <h2 style="font-size:3rem;font-weight:900;color:#7C3AED;margin:0 0 28px;line-height:1.1;">GEO Score?</h2>
     <p style="font-size:1rem;color:#6B7280;line-height:1.8;margin:0 auto;max-width:520px;">Join forward-thinking brands that are optimizing for the new era of generative search. Get your Percepta GEO Score today — backed by Accenture.</p>
     <div style="margin-top:40px;">
-      <a href="?goto=geohub" class="cta-btn">Launch Percepta &nbsp;→</a>
+      <a href="?goto=geohub" class="cta-btn" target="_self">Launch Percepta &nbsp;→</a>
     </div>
   </div>
 </div>
