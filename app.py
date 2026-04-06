@@ -23,12 +23,8 @@ footer{visibility:hidden;}
 section[data-testid="stSidebar"]{display:none!important;}
 div[data-testid="stTabs"] button{font-size:0.85rem!important;font-weight:600!important;padding:10px 20px!important;}
 div[data-testid="stTabs"] button[aria-selected="true"]{color:#7C3AED!important;border-bottom:2px solid #7C3AED!important;}
-section.main div[data-testid="stButton"]>button{background:#6B21E8!important;color:white!important;border:none!important;border-radius:50px!important;font-weight:700!important;transition:background 0.2s!important;padding:14px 28px!important;font-size:1rem!important;box-shadow:0 4px 18px rgba(107,33,232,0.45)!important;}
+section.main div[data-testid="stButton"]>button{background:#6B21E8!important;color:white!important;border:none!important;border-radius:50px!important;font-weight:700!important;transition:background 0.2s!important;padding:14px 28px!important;font-size:1rem!important;box-shadow:0 4px 14px rgba(107,33,232,0.35)!important;}
 section.main div[data-testid="stButton"]>button:hover{background:#5B21B6!important;}
-section.main div[data-testid="stButton"]>button p{color:white!important;font-weight:700!important;}
-/* Navbar buttons must NOT get the purple style */
-div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button{background:transparent!important;box-shadow:none!important;color:#6B7280!important;}
-div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button[kind="primary"]{background:#EDE9FE!important;color:#7C3AED!important;}
 div[data-testid="stTextInput"] input{border-radius:10px!important;border:1.5px solid #E5E7EB!important;padding:12px 16px!important;font-size:0.95rem!important;}
 .metric-tooltip{position:relative;display:inline-block;cursor:help;}
 .metric-tooltip .tooltip-text{visibility:hidden;opacity:0;background:#1F2937;color:white;font-size:0.75rem;line-height:1.5;border-radius:8px;padding:10px 14px;position:absolute;z-index:9999;bottom:130%;left:50%;transform:translateX(-50%);width:220px;text-align:left;box-shadow:0 4px 12px rgba(0,0,0,0.2);transition:opacity 0.2s;pointer-events:none;}
@@ -434,42 +430,11 @@ elif nav=="GEO Hub":
 
     if not has_result:
         st.markdown("""
-        <div style="background:#F3F4F6;padding:40px 40px 0 40px;">
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;margin-bottom:40px;">
-            <div style="background:#ECFDF5;border-radius:16px;padding:28px 24px;text-align:center;border:1.5px solid #6EE7B7;">
-              <div style="font-size:0.9rem;font-weight:700;color:#065F46;margin-bottom:8px;">80–100</div>
-              <div style="font-size:1.6rem;font-weight:900;color:#065F46;margin-bottom:8px;">Excellent</div>
-              <div style="font-size:0.85rem;color:#065F46;">Well optimized for AI citation</div>
-            </div>
-            <div style="background:#EFF6FF;border-radius:16px;padding:28px 24px;text-align:center;border:1.5px solid #93C5FD;">
-              <div style="font-size:0.9rem;font-weight:700;color:#1E40AF;margin-bottom:8px;">70–79</div>
-              <div style="font-size:1.6rem;font-weight:900;color:#1E40AF;margin-bottom:8px;">Good</div>
-              <div style="font-size:0.85rem;color:#1E40AF;">Minor improvements recommended</div>
-            </div>
-            <div style="background:#FFFBEB;border-radius:16px;padding:28px 24px;text-align:center;border:1.5px solid #FCD34D;">
-              <div style="font-size:0.9rem;font-weight:700;color:#92400E;margin-bottom:8px;">45–69</div>
-              <div style="font-size:1.6rem;font-weight:900;color:#92400E;margin-bottom:8px;">Needs Work</div>
-              <div style="font-size:0.85rem;color:#92400E;">Several issues to address</div>
-            </div>
-            <div style="background:#FFF1F2;border-radius:16px;padding:28px 24px;text-align:center;border:1.5px solid #FCA5A5;">
-              <div style="font-size:0.9rem;font-weight:700;color:#991B1B;margin-bottom:8px;">0–44</div>
-              <div style="font-size:1.6rem;font-weight:900;color:#991B1B;margin-bottom:8px;">Poor</div>
-              <div style="font-size:0.85rem;color:#991B1B;">Major optimization needed</div>
-            </div>
-          </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-        st.markdown("""
         <style>
-        div[data-testid="stVerticalBlockBorderWrapper"] {
-            background: white !important;
-            border-radius: 16px !important;
-            border: 1.5px solid #E5E7EB !important;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07) !important;
-            padding: 8px 24px 24px 24px !important;
-            margin: 0 40px 48px 40px !important;
-        }
+        /* Page background */
+        section.main > div { background: #F3F4F6 !important; }
+
+        /* Input field */
         div[data-testid="stTextInput"] input {
             border-radius: 10px !important;
             border: 1.5px solid #E5E7EB !important;
@@ -482,15 +447,63 @@ elif nav=="GEO Hub":
             border-color: #7C3AED !important;
             box-shadow: 0 0 0 3px rgba(124,58,237,0.12) !important;
         }
+
+        /* White card container */
+        div[data-testid="stVerticalBlockBorderWrapper"] {
+            background: white !important;
+            border-radius: 20px !important;
+            border: 1.5px solid #E9E9E9 !important;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06) !important;
+            padding: 28px 32px 32px 32px !important;
+            margin: 0 40px 48px 40px !important;
+        }
+
+        /* Run button — solid purple pill */
+        section.main div[data-testid="stButton"]>button {
+            background: #7C3AED !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 12px !important;
+            font-weight: 700 !important;
+            font-size: 1rem !important;
+            height: 52px !important;
+            width: 100% !important;
+            box-shadow: 0 4px 14px rgba(124,58,237,0.4) !important;
+            letter-spacing: 0.01em !important;
+        }
+        section.main div[data-testid="stButton"]>button:hover {
+            background: #6D28D9 !important;
+        }
         </style>
-        <div style="background:#F3F4F6;padding:0 0 0 0;margin-bottom:0;">
-          <p style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:#9CA3AF;text-transform:uppercase;margin:0 40px 0 40px;padding-top:0px;">
-          </p>
+
+        <div style="background:#F3F4F6; padding:40px 40px 0 40px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:20px;margin-bottom:40px;">
+            <div style="background:#ECFDF5;border-radius:20px;padding:32px 28px;text-align:center;border:1.5px solid #A7F3D0;">
+              <div style="font-size:0.88rem;font-weight:700;color:#065F46;margin-bottom:10px;">80–100</div>
+              <div style="font-size:1.7rem;font-weight:900;color:#065F46;margin-bottom:10px;">Excellent</div>
+              <div style="font-size:0.84rem;color:#065F46;">Well optimized for AI citation</div>
+            </div>
+            <div style="background:#EFF6FF;border-radius:20px;padding:32px 28px;text-align:center;border:1.5px solid #BFDBFE;">
+              <div style="font-size:0.88rem;font-weight:700;color:#1E40AF;margin-bottom:10px;">70–79</div>
+              <div style="font-size:1.7rem;font-weight:900;color:#1E40AF;margin-bottom:10px;">Good</div>
+              <div style="font-size:0.84rem;color:#1E40AF;">Minor improvements recommended</div>
+            </div>
+            <div style="background:#FFFBEB;border-radius:20px;padding:32px 28px;text-align:center;border:1.5px solid #FDE68A;">
+              <div style="font-size:0.88rem;font-weight:700;color:#92400E;margin-bottom:10px;">45–69</div>
+              <div style="font-size:1.7rem;font-weight:900;color:#92400E;margin-bottom:10px;">Needs Work</div>
+              <div style="font-size:0.84rem;color:#92400E;">Several issues to address</div>
+            </div>
+            <div style="background:#FFF1F2;border-radius:20px;padding:32px 28px;text-align:center;border:1.5px solid #FECDD3;">
+              <div style="font-size:0.88rem;font-weight:700;color:#991B1B;margin-bottom:10px;">0–44</div>
+              <div style="font-size:1.7rem;font-weight:900;color:#991B1B;margin-bottom:10px;">Poor</div>
+              <div style="font-size:0.84rem;color:#991B1B;">Major optimization needed</div>
+            </div>
+          </div>
         </div>
         """, unsafe_allow_html=True)
 
         with st.container(border=True):
-            st.markdown('<p style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:#9CA3AF;text-transform:uppercase;margin-bottom:4px;">BRAND URL</p>', unsafe_allow_html=True)
+            st.markdown('<p style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:#9CA3AF;text-transform:uppercase;margin-bottom:8px;margin-top:4px;">BRAND URL</p>', unsafe_allow_html=True)
             url_col, btn_col = st.columns([3.5, 1])
             with url_col:
                 brand_url = st.text_input("Brand URL", value=st.session_state.geo_url,
