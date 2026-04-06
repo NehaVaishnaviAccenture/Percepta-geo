@@ -429,36 +429,36 @@ elif nav=="GEO Hub":
 
     if not has_result:
         st.markdown("""
-        <div style="background:#F9F9FC;padding:40px 40px 0 40px;">
+        <div style="background:#F3F4F6;padding:40px 40px 0 40px;">
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;margin-bottom:40px;">
-            <div style="background:#ECFDF5;border-radius:16px;padding:28px 24px;text-align:center;">
+            <div style="background:#ECFDF5;border-radius:16px;padding:28px 24px;text-align:center;border:1.5px solid #6EE7B7;">
               <div style="font-size:0.9rem;font-weight:700;color:#065F46;margin-bottom:8px;">80–100</div>
               <div style="font-size:1.6rem;font-weight:900;color:#065F46;margin-bottom:8px;">Excellent</div>
-              <div style="font-size:0.85rem;color:#065F46;opacity:0.85;">Well optimized for AI citation</div>
+              <div style="font-size:0.85rem;color:#065F46;">Well optimized for AI citation</div>
             </div>
-            <div style="background:#EFF6FF;border-radius:16px;padding:28px 24px;text-align:center;">
+            <div style="background:#EFF6FF;border-radius:16px;padding:28px 24px;text-align:center;border:1.5px solid #93C5FD;">
               <div style="font-size:0.9rem;font-weight:700;color:#1E40AF;margin-bottom:8px;">70–79</div>
               <div style="font-size:1.6rem;font-weight:900;color:#1E40AF;margin-bottom:8px;">Good</div>
-              <div style="font-size:0.85rem;color:#1E40AF;opacity:0.85;">Minor improvements recommended</div>
+              <div style="font-size:0.85rem;color:#1E40AF;">Minor improvements recommended</div>
             </div>
-            <div style="background:#FFFBEB;border-radius:16px;padding:28px 24px;text-align:center;">
+            <div style="background:#FFFBEB;border-radius:16px;padding:28px 24px;text-align:center;border:1.5px solid #FCD34D;">
               <div style="font-size:0.9rem;font-weight:700;color:#92400E;margin-bottom:8px;">45–69</div>
               <div style="font-size:1.6rem;font-weight:900;color:#92400E;margin-bottom:8px;">Needs Work</div>
-              <div style="font-size:0.85rem;color:#92400E;opacity:0.85;">Several issues to address</div>
+              <div style="font-size:0.85rem;color:#92400E;">Several issues to address</div>
             </div>
-            <div style="background:#FFF1F2;border-radius:16px;padding:28px 24px;text-align:center;">
+            <div style="background:#FFF1F2;border-radius:16px;padding:28px 24px;text-align:center;border:1.5px solid #FCA5A5;">
               <div style="font-size:0.9rem;font-weight:700;color:#991B1B;margin-bottom:8px;">0–44</div>
               <div style="font-size:1.6rem;font-weight:900;color:#991B1B;margin-bottom:8px;">Poor</div>
-              <div style="font-size:0.85rem;color:#991B1B;opacity:0.85;">Major optimization needed</div>
+              <div style="font-size:0.85rem;color:#991B1B;">Major optimization needed</div>
             </div>
           </div>
         </div>
         """, unsafe_allow_html=True)
 
         st.markdown("""
-        <div style="background:#F9F9FC;padding:0 40px 48px 40px;">
-          <div style="background:white;border-radius:16px;border:1px solid #E5E7EB;padding:32px 36px;">
-            <div style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:#9CA3AF;text-transform:uppercase;margin-bottom:12px;">Brand URL</div>
+        <div style="background:#F3F4F6;padding:0 40px 48px 40px;">
+          <div style="background:white;border-radius:16px;border:1.5px solid #E5E7EB;padding:32px 36px;box-shadow:0 1px 4px rgba(0,0,0,0.06);">
+            <div style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:#9CA3AF;text-transform:uppercase;margin-bottom:16px;">Brand URL</div>
         """, unsafe_allow_html=True)
 
         url_col, btn_col = st.columns([3.5, 1])
@@ -469,6 +469,32 @@ elif nav=="GEO Hub":
             run_analysis = st.button("🔍  Run Live AI Analysis", use_container_width=True)
 
         st.markdown("</div></div>", unsafe_allow_html=True)
+
+        # Force the button to match the screenshot exactly
+        st.markdown("""
+        <style>
+        section.main div[data-testid="stButton"]>button {
+            background:#6B21E8 !important;
+            color:white !important;
+            border:none !important;
+            border-radius:50px !important;
+            font-weight:700 !important;
+            font-size:1rem !important;
+            padding:14px 28px !important;
+            width:100% !important;
+            box-shadow:0 4px 14px rgba(107,33,232,0.35) !important;
+        }
+        section.main div[data-testid="stButton"]>button:hover {
+            background:#5B21B6 !important;
+        }
+        div[data-testid="stTextInput"] input {
+            border-radius:10px !important;
+            border:1.5px solid #E5E7EB !important;
+            padding:12px 16px !important;
+            font-size:0.95rem !important;
+        }
+        </style>
+        """, unsafe_allow_html=True)
 
         if run_analysis:
             if not brand_url.strip() or not brand_url.startswith("http"):
