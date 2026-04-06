@@ -386,8 +386,16 @@ elif nav=="GEO Hub":
                 iy=c["Brand"].lower()==brand.lower(); gc2=c["GEO"]
                 gcol="#10B981" if gc2>=80 else "#F59E0B" if gc2>=60 else "#EF4444"
                 yb=' <span style="background:#EDE9FE;color:#7C3AED;border-radius:4px;padding:1px 6px;font-size:0.7rem;font-weight:700;">You</span>' if iy else ""
-                rows+=f'<tr style="background:{"#F5F3FF" if iy else "white" if i%2==1 else "#FAFAFA"};{"border-left:3px solid #7C3AED;" if iy else ""}"><td style="padding:10px 12px;font-size:0.8rem;color:#9CA3AF;font-weight:600;">{i}</td><td style="padding:10px 12px;"><div style="font-size:0.84rem;font-weight:{"700" if iy else "400"};color:#111827;">{c["Brand"]}{yb}</div><div style="font-size:0.72rem;color:#9CA3AF;">{c.get("URL","")}</div></td><td style="padding:10px 12px;font-size:0.88rem;font-weight:700;color:{gcol};">{gc2}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Vis"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Cit"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Sen"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c.get("Sov","")}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Rank"]}</td></tr>'
-            st.markdown(f'{white_card(f"""<div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">{bd} vs Competitors — {ind["label"]}</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Real-time GEO scores. Highlighted row is you.</div><table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:1px solid #E5E7EB;">{"".join(f\'<th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">{h}</th>\' for h in ["#","Brand","GEO","Visibility","Citation","Sentiment","Share of Voice","Avg Rank"])}</tr></thead><tbody>{rows}</tbody></table>""")}',unsafe_allow_html=True)
+                row_bg="#F5F3FF" if iy else ("white" if i%2==1 else "#FAFAFA")
+                row_bdr="border-left:3px solid #7C3AED;" if iy else ""
+                row_fw="700" if iy else "400"
+                rows+=f'<tr style="background:{row_bg};{row_bdr}"><td style="padding:10px 12px;font-size:0.8rem;color:#9CA3AF;font-weight:600;">{i}</td><td style="padding:10px 12px;"><div style="font-size:0.84rem;font-weight:{row_fw};color:#111827;">{c["Brand"]}{yb}</div><div style="font-size:0.72rem;color:#9CA3AF;">{c.get("URL","")}</div></td><td style="padding:10px 12px;font-size:0.88rem;font-weight:700;color:{gcol};">{gc2}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Vis"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Cit"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Sen"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c.get("Sov","")}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Rank"]}</td></tr>'
+            th_cols=["#","Brand","GEO","Visibility","Citation","Sentiment","Share of Voice","Avg Rank"]
+            thead="".join(f'<th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">{h}</th>' for h in th_cols)
+            comp_html=(f'<div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">{bd} vs Competitors — {ind["label"]}</div>'
+                       f'<div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Real-time GEO scores. Highlighted row is you.</div>'
+                       f'<table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:1px solid #E5E7EB;">{thead}</tr></thead><tbody>{rows}</tbody></table>')
+            st.markdown(white_card(comp_html),unsafe_allow_html=True)
             st.markdown("</div></div>",unsafe_allow_html=True)
 
         with tabs[1]:
@@ -403,7 +411,12 @@ elif nav=="GEO Hub":
                     gc2=p["geo"]; gcol="#10B981" if gc2>=60 else "#F59E0B" if gc2>=30 else "#EF4444"
                     cb=f'<span style="background:#D1FAE5;color:#065F46;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">Cited {p["cited"]}x</span>' if p["cited"]>0 else '<span style="background:#F3F4F6;color:#9CA3AF;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">Not Cited</span>'
                     rows+=f'<tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:10px 14px;"><div style="font-size:0.84rem;font-weight:600;color:#111827;">{p["label"]}</div><div style="font-size:0.72rem;color:#9CA3AF;">{p["path"]}</div></td><td style="padding:10px 14px;">{cb}</td><td style="padding:10px 14px;font-size:0.88rem;font-weight:700;color:{gcol};">{gc2}</td><td style="padding:10px 14px;font-size:0.82rem;color:#7C3AED;font-weight:600;">{p["citation_share"]}%</td><td style="padding:10px 14px;font-size:0.84rem;color:{p["color"]};font-weight:600;">{p["status"]}</td></tr>'
-                st.markdown(f'{white_card(f"""<div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Page Intelligence</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Which pages of {bd} are being cited by AI.</div><table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:2px solid #E5E7EB;background:#FAFAFA;">{"".join(f\'<th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">{h}</th>\' for h in ["Page","AI Citations","GEO Score","Citation Share","Status"])}</tr></thead><tbody>{rows}</tbody></table>""")}',unsafe_allow_html=True)
+            th2=["Page","AI Citations","GEO Score","Citation Share","Status"]
+            thead2="".join(f'<th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">{h}</th>' for h in th2)
+            pg_html=(f'<div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Page Intelligence</div>'
+                     f'<div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Which pages of {bd} are being cited by AI.</div>'
+                     f'<table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:2px solid #E5E7EB;background:#FAFAFA;">{thead2}</tr></thead><tbody>{rows}</tbody></table>')
+            st.markdown(white_card(pg_html),unsafe_allow_html=True)
             st.markdown("</div>",unsafe_allow_html=True)
 
         with tabs[3]:
@@ -449,7 +462,12 @@ elif nav=="GEO Hub":
                 ab='<span style="background:#D1FAE5;color:#065F46;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">Appeared</span>' if m else '<span style="background:#F3F4F6;color:#9CA3AF;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">Not Mentioned</span>'
                 cb2=f'<span style="background:#EDE9FE;color:#5B21B6;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:600;">{item.get("category","")}</span>'
                 qrows+=f'<tr style="background:{"#F5F3FF" if m else "white"};border-bottom:1px solid #F3F4F6;"><td style="padding:10px 12px;font-size:0.78rem;color:#9CA3AF;font-weight:600;">{i+1}</td><td style="padding:10px 14px;"><div style="display:flex;gap:6px;align-items:center;margin-bottom:5px;">{cb2}{ab}</div><div style="font-size:0.83rem;color:#374151;">{item.get("query","")}</div></td><td style="padding:10px 16px;text-align:center;"><div style="font-size:1.1rem;font-weight:800;color:{rc};">{rd2}</div><div style="font-size:0.68rem;color:#9CA3AF;">Rank</div></td></tr>'
-            st.markdown(f'{white_card(f"""<div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Top 10 Prompts</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Generic consumer questions. No brand name used.</div><table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:2px solid #E5E7EB;background:#FAFAFA;">{"".join(f\'<th style="padding:8px {"14" if h=="Query" else "12"}px;text-align:{"center" if h=="Rank" else "left"};font-size:0.72rem;color:#9CA3AF;font-weight:600;">{h}</th>\' for h in ["#","Query","Rank"])}</tr></thead><tbody>{qrows}</tbody></table>""")}',unsafe_allow_html=True)
+            th3=["#","Query","Rank"]
+            thead3="".join(f'<th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">{h}</th>' for h in th3)
+            pr_html=(f'<div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Top 10 Prompts</div>'
+                     f'<div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Generic consumer questions. No brand name used.</div>'
+                     f'<table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:2px solid #E5E7EB;background:#FAFAFA;">{thead3}</tr></thead><tbody>{qrows}</tbody></table>')
+            st.markdown(white_card(pr_html),unsafe_allow_html=True)
             st.markdown("</div>",unsafe_allow_html=True)
 
         with tabs[6]:
