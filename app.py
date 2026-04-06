@@ -23,8 +23,11 @@ footer{visibility:hidden;}
 section[data-testid="stSidebar"]{display:none!important;}
 div[data-testid="stTabs"] button{font-size:0.85rem!important;font-weight:600!important;padding:10px 20px!important;}
 div[data-testid="stTabs"] button[aria-selected="true"]{color:#7C3AED!important;border-bottom:2px solid #7C3AED!important;}
-section.main div[data-testid="stButton"]>button{background:#7C3AED!important;color:white!important;border:none!important;border-radius:8px!important;font-weight:600!important;transition:background 0.2s!important;}
-section.main div[data-testid="stButton"]>button:hover{background:#6D28D9!important;}
+section.main div[data-testid="stButton"]>button{border-radius:50px!important;font-weight:700!important;padding:14px 28px!important;font-size:1rem!important;transition:all 0.2s!important;}
+.btn-primary>button{background:#7C3AED!important;color:white!important;border:none!important;}
+.btn-primary>button:hover{background:#6D28D9!important;}
+.btn-secondary>button{background:white!important;color:#111827!important;border:1.5px solid #E5E7EB!important;}
+.btn-secondary>button:hover{border-color:#7C3AED!important;color:#7C3AED!important;}
 .metric-tooltip{position:relative;display:inline-block;cursor:help;}
 .metric-tooltip .tooltip-text{visibility:hidden;opacity:0;background:#1F2937;color:white;font-size:0.75rem;line-height:1.5;border-radius:8px;padding:10px 14px;position:absolute;z-index:9999;bottom:130%;left:50%;transform:translateX(-50%);width:220px;text-align:left;box-shadow:0 4px 12px rgba(0,0,0,0.2);transition:opacity 0.2s;pointer-events:none;}
 .metric-tooltip .tooltip-text::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#1F2937;}
@@ -262,23 +265,35 @@ with sp_c:
 # ════════════════════════════════════════════════════════════
 if nav=="Overview":
 
-    # HERO
+    # ── HERO ──────────────────────────────────────────────
     st.markdown("""
-<div style="background:white;padding:80px 40px 40px 40px;text-align:center;border-bottom:1px solid #F3F4F6;">
-  <p style="font-size:1rem;color:#6B7280;max-width:700px;margin:0 auto 18px;line-height:1.8;">The Percepta GEO Score is a single 0–100 number that measures how often and how favorably your brand is cited in AI-generated responses — across ChatGPT, Gemini, and other major AI engines.</p>
-  <h1 style="font-size:3rem;font-weight:900;color:#111827;line-height:1.1;margin:0 0 40px;letter-spacing:-1.5px;">Your Brand's GEO Score</h1>
+<div style="background:linear-gradient(170deg,#ffffff 50%,#F3EEFF 100%);padding:72px 40px 0 40px;text-align:center;">
+  <div style="display:inline-flex;align-items:center;gap:8px;border:1px solid #DDD6FE;border-radius:50px;padding:7px 22px;font-size:0.72rem;font-weight:700;letter-spacing:.1em;color:#7C3AED;text-transform:uppercase;margin-bottom:40px;background:rgba(255,255,255,0.8);">
+    ✦ &nbsp;AI-Powered Brand Intelligence &nbsp;·&nbsp; Powered by Accenture
+  </div>
+  <div style="font-size:4.8rem;font-weight:900;color:#111827;line-height:1.0;letter-spacing:-3px;margin-bottom:0;">Your Brand's</div>
+  <div style="font-size:4.8rem;font-weight:900;color:#7C3AED;line-height:1.0;letter-spacing:-3px;margin-bottom:0;">GEO</div>
+  <div style="font-size:4.8rem;font-weight:900;color:#111827;line-height:1.0;letter-spacing:-3px;margin-bottom:40px;">Score</div>
+  <p style="font-size:1.1rem;color:#6B7280;max-width:660px;margin:0 auto 52px;line-height:1.8;">The Percepta GEO Score is a single 0–100 number that measures how often and how favorably your brand is cited in AI-generated responses — across ChatGPT, Gemini, and other major AI engines.</p>
 </div>
 """, unsafe_allow_html=True)
 
-    _, hb1, hb2, _ = st.columns([1.5, 0.85, 0.85, 1.5])
-    with hb1:
+    # Hero buttons
+    _, b1, b2, _ = st.columns([1.6, 0.9, 0.75, 1.6])
+    with b1:
+        st.markdown('<div class="btn-primary">', unsafe_allow_html=True)
         if st.button("Get Your GEO Score  →", key="hero_primary", use_container_width=True):
             st.session_state.nav = "GEO Hub"; st.rerun()
-    with hb2:
+        st.markdown('</div>', unsafe_allow_html=True)
+    with b2:
+        st.markdown('<div class="btn-secondary">', unsafe_allow_html=True)
         if st.button("See How It Works", key="hero_secondary", use_container_width=True):
             st.session_state.nav = "GEO Hub"; st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
-    # PROCESS
+    st.markdown('<div style="background:linear-gradient(170deg,#ffffff 50%,#F3EEFF 100%);padding:48px 0 0 0;"></div>', unsafe_allow_html=True)
+
+    # ── PROCESS ───────────────────────────────────────────
     st.markdown("""
 <div style="background:#F9F9FC;padding:80px 40px;border-top:1px solid #E5E7EB;">
   <div style="text-align:center;margin-bottom:64px;">
@@ -380,18 +395,21 @@ if nav=="Overview":
 
 <!-- FINAL CTA -->
 <div style="background:white;padding:80px 40px;border-top:1px solid #E5E7EB;">
-  <div style="background:linear-gradient(135deg,#F8F5FF 0%,#EDE9FE 50%,#F3EEFF 100%);border:1.5px solid #DDD6FE;border-radius:28px;padding:80px 60px;text-align:center;max-width:100%;">
-    <h2 style="font-size:2.8rem;font-weight:900;color:#111827;margin:0 0 4px;line-height:1.15;">Ready to Discover Your</h2>
-    <h2 style="font-size:2.8rem;font-weight:900;color:#7C3AED;margin:0 0 28px;line-height:1.15;">GEO Score?</h2>
-    <p style="font-size:1rem;color:#6B7280;line-height:1.8;margin:0 auto;max-width:560px;">Join forward-thinking brands that are optimizing for the new era of generative search. Get your Percepta GEO Score today — backed by Accenture.</p>
+  <div style="background:linear-gradient(135deg,#F8F5FF 0%,#EDE9FE 40%,#F3EEFF 100%);border:1.5px solid #C4B5FD;border-radius:28px;padding:80px 60px;text-align:center;">
+    <h2 style="font-size:3rem;font-weight:900;color:#111827;margin:0 0 4px;line-height:1.1;">Ready to Discover Your</h2>
+    <h2 style="font-size:3rem;font-weight:900;color:#7C3AED;margin:0 0 28px;line-height:1.1;">GEO Score?</h2>
+    <p style="font-size:1rem;color:#6B7280;line-height:1.8;margin:0 auto 48px;max-width:520px;">Join forward-thinking brands that are optimizing for the new era of generative search. Get your Percepta GEO Score today — backed by Accenture.</p>
   </div>
 </div>
 """, unsafe_allow_html=True)
 
-    _, fc2, _ = st.columns([2.2, 0.9, 2.2])
+    # Final CTA button overlaid on top of the card bottom
+    _, fc2, _ = st.columns([2.4, 0.85, 2.4])
     with fc2:
+        st.markdown('<div class="btn-primary">', unsafe_allow_html=True)
         if st.button("Launch Percepta  →", key="final_cta", use_container_width=True):
             st.session_state.nav = "GEO Hub"; st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
 # ════════════════════════════════════════════════════════════
 # PAGE 2: GEO HUB
@@ -417,7 +435,7 @@ elif nav=="GEO Hub":
         if not has_result:
             st.markdown("""<div style="text-align:center;padding:40px 0 24px 0;">
                 <h3 style="font-size:1.3rem;font-weight:800;color:#111827;margin:0 0 8px 0;">Analyze Your Brand's GEO Score</h3>
-                <p style="font-size:0.88rem;color:#6B7280;margin:0 0 24px 0;">Enter any brand URL below. Percepta will run 200 live AI queries and generate your complete GEO report.</p>
+                <p style="font-size:0.88rem;color:#6B7280;margin:0 0 24px 0;">Enter any brand URL below. Percepta will run 20 live AI queries and generate your complete GEO report.</p>
             </div>""",unsafe_allow_html=True)
             brand_url = st.text_input("Brand URL",value=st.session_state.geo_url,placeholder="https://www.chase.com/",label_visibility="collapsed")
             run_analysis = st.button("Run GEO Analysis",use_container_width=True)
@@ -512,7 +530,7 @@ elif nav=="GEO Hub":
                     gc=p["geo"]; gcol="#10B981" if gc>=60 else "#F59E0B" if gc>=30 else "#EF4444"
                     cited_badge=f'<span style="background:#D1FAE5;color:#065F46;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">Cited {p["cited"]}x</span>' if p["cited"]>0 else '<span style="background:#F3F4F6;color:#9CA3AF;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">Not Cited</span>'
                     pi_rows+=f'<tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:10px 14px;"><div style="font-size:0.84rem;font-weight:600;color:#111827;">{p["label"]}</div><div style="font-size:0.72rem;color:#9CA3AF;">{p["path"]}</div></td><td style="padding:10px 14px;">{cited_badge}</td><td style="padding:10px 14px;font-size:0.88rem;font-weight:700;color:{gcol};">{gc}</td><td style="padding:10px 14px;font-size:0.82rem;color:#7C3AED;font-weight:600;">{p["citation_share"]}%</td><td style="padding:10px 14px;font-size:0.84rem;color:{p["color"]};font-weight:600;">{p["status"]}</td></tr>'
-                st.markdown(f'<div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px;"><div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Page Intelligence</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Which pages of {brand_domain} are being cited by AI. Metrics: GEO Score and Citation Share.</div><table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:2px solid #E5E7EB;background:#FAFAFA;"><th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Page</th><th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">AI Citations</th><th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">GEO Score</th><th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Citation Share</th><th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Status</th></tr></thead><tbody>{pi_rows}</tbody></table></div>',unsafe_allow_html=True)
+                st.markdown(f'<div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px;"><div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Page Intelligence</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Which pages of {brand_domain} are being cited by AI.</div><table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:2px solid #E5E7EB;background:#FAFAFA;"><th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Page</th><th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">AI Citations</th><th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">GEO Score</th><th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Citation Share</th><th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">Status</th></tr></thead><tbody>{pi_rows}</tbody></table></div>',unsafe_allow_html=True)
             st.markdown("</div>",unsafe_allow_html=True)
 
         with tabs[3]:
