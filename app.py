@@ -539,12 +539,18 @@ elif nav=="Get Support":
     hdrs="".join(f'<div style="background:{d[1]};padding:20px {"20px 20px 20px 28px" if i>0 else "18px"};{d[3]};clip-path:{d[2]};"><div style="font-size:0.7rem;font-weight:600;color:rgba(255,255,255,0.65);margin-bottom:6px;text-transform:uppercase;letter-spacing:.07em;">Workstream 0{i+1}</div><div style="font-size:0.9rem;font-weight:700;color:white;line-height:1.35;">{d[0]}</div></div>' for i,d in enumerate(DELIVER))
     acts="".join(f'<div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:18px;"><div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:12px;text-align:center;">Activities</div><ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;">{"".join(f"<li>{a}</li>" for a in d[4])}</ul></div>' for d in DELIVER)
     dlvs="".join(f'<div style="background:#EEEAF8;border:1px solid #DDD6FE;border-radius:8px;padding:18px;"><div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #DDD6FE;padding-bottom:8px;margin-bottom:12px;text-align:center;">Deliverables</div><ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;">{"".join(f"<li>{dl}</li>" for dl in d[5])}</ul></div>' for d in DELIVER)
+    stat_cards = "".join(
+        f'<div style="border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:24px;">'
+        f'<div style="font-size:2.4rem;font-weight:900;color:white;">{v}</div>'
+        f'<div style="font-size:0.85rem;font-weight:600;color:rgba(255,255,255,0.8);margin-top:5px;">{l}</div></div>'
+        for v,l in [("10+","Successful Clients"),("4X","Higher Conversion"),("15%","Citation Growth"),("68%","Longer Sessions")]
+    )
     st.markdown(f"""
     <div style="background:white;padding:32px 40px 40px;border-bottom:1px solid #E5E7EB;">
         <div style="display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;gap:0;border-top:1px dashed #D1D5DB;padding-top:32px;">
             <div style="text-align:center;padding:0 20px;"><div style="font-size:3.2rem;font-weight:900;color:#111827;line-height:1;">6</div><div style="font-size:1rem;font-weight:700;color:#111827;margin-top:6px;">Week Engagement</div><div style="font-size:0.8rem;color:#9CA3AF;margin-top:3px;">Phase 1</div></div>
             <div style="background:#E5E7EB;"></div>
-            <div style="text-align:center;padding:0 20px;"><div style="font-size:0.85rem;font-weight:700;color:#111827;margin-bottom:4px;">Pilot Phase 1</div><div style="font-size:3.2rem;font-weight:900;color:#111827;line-height:1;">2</div><div style="font-size:1rem;font-weight:700;color:#111827;margin-top:6px;">AI Agents</div><div style="font-size:0.8rem;color:#9CA3AF;margin-top:3px;">ChatGPT & Gemini</div></div>
+            <div style="text-align:center;padding:0 20px;"><div style="font-size:0.85rem;font-weight:700;color:#111827;margin-bottom:4px;">Pilot Phase 1</div><div style="font-size:3.2rem;font-weight:900;color:#111827;line-height:1;">2</div><div style="font-size:1rem;font-weight:700;color:#111827;margin-top:6px;">AI Agents</div><div style="font-size:0.8rem;color:#9CA3AF;margin-top:3px;">ChatGPT &amp; Gemini</div></div>
             <div style="background:#E5E7EB;"></div>
             <div style="text-align:center;padding:0 20px;"><div style="font-size:3.2rem;font-weight:900;color:#111827;line-height:1;">4</div><div style="font-size:1rem;font-weight:700;color:#111827;margin-top:6px;">Workstreams</div><div style="font-size:0.8rem;color:#9CA3AF;margin-top:3px;">End to end coverage</div></div>
         </div>
@@ -566,6 +572,6 @@ elif nav=="Get Support":
     <div style="background:#7C3AED;padding:56px 40px;">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;">
             <div><div style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:rgba(255,255,255,0.6);text-transform:uppercase;margin-bottom:10px;">Proven Results</div><h2 style="font-size:2rem;font-weight:800;color:white;margin:0 0 14px;line-height:1.25;">Validated Impact Across<br>10+ Client Engagements</h2><p style="font-size:0.92rem;color:rgba(255,255,255,0.8);line-height:1.8;margin:0;">Across retail, travel, financial services, and hospitality, Percepta has consistently delivered measurable improvements.</p></div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">{"".join(f\'<div style="border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:24px;"><div style="font-size:2.4rem;font-weight:900;color:white;">{v}</div><div style="font-size:0.85rem;font-weight:600;color:rgba(255,255,255,0.8);margin-top:5px;">{l}</div></div>\' for v,l in [("10+","Successful Clients"),("4X","Higher Conversion"),("15%","Citation Growth"),("68%","Longer Sessions")])}</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">{stat_cards}</div>
         </div>
-    </div>""",unsafe_allow_html=True)
+    </div>""", unsafe_allow_html=True)
