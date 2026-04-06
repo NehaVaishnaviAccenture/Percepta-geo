@@ -649,126 +649,158 @@ elif nav=="Get Support":
     </div>""",unsafe_allow_html=True)
 
     st.markdown("""
-    <div style="background:white;padding:72px 40px;border-bottom:1px solid #E5E7EB;">
-        <div style="max-width:900px;margin:0 auto;">
-            <div style="text-align:center;margin-bottom:48px;">
-                <div class="section-tag">Our Approach</div>
-                <h2 style="font-size:1.8rem;font-weight:800;color:#111827;margin:0 0 10px 0;">GEO is No Longer Optional</h2>
-                <p style="font-size:0.88rem;color:#6B7280;max-width:520px;margin:0 auto;line-height:1.8;">While search spend continues to rise, its impact is fading as AI agents increasingly shape the decisions search used to influence.</p>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:32px;align-items:center;margin-bottom:40px;">
-                <div style="display:flex;flex-direction:column;gap:24px;">
-                    <div style="padding:24px;border:1px solid #E5E7EB;border-radius:12px;">
-                        <div style="font-size:0.7rem;font-weight:700;color:#7C3AED;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Workstream 1</div>
-                        <div style="font-size:0.95rem;font-weight:700;color:#111827;margin-bottom:6px;font-style:italic;">Agent Ranking Diagnostic (ARD)</div>
-                        <p style="font-size:0.82rem;color:#6B7280;line-height:1.6;margin:0;">Conduct the initial evaluation to <strong>establish the baseline ranking performance</strong> of AI agents when comparing your brand to competitive offerings across high-intent consumer scenarios.</p>
-                    </div>
-                    <div style="padding:24px;border:1px solid #E5E7EB;border-radius:12px;">
-                        <div style="font-size:0.7rem;font-weight:700;color:#7C3AED;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Workstream 4</div>
-                        <div style="font-size:0.95rem;font-weight:700;color:#111827;margin-bottom:6px;font-style:italic;">Impact Measurement (Re-Diagnostic)</div>
-                        <p style="font-size:0.82rem;color:#6B7280;line-height:1.6;margin:0;">Following the optimization activities, re-run the diagnostic to <strong>re-measure performance</strong>, quantify improvements and establish the ongoing program foundation.</p>
-                    </div>
+    <div style="background:white;padding:56px 40px 40px 40px;border-bottom:1px solid #E5E7EB;">
+        <div style="margin-bottom:36px;">
+            <div class="section-tag">Our Approach</div>
+            <h2 style="font-size:2rem;font-weight:900;color:#111827;margin:8px 0 8px 0;">GEO is No Longer Optional</h2>
+            <p style="font-size:0.9rem;color:#6B7280;margin:0;line-height:1.7;">While search spend continues to rise, its impact is fading as AI agents increasingly shape the decisions search used to influence.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 320px 1fr;gap:40px;align-items:center;margin-bottom:32px;">
+            <div style="display:flex;flex-direction:column;gap:28px;">
+                <div>
+                    <div style="font-size:0.9rem;font-weight:800;color:#111827;margin-bottom:2px;"><strong>Workstream 1:</strong></div>
+                    <div style="font-size:0.88rem;font-style:italic;color:#374151;margin-bottom:8px;">Agent Ranking Diagnostic (ARD)</div>
+                    <p style="font-size:0.82rem;color:#6B7280;line-height:1.65;margin:0;">Conduct the initial evaluation to <strong>establish the baseline ranking performance</strong> of AI agents when comparing your brand to competitive offerings across high-intent consumer scenarios.</p>
                 </div>
-                <div style="display:flex;align-items:center;justify-content:center;">
-                    <svg width="140" height="110" viewBox="0 0 180 120" fill="none">
-                        <path d="M45 60 C45 38 60 20 80 20 C100 20 110 38 110 60 C110 82 120 100 140 100 C160 100 170 82 170 60 C170 38 160 20 140 20 C120 20 110 38 110 60 C110 82 100 100 80 100 C60 100 45 82 45 60Z" stroke="#7C3AED" stroke-width="7" fill="none"/>
-                        <polygon points="109,53 117,60 109,67" fill="#7C3AED"/>
-                        <polygon points="111,53 103,60 111,67" fill="#5B21B6"/>
-                    </svg>
-                </div>
-                <div style="display:flex;flex-direction:column;gap:24px;">
-                    <div style="padding:24px;border:1px solid #E5E7EB;border-radius:12px;">
-                        <div style="font-size:0.7rem;font-weight:700;color:#7C3AED;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Workstream 3</div>
-                        <div style="font-size:0.95rem;font-weight:700;color:#111827;margin-bottom:6px;font-style:italic;">Distribution and Technical Influence (DTI)</div>
-                        <p style="font-size:0.82rem;color:#6B7280;line-height:1.6;margin:0;">Pinpoint and <strong>propose specific technical and distribution improvements</strong> to maximize the chance that LLMs ingest and utilize your verified content.</p>
-                    </div>
-                    <div style="padding:24px;border:1px solid #E5E7EB;border-radius:12px;">
-                        <div style="font-size:0.7rem;font-weight:700;color:#7C3AED;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Workstream 2</div>
-                        <div style="font-size:0.95rem;font-weight:700;color:#111827;margin-bottom:6px;font-style:italic;">Agent Optimization Plan (AOP)</div>
-                        <p style="font-size:0.82rem;color:#6B7280;line-height:1.6;margin:0;">Based on the diagnostic findings, <strong>design and deploy a specific optimization strategy</strong> aimed at elevating agent recognition and positioning of your brand.</p>
-                    </div>
+                <div>
+                    <div style="font-size:0.9rem;font-weight:800;color:#111827;margin-bottom:2px;"><strong>Workstream 4:</strong></div>
+                    <div style="font-size:0.88rem;font-style:italic;color:#374151;margin-bottom:8px;">Impact Measurement (Re-Diagnostic)</div>
+                    <p style="font-size:0.82rem;color:#6B7280;line-height:1.65;margin:0;">Following the optimization activities, re-run the diagnostic to <strong>Re-measure performance</strong> to quantify improvements and establish ongoing program foundation.</p>
                 </div>
             </div>
-            <div style="display:flex;gap:40px;justify-content:center;padding:28px 0;border-top:1px solid #F3F4F6;">
-                <div style="text-align:center;"><div style="font-size:2.8rem;font-weight:900;color:#111827;line-height:1;">6</div><div style="font-size:0.88rem;font-weight:600;color:#111827;margin-top:2px;">Week Engagement</div><div style="font-size:0.76rem;color:#9CA3AF;margin-top:2px;">Phase 1</div></div>
-                <div style="width:1px;background:#F3F4F6;"></div>
-                <div style="text-align:center;"><div style="font-size:2.8rem;font-weight:900;color:#111827;line-height:1;">2</div><div style="font-size:0.88rem;font-weight:600;color:#111827;margin-top:2px;">AI Agents</div><div style="font-size:0.76rem;color:#9CA3AF;margin-top:2px;">ChatGPT and Gemini</div></div>
-                <div style="width:1px;background:#F3F4F6;"></div>
-                <div style="text-align:center;"><div style="font-size:2.8rem;font-weight:900;color:#111827;line-height:1;">4</div><div style="font-size:0.88rem;font-weight:600;color:#111827;margin-top:2px;">Workstreams</div><div style="font-size:0.76rem;color:#9CA3AF;margin-top:2px;">End to end coverage</div></div>
+            <div style="display:flex;align-items:center;justify-content:center;">
+                <svg width="320" height="220" viewBox="0 0 400 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="loopGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" style="stop-color:#1a1a6e;stop-opacity:1"/>
+                      <stop offset="100%" style="stop-color:#4040cc;stop-opacity:1"/>
+                    </linearGradient>
+                    <linearGradient id="loopGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" style="stop-color:#4040cc;stop-opacity:1"/>
+                      <stop offset="100%" style="stop-color:#6060ee;stop-opacity:1"/>
+                    </linearGradient>
+                    <marker id="arrow1" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+                      <path d="M0,0 L8,4 L0,8 Z" fill="#1a1a6e"/>
+                    </marker>
+                    <marker id="arrow2" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+                      <path d="M0,0 L8,4 L0,8 Z" fill="#5555dd"/>
+                    </marker>
+                  </defs>
+                  <!-- Left loop -->
+                  <path d="M 50 130 C 50 70, 90 30, 140 30 C 190 30, 210 70, 200 130 C 190 190, 210 230, 260 230 C 310 230, 350 190, 350 130 C 350 70, 310 30, 260 30 C 210 30, 190 70, 200 130 C 210 190, 190 230, 140 230 C 90 230, 50 190, 50 130 Z"
+                    stroke="url(#loopGrad1)" stroke-width="28" fill="none" stroke-linecap="round"/>
+                  <!-- Arrow going right across center -->
+                  <path d="M 155 115 L 245 145" stroke="#1a1a6e" stroke-width="4" marker-end="url(#arrow1)"/>
+                  <!-- Arrow going left across center -->
+                  <path d="M 245 115 L 155 145" stroke="#5555dd" stroke-width="4" marker-end="url(#arrow2)"/>
+                  <!-- Dots at connection points -->
+                  <circle cx="140" cy="30" r="5" fill="white" stroke="#4040cc" stroke-width="2"/>
+                  <circle cx="260" cy="30" r="5" fill="white" stroke="#4040cc" stroke-width="2"/>
+                  <circle cx="140" cy="230" r="5" fill="white" stroke="#4040cc" stroke-width="2"/>
+                  <circle cx="260" cy="230" r="5" fill="white" stroke="#4040cc" stroke-width="2"/>
+                </svg>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:28px;">
+                <div>
+                    <div style="font-size:0.9rem;font-weight:800;color:#111827;margin-bottom:2px;"><strong>Workstream 3:</strong></div>
+                    <div style="font-size:0.88rem;font-style:italic;color:#374151;margin-bottom:8px;">Distribution and Technical Influence Layer (DTI)</div>
+                    <p style="font-size:0.82rem;color:#6B7280;line-height:1.65;margin:0;">Pinpoint and <strong>propose specific technical and distribution improvements</strong> to maximize the chance that Large Language Models (LLMs) ingest and utilize your verified content.</p>
+                </div>
+                <div>
+                    <div style="font-size:0.9rem;font-weight:800;color:#111827;margin-bottom:2px;"><strong>Workstream 2:</strong></div>
+                    <div style="font-size:0.88rem;font-style:italic;color:#374151;margin-bottom:8px;">Agent Optimization Plan (AOP)</div>
+                    <p style="font-size:0.82rem;color:#6B7280;line-height:1.65;margin:0;">Based on the diagnostic findings, <strong>design and deploy a specific optimization strategy</strong> aimed at elevating agent recognition and positioning of your brand.</p>
+                </div>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;gap:0;border-top:1px dashed #E5E7EB;padding-top:28px;">
+            <div style="text-align:center;padding:0 20px;">
+                <div style="font-size:3rem;font-weight:900;color:#111827;line-height:1;">6</div>
+                <div style="font-size:0.95rem;font-weight:700;color:#111827;margin-top:4px;">Week Engagement</div>
+                <div style="font-size:0.78rem;color:#9CA3AF;margin-top:2px;">Phase 1</div>
+            </div>
+            <div style="background:#E5E7EB;"></div>
+            <div style="text-align:center;padding:0 20px;">
+                <div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Pilot Phase 1</div>
+                <div style="font-size:3rem;font-weight:900;color:#111827;line-height:1;">2</div>
+                <div style="font-size:0.95rem;font-weight:700;color:#111827;margin-top:4px;">AI Agents</div>
+                <div style="font-size:0.78rem;color:#9CA3AF;margin-top:2px;">ChatGPT & Gemini</div>
+            </div>
+            <div style="background:#E5E7EB;"></div>
+            <div style="text-align:center;padding:0 20px;">
+                <div style="font-size:3rem;font-weight:900;color:#111827;line-height:1;">4</div>
+                <div style="font-size:0.95rem;font-weight:700;color:#111827;margin-top:4px;">Workstreams</div>
+                <div style="font-size:0.78rem;color:#9CA3AF;margin-top:2px;">End to end coverage</div>
             </div>
         </div>
     </div>""",unsafe_allow_html=True)
 
     st.markdown("""
-    <div style="background:#F9F9FC;padding:64px 40px;border-bottom:1px solid #E5E7EB;">
-        <div style="max-width:900px;margin:0 auto;">
-            <div style="text-align:center;margin-bottom:40px;">
-                <div class="section-tag">Deliverables</div>
-                <h2 style="font-size:1.8rem;font-weight:800;color:#111827;margin:0;">Activities and What We Deliver</h2>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:3px;margin-bottom:12px;">
-                <div style="background:#1E1B5E;padding:18px 16px;border-radius:8px 0 0 0;clip-path:polygon(0 0,93% 0,100% 50%,93% 100%,0 100%);"><div style="font-size:0.68rem;font-weight:600;color:rgba(255,255,255,0.6);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em;">Workstream 01</div><div style="font-size:0.85rem;font-weight:700;color:white;line-height:1.3;">Agent Ranking Diagnostic</div></div>
-                <div style="background:#2D2A70;padding:18px 18px 18px 24px;clip-path:polygon(0 0,93% 0,100% 50%,93% 100%,0 100%,7% 50%);"><div style="font-size:0.68rem;font-weight:600;color:rgba(255,255,255,0.6);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em;">Workstream 02</div><div style="font-size:0.85rem;font-weight:700;color:white;line-height:1.3;">Agent Optimization Plan</div></div>
-                <div style="background:#3D3A8A;padding:18px 18px 18px 24px;clip-path:polygon(0 0,93% 0,100% 50%,93% 100%,0 100%,7% 50%);"><div style="font-size:0.68rem;font-weight:600;color:rgba(255,255,255,0.6);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em;">Workstream 03</div><div style="font-size:0.85rem;font-weight:700;color:white;line-height:1.3;">Distribution and Technical</div></div>
-                <div style="background:#5B21B6;padding:18px 18px 18px 24px;border-radius:0 8px 0 0;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,7% 50%);"><div style="font-size:0.68rem;font-weight:600;color:rgba(255,255,255,0.6);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em;">Workstream 04</div><div style="font-size:0.85rem;font-weight:700;color:white;line-height:1.3;">Impact Measurement</div></div>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:12px;">
-                <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:16px;"><div style="font-size:0.8rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:10px;">Activities</div><ul style="list-style:disc;padding-left:14px;margin:0;font-size:0.76rem;color:#374151;line-height:1.7;"><li>Representative prompts across personas</li><li>Multi-run stability testing</li><li>Agent-generated rankings</li><li>Power distribution modeling</li><li>Competitor adjacency maps</li></ul></div>
-                <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:16px;"><div style="font-size:0.8rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:10px;">Activities</div><ul style="list-style:disc;padding-left:14px;margin:0;font-size:0.76rem;color:#374151;line-height:1.7;"><li>LLM-ready content: FAQs, Top 10 lists</li><li>Product-attribute associations</li><li>Content for agent ingestion</li><li>Content Influence Blueprint</li></ul></div>
-                <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:16px;"><div style="font-size:0.8rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:10px;">Activities</div><ul style="list-style:disc;padding-left:14px;margin:0;font-size:0.76rem;color:#374151;line-height:1.7;"><li>Tagging, metadata, and taxonomy</li><li>Missing structured data</li><li>Backlink improvements</li><li>Schema markup audit</li></ul></div>
-                <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:16px;"><div style="font-size:0.8rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:10px;">Activities</div><ul style="list-style:disc;padding-left:14px;margin:0;font-size:0.76rem;color:#374151;line-height:1.7;"><li>Re-test all prompts</li><li>Semantic drift and ranking changes</li><li>Recompute AXO Score</li></ul></div>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;">
-                <div style="background:#F9F9FC;border:1px solid #E5E7EB;border-radius:8px;padding:16px;"><div style="font-size:0.8rem;font-weight:700;color:#111827;border-bottom:1px solid #E5E7EB;padding-bottom:8px;margin-bottom:10px;">Deliverables</div><ul style="list-style:disc;padding-left:14px;margin:0;font-size:0.76rem;color:#374151;line-height:1.7;"><li>AXO Baseline Report</li><li>Brand Ranking Index</li><li>Power Curve Analysis</li><li>Attribute Influence Map</li><li>AXO Baseline Score v1.0</li></ul></div>
-                <div style="background:#F9F9FC;border:1px solid #E5E7EB;border-radius:8px;padding:16px;"><div style="font-size:0.8rem;font-weight:700;color:#111827;border-bottom:1px solid #E5E7EB;padding-bottom:8px;margin-bottom:10px;">Deliverables</div><ul style="list-style:disc;padding-left:14px;margin:0;font-size:0.76rem;color:#374151;line-height:1.7;"><li>Agent Optimization Plan</li><li>LLM-Ready Content Package</li><li>Attribute Reinforcement Strategy</li><li>Content Influence Blueprint</li></ul></div>
-                <div style="background:#F9F9FC;border:1px solid #E5E7EB;border-radius:8px;padding:16px;"><div style="font-size:0.8rem;font-weight:700;color:#111827;border-bottom:1px solid #E5E7EB;padding-bottom:8px;margin-bottom:10px;">Deliverables</div><ul style="list-style:disc;padding-left:14px;margin:0;font-size:0.76rem;color:#374151;line-height:1.7;"><li>DTI Report</li><li>Metadata Remediation Plan</li><li>Backlink and Redirect Strategy</li><li>Schema Optimization Guide</li></ul></div>
-                <div style="background:#F9F9FC;border:1px solid #E5E7EB;border-radius:8px;padding:16px;"><div style="font-size:0.8rem;font-weight:700;color:#111827;border-bottom:1px solid #E5E7EB;padding-bottom:8px;margin-bottom:10px;">Deliverables</div><ul style="list-style:disc;padding-left:14px;margin:0;font-size:0.76rem;color:#374151;line-height:1.7;"><li>AXO Impact Report</li><li>Before and After Ranking Comparison</li><li>Updated AXO Score v2.0</li><li>Ongoing recommendations</li></ul></div>
-            </div>
+    <div style="background:#F9F9FC;padding:48px 40px;border-bottom:1px solid #E5E7EB;">
+        <div style="text-align:left;margin-bottom:32px;">
+            <div class="section-tag">Deliverables</div>
+            <h2 style="font-size:1.8rem;font-weight:800;color:#111827;margin:8px 0 0 0;">Activities and What We Deliver</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:3px;margin-bottom:12px;">
+            <div style="background:#1E1B5E;padding:18px 16px;border-radius:8px 0 0 0;clip-path:polygon(0 0,93% 0,100% 50%,93% 100%,0 100%);"><div style="font-size:0.68rem;font-weight:600;color:rgba(255,255,255,0.6);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em;">Workstream 01</div><div style="font-size:0.85rem;font-weight:700;color:white;line-height:1.3;">Agent Ranking Diagnostic</div></div>
+            <div style="background:#2D2A70;padding:18px 18px 18px 24px;clip-path:polygon(0 0,93% 0,100% 50%,93% 100%,0 100%,7% 50%);"><div style="font-size:0.68rem;font-weight:600;color:rgba(255,255,255,0.6);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em;">Workstream 02</div><div style="font-size:0.85rem;font-weight:700;color:white;line-height:1.3;">Agent Optimization Plan</div></div>
+            <div style="background:#3D3A8A;padding:18px 18px 18px 24px;clip-path:polygon(0 0,93% 0,100% 50%,93% 100%,0 100%,7% 50%);"><div style="font-size:0.68rem;font-weight:600;color:rgba(255,255,255,0.6);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em;">Workstream 03</div><div style="font-size:0.85rem;font-weight:700;color:white;line-height:1.3;">Distribution and Technical</div></div>
+            <div style="background:#5B21B6;padding:18px 18px 18px 24px;border-radius:0 8px 0 0;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,7% 50%);"><div style="font-size:0.68rem;font-weight:600;color:rgba(255,255,255,0.6);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em;">Workstream 04</div><div style="font-size:0.85rem;font-weight:700;color:white;line-height:1.3;">Impact Measurement</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:12px;">
+            <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:16px;"><div style="font-size:0.8rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:10px;">Activities</div><ul style="list-style:disc;padding-left:14px;margin:0;font-size:0.76rem;color:#374151;line-height:1.7;"><li>Representative prompts across personas</li><li>Multi-run stability testing</li><li>Agent-generated rankings</li><li>Power distribution modeling</li><li>Competitor adjacency maps</li></ul></div>
+            <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:16px;"><div style="font-size:0.8rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:10px;">Activities</div><ul style="list-style:disc;padding-left:14px;margin:0;font-size:0.76rem;color:#374151;line-height:1.7;"><li>LLM-ready content: FAQs, Top 10 lists</li><li>Product-attribute associations</li><li>Content for agent ingestion</li><li>Content Influence Blueprint</li></ul></div>
+            <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:16px;"><div style="font-size:0.8rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:10px;">Activities</div><ul style="list-style:disc;padding-left:14px;margin:0;font-size:0.76rem;color:#374151;line-height:1.7;"><li>Tagging, metadata, and taxonomy</li><li>Missing structured data</li><li>Backlink improvements</li><li>Schema markup audit</li></ul></div>
+            <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:16px;"><div style="font-size:0.8rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:10px;">Activities</div><ul style="list-style:disc;padding-left:14px;margin:0;font-size:0.76rem;color:#374151;line-height:1.7;"><li>Re-test all prompts</li><li>Semantic drift and ranking changes</li><li>Recompute AXO Score</li></ul></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;">
+            <div style="background:#F0EEF8;border:1px solid #E5E7EB;border-radius:8px;padding:16px;"><div style="font-size:0.8rem;font-weight:700;color:#111827;border-bottom:1px solid #E5E7EB;padding-bottom:8px;margin-bottom:10px;">Deliverables</div><ul style="list-style:disc;padding-left:14px;margin:0;font-size:0.76rem;color:#374151;line-height:1.7;"><li>AXO Baseline Report</li><li>Brand Ranking Index</li><li>Power Curve Analysis</li><li>Attribute Influence Map</li><li>AXO Baseline Score v1.0</li></ul></div>
+            <div style="background:#F0EEF8;border:1px solid #E5E7EB;border-radius:8px;padding:16px;"><div style="font-size:0.8rem;font-weight:700;color:#111827;border-bottom:1px solid #E5E7EB;padding-bottom:8px;margin-bottom:10px;">Deliverables</div><ul style="list-style:disc;padding-left:14px;margin:0;font-size:0.76rem;color:#374151;line-height:1.7;"><li>Agent Optimization Plan</li><li>LLM-Ready Content Package</li><li>Attribute Reinforcement Strategy</li><li>Content Influence Blueprint</li></ul></div>
+            <div style="background:#F0EEF8;border:1px solid #E5E7EB;border-radius:8px;padding:16px;"><div style="font-size:0.8rem;font-weight:700;color:#111827;border-bottom:1px solid #E5E7EB;padding-bottom:8px;margin-bottom:10px;">Deliverables</div><ul style="list-style:disc;padding-left:14px;margin:0;font-size:0.76rem;color:#374151;line-height:1.7;"><li>DTI Report</li><li>Metadata Remediation Plan</li><li>Backlink and Redirect Strategy</li><li>Schema Optimization Guide</li></ul></div>
+            <div style="background:#F0EEF8;border:1px solid #E5E7EB;border-radius:8px;padding:16px;"><div style="font-size:0.8rem;font-weight:700;color:#111827;border-bottom:1px solid #E5E7EB;padding-bottom:8px;margin-bottom:10px;">Deliverables</div><ul style="list-style:disc;padding-left:14px;margin:0;font-size:0.76rem;color:#374151;line-height:1.7;"><li>AXO Impact Report</li><li>Before and After Ranking Comparison</li><li>Updated AXO Score v2.0</li><li>Ongoing recommendations</li></ul></div>
         </div>
     </div>""",unsafe_allow_html=True)
 
     st.markdown("""
-    <div style="background:white;padding:72px 40px;border-bottom:1px solid #E5E7EB;">
-        <div style="max-width:900px;margin:0 auto;">
-            <div style="text-align:center;margin-bottom:52px;">
-                <div class="section-tag">Explore Offers</div>
-                <h2 style="font-size:1.8rem;font-weight:800;color:#111827;margin:0 0 10px 0;">Choose Your Pilot Program</h2>
-                <p style="font-size:0.88rem;color:#6B7280;max-width:420px;margin:0 auto;">Start with what fits your timeline. Scale as you see results.</p>
+    <div style="background:white;padding:48px 40px;border-bottom:1px solid #E5E7EB;">
+        <div style="text-align:left;margin-bottom:36px;">
+            <div class="section-tag">Explore Offers</div>
+            <h2 style="font-size:1.8rem;font-weight:800;color:#111827;margin:8px 0 6px 0;">Choose Your Pilot Program</h2>
+            <p style="font-size:0.88rem;color:#6B7280;margin:0;">Start with what fits your timeline. Scale as you see results.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px;">
+            <div style="border:1px solid #E5E7EB;border-radius:16px;padding:36px 32px;">
+                <div style="font-size:0.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9CA3AF;margin-bottom:10px;">Option 1</div>
+                <div style="font-size:3rem;font-weight:900;color:#111827;line-height:1;margin-bottom:2px;">6</div>
+                <div style="font-size:0.95rem;font-weight:600;color:#374151;margin-bottom:28px;">Week Engagement</div>
+                <div style="height:1px;background:#F3F4F6;margin-bottom:24px;"></div>
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                    <div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Agent Ranking Diagnostic (ARD)</div>
+                    <div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Agent Optimization Plan (AOP)</div>
+                </div>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px;">
-                <div style="border:1px solid #E5E7EB;border-radius:16px;padding:36px 32px;">
-                    <div style="font-size:0.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9CA3AF;margin-bottom:10px;">Option 1</div>
-                    <div style="font-size:3rem;font-weight:900;color:#111827;line-height:1;margin-bottom:2px;">6</div>
-                    <div style="font-size:0.95rem;font-weight:600;color:#374151;margin-bottom:28px;">Week Engagement</div>
-                    <div style="height:1px;background:#F3F4F6;margin-bottom:24px;"></div>
-                    <div style="display:flex;flex-direction:column;gap:12px;">
-                        <div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Agent Ranking Diagnostic (ARD)</div>
-                        <div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Agent Optimization Plan (AOP)</div>
-                    </div>
+            <div style="border:2px solid #7C3AED;border-radius:16px;padding:36px 32px;position:relative;background:#FAFBFF;">
+                <div style="position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#7C3AED;color:white;border-radius:50px;padding:3px 16px;font-size:0.72rem;font-weight:700;white-space:nowrap;">Recommended</div>
+                <div style="font-size:0.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#7C3AED;margin-bottom:10px;">Option 2</div>
+                <div style="font-size:3rem;font-weight:900;color:#111827;line-height:1;margin-bottom:2px;">7</div>
+                <div style="font-size:0.95rem;font-weight:600;color:#374151;margin-bottom:28px;">Week Engagement</div>
+                <div style="height:1px;background:#E5E7EB;margin-bottom:24px;"></div>
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                    <div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Agent Ranking Diagnostic (ARD)</div>
+                    <div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Agent Optimization Plan (AOP)</div>
+                    <div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Impact Measurement (Re-Diagnostic)</div>
                 </div>
-                <div style="border:2px solid #7C3AED;border-radius:16px;padding:36px 32px;position:relative;background:#FAFBFF;">
-                    <div style="position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#7C3AED;color:white;border-radius:50px;padding:3px 16px;font-size:0.72rem;font-weight:700;white-space:nowrap;">Recommended</div>
-                    <div style="font-size:0.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#7C3AED;margin-bottom:10px;">Option 2</div>
-                    <div style="font-size:3rem;font-weight:900;color:#111827;line-height:1;margin-bottom:2px;">7</div>
-                    <div style="font-size:0.95rem;font-weight:600;color:#374151;margin-bottom:28px;">Week Engagement</div>
-                    <div style="height:1px;background:#E5E7EB;margin-bottom:24px;"></div>
-                    <div style="display:flex;flex-direction:column;gap:12px;">
-                        <div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Agent Ranking Diagnostic (ARD)</div>
-                        <div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Agent Optimization Plan (AOP)</div>
-                        <div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Impact Measurement (Re-Diagnostic)</div>
-                    </div>
-                </div>
-                <div style="border:1px solid #E5E7EB;border-radius:16px;padding:36px 32px;">
-                    <div style="font-size:0.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9CA3AF;margin-bottom:10px;">Option 3</div>
-                    <div style="font-size:3rem;font-weight:900;color:#111827;line-height:1;margin-bottom:2px;">7</div>
-                    <div style="font-size:0.95rem;font-weight:600;color:#374151;margin-bottom:28px;">Week Engagement</div>
-                    <div style="height:1px;background:#F3F4F6;margin-bottom:24px;"></div>
-                    <div style="display:flex;flex-direction:column;gap:12px;">
-                        <div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Agent Ranking Diagnostic (ARD)</div>
-                        <div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Agent Optimization Plan (AOP)</div>
-                        <div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Distribution and Technical Influence (DTI)</div>
-                        <div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Impact Measurement (Re-Diagnostic)</div>
-                    </div>
+            </div>
+            <div style="border:1px solid #E5E7EB;border-radius:16px;padding:36px 32px;">
+                <div style="font-size:0.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9CA3AF;margin-bottom:10px;">Option 3</div>
+                <div style="font-size:3rem;font-weight:900;color:#111827;line-height:1;margin-bottom:2px;">7</div>
+                <div style="font-size:0.95rem;font-weight:600;color:#374151;margin-bottom:28px;">Week Engagement</div>
+                <div style="height:1px;background:#F3F4F6;margin-bottom:24px;"></div>
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                    <div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Agent Ranking Diagnostic (ARD)</div>
+                    <div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Agent Optimization Plan (AOP)</div>
+                    <div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Distribution and Technical Influence (DTI)</div>
+                    <div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Impact Measurement (Re-Diagnostic)</div>
                 </div>
             </div>
         </div>
