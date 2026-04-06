@@ -51,27 +51,38 @@ div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>b
 
 /* ── INPUT ── */
 div[data-testid="stTextInput"] input{
-    border-radius:12px!important;border:1.5px solid #E5E7EB!important;
+    border-radius:12px!important;border:1.5px solid #DDD6FE!important;
     padding:14px 18px!important;font-size:0.95rem!important;height:52px!important;
-    background:#FFFFFF!important;}
+    background:#FAFAFE!important;}
 div[data-testid="stTextInput"] input:focus{
     border-color:#7C3AED!important;
     box-shadow:0 0 0 3px rgba(124,58,237,0.12)!important;background:white!important;}
 
-/* ── URL input row: transparent ── */
+/* ── URL input row: transparent, no gaps ── */
 div[data-testid="stHorizontalBlock"]:not(:first-of-type){
     background:transparent!important;border:none!important;
     box-shadow:none!important;border-radius:0!important;
     padding:0!important;margin:0!important;}
 
-/* ── Run button inside input card: purple pill ── */
+/* ── Run button: solid purple pill ── */
+div[data-testid="stHorizontalBlock"]:not(:first-of-type) div[data-testid="stButton"]>button,
 div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stButton"]>button{
     background:#7C3AED!important;color:white!important;border:none!important;
-    border-radius:12px!important;font-weight:700!important;font-size:0.95rem!important;
+    border-radius:50px!important;font-weight:700!important;font-size:1rem!important;
     height:52px!important;width:100%!important;
-    box-shadow:0 4px 16px rgba(124,58,237,0.45)!important;padding:0 20px!important;}
+    box-shadow:0 4px 16px rgba(124,58,237,0.45)!important;
+    padding:0 24px!important;letter-spacing:0.01em!important;}
+div[data-testid="stHorizontalBlock"]:not(:first-of-type) div[data-testid="stButton"]>button:hover,
 div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stButton"]>button:hover{
-    background:#6D28D9!important;}
+    background:#6D28D9!important;box-shadow:0 6px 20px rgba(124,58,237,0.55)!important;}
+
+/* ── st.container card styling ── */
+div[data-testid="stVerticalBlockBorderWrapper"]{
+    background:white!important;border-radius:16px!important;
+    border:1px solid #E5E7EB!important;
+    box-shadow:0 4px 20px rgba(124,58,237,0.07)!important;
+    padding:24px 28px!important;
+    margin:0 40px 40px 40px!important;}
 
 .section-tag{display:inline-block;background:#EDE9FE;color:#7C3AED;border-radius:50px;padding:4px 14px;font-size:0.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;}
 .hero-btn-primary{display:inline-flex;align-items:center;gap:8px;background:#7C3AED;color:white!important;border:none;border-radius:50px;padding:18px 36px;font-size:1.05rem;font-weight:700;cursor:pointer;text-decoration:none;}
@@ -107,7 +118,7 @@ def score_band_cards():
            ("#FFFBEB","#FCD34D","#92400E","45–69","Needs Work","Several issues to address"),
            ("#FFF1F2","#FCA5A5","#991B1B","0–44","Poor","Major optimization needed")]
     inner="".join(card(bg,border,f'<div style="font-size:0.82rem;font-weight:700;color:{c};margin-bottom:6px;">{rng}</div><div style="font-size:1.6rem;font-weight:900;color:{c};margin-bottom:6px;">{label}</div><div style="font-size:0.82rem;color:{c};">{desc}</div>') for bg,border,c,rng,label,desc in bands)
-    return f'<div style="background:#F3F4F6;padding:32px 24px;"><div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;">{inner}</div></div>'
+    return f'<div style="background:#F3F4F6;padding:40px 40px 32px;"><div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:20px;">{inner}</div></div>'
 
 def metric_card(label, val, sub, tip="", color="#7C3AED"):
     return f'<div style="background:white;border-radius:10px;padding:18px 16px;border:1px solid #E5E7EB;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">{label}<span class="metric-tooltip"><span class="tooltip-icon">?</span><span class="tooltip-text">{tip}</span></span></div><div style="font-size:1.8rem;font-weight:800;color:{color};line-height:1;">{val}</div><div style="font-size:0.75rem;color:#9CA3AF;margin-top:3px;">{sub}</div></div>'
@@ -272,9 +283,15 @@ else:
     slug=rm.get(st.session_state.nav,"")
     if st.query_params.get("p")!=slug: st.query_params["p"]=slug
 
-# ── NAVBAR ────────────────────────────────────────────────────
+# ── NAVBAR — NO type="primary", active state via CSS only ─────
 nav=st.session_state.nav
 
+# Inject active nav highlight via CSS based on current page
+active_styles = {
+    "Overview": "#nb_ov",
+    "GEO Hub": "#nb_gh",
+    "Get Support": "#nb_sp"
+}
 st.markdown(f"""<style>
 div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]:nth-child({"2" if nav=="Overview" else "3" if nav=="GEO Hub" else "4"}) button{{
     background:#EDE9FE!important;color:#7C3AED!important;font-weight:700!important;
@@ -337,100 +354,67 @@ if nav=="Overview":
 # PAGE 2: GEO HUB
 # ════════════════════════════════════════════════════════════
 elif nav=="GEO Hub":
-    # ── HERO: matches Image 2 exactly ──────────────────────────
-    st.markdown("""
-    <div style="background:linear-gradient(135deg,#5B21B6 0%,#7C3AED 50%,#9333EA 100%);padding:60px 40px 52px;text-align:center;">
-        <div style="display:inline-flex;align-items:center;gap:8px;border:1.5px solid rgba(255,255,255,0.45);border-radius:50px;padding:10px 28px;font-size:0.8rem;font-weight:700;color:white;margin-bottom:24px;background:rgba(255,255,255,0.12);">
-            ✦ &nbsp;Real Time GEO Scoring
-        </div>
-        <h1 style="font-size:3.6rem;font-weight:900;color:white;margin:0 0 16px;letter-spacing:-1.5px;line-height:1.1;">GEO Scorecard</h1>
-        <p style="font-size:1.05rem;color:rgba(255,255,255,0.88);margin:0 0 20px;">Enter any brand URL · Discover your brand's AI presence</p>
-        <div style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,0.28);border-radius:50px;padding:8px 22px;font-size:0.78rem;color:rgba(255,255,255,0.82);background:rgba(255,255,255,0.1);">
-            ⏱ &nbsp;Live data &nbsp;·&nbsp; Updated in real-time &nbsp;·&nbsp; Not cached like competitors
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown("""<div style="background:linear-gradient(135deg,#5B21B6 0%,#7C3AED 50%,#9333EA 100%);padding:64px 40px 56px;text-align:center;">
+        <div style="display:inline-flex;align-items:center;gap:8px;border:1.5px solid rgba(255,255,255,0.5);border-radius:50px;padding:8px 24px;font-size:0.78rem;font-weight:700;color:white;margin-bottom:28px;background:rgba(255,255,255,0.15);">✦ &nbsp;Real Time GEO Scoring</div>
+        <h1 style="font-size:3.4rem;font-weight:900;color:white;margin:0 0 14px;letter-spacing:-1.5px;">GEO Scorecard</h1>
+        <p style="font-size:1.05rem;color:rgba(255,255,255,0.88);margin:0;">Enter any brand URL · Discover your brand's AI presence</p>
+    </div>""", unsafe_allow_html=True)
 
-    has_result = st.session_state.geo_result is not None
+    has_result=st.session_state.geo_result is not None
 
     if not has_result:
-        # ── SCORE BAND CARDS ────────────────────────────────────
         st.markdown(score_band_cards(), unsafe_allow_html=True)
 
-        # ── INPUT CARD CSS ──────────────────────────────────────
+        st.markdown("<div style='background:#F3F4F6;padding:28px 40px 40px 40px;'>", unsafe_allow_html=True)
+        with st.container(border=True):
+            st.markdown("""
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+              <div style="width:7px;height:7px;border-radius:50%;background:#7C3AED;flex-shrink:0;"></div>
+              <span style="font-size:0.7rem;font-weight:700;letter-spacing:.14em;color:#9CA3AF;text-transform:uppercase;">Brand URL</span>
+            </div>
+            """, unsafe_allow_html=True)
+            col_i, col_b = st.columns([3.5, 1])
+            with col_i:
+                brand_url = st.text_input("url", value=st.session_state.geo_url,
+                    placeholder="https://www.capitalone.com/", label_visibility="collapsed")
+            with col_b:
+                run = st.button("🔍  Run Live AI Analysis", use_container_width=True)
+        st.markdown("</div>", unsafe_allow_html=True)
+
+        # Style the st.container border wrapper to look like the card
         st.markdown("""<style>
-        /* Force white card on the border container */
         div[data-testid="stVerticalBlockBorderWrapper"]{
-            background:white!important;
-            border-radius:16px!important;
+            background:white!important;border-radius:16px!important;
             border:1px solid #E5E7EB!important;
-            box-shadow:0 2px 16px rgba(0,0,0,0.07)!important;
-            padding:28px 28px 24px!important;
-            margin:24px 24px 32px!important;
+            box-shadow:0 4px 20px rgba(124,58,237,0.07)!important;
+            padding:24px 28px!important;
+            margin:0 40px 40px 40px!important;
         }
-        /* Input inside the card */
-        div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stTextInput"] input{
-            border-radius:10px!important;
-            border:1.5px solid #E5E7EB!important;
-            height:54px!important;
-            font-size:0.95rem!important;
-            background:white!important;
-        }
-        div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stTextInput"] input:focus{
-            border-color:#7C3AED!important;
-            box-shadow:0 0 0 3px rgba(124,58,237,0.1)!important;
-        }
-        /* Run button: solid purple pill */
         div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stButton"]>button{
-            background:#7C3AED!important;
-            color:white!important;
-            border:none!important;
-            border-radius:12px!important;
-            font-weight:700!important;
-            font-size:0.92rem!important;
-            height:54px!important;
-            width:100%!important;
-            box-shadow:0 4px 14px rgba(124,58,237,0.4)!important;
-            padding:0 16px!important;
+            background:#7C3AED!important;color:white!important;border:none!important;
+            border-radius:12px!important;font-weight:700!important;font-size:0.95rem!important;
+            height:52px!important;width:100%!important;
+            box-shadow:0 4px 16px rgba(124,58,237,0.45)!important;
         }
         div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stButton"]>button:hover{
             background:#6D28D9!important;
         }
         </style>""", unsafe_allow_html=True)
 
-        # ── INPUT CARD ──────────────────────────────────────────
-        with st.container(border=True):
-            st.markdown('<p style="font-size:0.72rem;font-weight:700;letter-spacing:0.12em;color:#9CA3AF;text-transform:uppercase;margin:0 0 14px 0;">Brand URL</p>', unsafe_allow_html=True)
-            col_i, col_b = st.columns([3.5, 1])
-            with col_i:
-                brand_url = st.text_input(
-                    "url",
-                    value=st.session_state.geo_url,
-                    placeholder="https://www.capitalone.com/",
-                    label_visibility="collapsed"
-                )
-            with col_b:
-                run = st.button("🔍  Run Live AI Analysis", use_container_width=True)
-
         if run:
             if not brand_url.strip() or not brand_url.startswith("http"):
                 st.error("Please enter a valid URL starting with http:// or https://")
             else:
                 with st.spinner("Identifying brand from URL..."):
-                    page_data = fetch_page_content(brand_url)
-                if not page_data["ok"]:
-                    st.error(f"Could not fetch URL: {page_data['error']}")
+                    page_data=fetch_page_content(brand_url)
+                if not page_data["ok"]: st.error(f"Could not fetch URL: {page_data['error']}")
                 else:
                     with st.spinner("Running 20 live AI queries across 4 consumer categories..."):
                         try:
-                            result = analyze_geo_with_ai(page_data)
-                            st.session_state.geo_result = result
-                            st.session_state.geo_url = brand_url
-                            st.session_state.geo_page_data = page_data
-                            st.success("Analysis complete. Explore the tabs for your full GEO report.")
-                            st.rerun()
-                        except Exception as e:
-                            st.error(f"Analysis failed: {e}")
+                            result=analyze_geo_with_ai(page_data)
+                            st.session_state.geo_result=result; st.session_state.geo_url=brand_url; st.session_state.geo_page_data=page_data
+                            st.success("Analysis complete. Explore the tabs for your full GEO report."); st.rerun()
+                        except Exception as e: st.error(f"Analysis failed: {e}")
     else:
         R=st.session_state.geo_result; PD=st.session_state.geo_page_data; BU=st.session_state.geo_url
         geo=R.get("overall_geo_score",0); brand=R.get("brand_name",PD["domain"]); bd=PD.get("domain","")
