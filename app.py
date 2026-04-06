@@ -18,44 +18,61 @@ header[data-testid="stHeader"],#MainMenu,footer{display:none!important;visibilit
 section[data-testid="stSidebar"]{display:none!important;}
 div[data-testid="stTabs"] button{font-size:0.85rem!important;font-weight:600!important;padding:10px 20px!important;}
 div[data-testid="stTabs"] button[aria-selected="true"]{color:#7C3AED!important;border-bottom:2px solid #7C3AED!important;}
-/* ALL buttons: purple pill */
+
+/* ── ALL non-navbar buttons: purple pill ── */
 section.main div[data-testid="stButton"]>button{
     background:#7C3AED!important;color:white!important;border:none!important;
     border-radius:50px!important;font-weight:700!important;font-size:1rem!important;
-    padding:14px 28px!important;box-shadow:0 4px 14px rgba(124,58,237,0.4)!important;transition:all 0.2s!important;}
+    padding:14px 28px!important;box-shadow:0 4px 14px rgba(124,58,237,0.4)!important;
+    transition:all 0.2s!important;}
 section.main div[data-testid="stButton"]>button:hover{background:#6D28D9!important;}
-/* NAVBAR: no border, no shadow, light purple hover only */
+
+/* ── NAVBAR bar: white, no border, soft shadow ── */
 div[data-testid="stHorizontalBlock"]:first-of-type{
     background:white!important;border:none!important;border-bottom:none!important;
-    padding:14px 40px!important;margin:0!important;position:sticky!important;top:0!important;
-    z-index:999!important;align-items:center!important;
+    padding:14px 40px!important;margin:0!important;position:sticky!important;
+    top:0!important;z-index:999!important;align-items:center!important;
     box-shadow:0 2px 8px rgba(0,0,0,0.06)!important;}
-div[data-testid="stAppViewBlockContainer"]>div>div>div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button{
-    background:transparent!important;color:#6B7280!important;border:none!important;
-    border-radius:8px!important;font-weight:500!important;font-size:0.88rem!important;
-    padding:8px 20px!important;box-shadow:none!important;width:100%!important;height:auto!important;}
-div[data-testid="stAppViewBlockContainer"]>div>div>div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button:hover{
+
+/* ── NAVBAR buttons: ALL transparent, no border ── */
+div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button{
+    background:transparent!important;color:#6B7280!important;
+    border:none!important;border-radius:8px!important;
+    font-weight:500!important;font-size:0.88rem!important;
+    padding:8px 20px!important;box-shadow:none!important;
+    width:100%!important;height:auto!important;}
+div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button:hover{
     background:#EDE9FE!important;color:#7C3AED!important;box-shadow:none!important;}
-div[data-testid="stAppViewBlockContainer"]>div>div>div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"] button[kind="primary"]{
-    background:#EDE9FE!important;color:#7C3AED!important;font-weight:700!important;box-shadow:none!important;}
-/* INPUT */
+
+/* ── ACTIVE nav button injected per page via .nav-active class ── */
+div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button[kind="primary"]{
+    background:#EDE9FE!important;color:#7C3AED!important;
+    font-weight:700!important;border:none!important;box-shadow:none!important;}
+
+/* ── INPUT ── */
 div[data-testid="stTextInput"] input{
     border-radius:12px!important;border:1.5px solid #DDD6FE!important;
-    padding:14px 18px!important;font-size:0.95rem!important;height:52px!important;background:#FAFAFE!important;}
+    padding:14px 18px!important;font-size:0.95rem!important;height:52px!important;
+    background:#FAFAFE!important;}
 div[data-testid="stTextInput"] input:focus{
-    border-color:#7C3AED!important;box-shadow:0 0 0 3px rgba(124,58,237,0.12)!important;background:white!important;}
-/* URL ROW columns: transparent, no card */
+    border-color:#7C3AED!important;
+    box-shadow:0 0 0 3px rgba(124,58,237,0.12)!important;background:white!important;}
+
+/* ── URL input row: transparent ── */
 div[data-testid="stHorizontalBlock"]:not(:first-of-type){
-    background:transparent!important;border:none!important;box-shadow:none!important;
-    border-radius:0!important;padding:0!important;margin:0!important;}
-/* RUN button: solid purple pill */
+    background:transparent!important;border:none!important;
+    box-shadow:none!important;border-radius:0!important;
+    padding:0!important;margin:0!important;}
+
+/* ── Run button: purple pill ── */
 div[data-testid="stHorizontalBlock"]:not(:first-of-type) div[data-testid="stButton"]>button{
     background:#7C3AED!important;color:white!important;border:none!important;
     border-radius:12px!important;font-weight:700!important;font-size:0.95rem!important;
     height:52px!important;width:100%!important;
     box-shadow:0 4px 16px rgba(124,58,237,0.45)!important;padding:0 20px!important;}
 div[data-testid="stHorizontalBlock"]:not(:first-of-type) div[data-testid="stButton"]>button:hover{
-    background:#6D28D9!important;box-shadow:0 6px 20px rgba(124,58,237,0.55)!important;}
+    background:#6D28D9!important;}
+
 .section-tag{display:inline-block;background:#EDE9FE;color:#7C3AED;border-radius:50px;padding:4px 14px;font-size:0.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;}
 .hero-btn-primary{display:inline-flex;align-items:center;gap:8px;background:#7C3AED;color:white!important;border:none;border-radius:50px;padding:18px 36px;font-size:1.05rem;font-weight:700;cursor:pointer;text-decoration:none;}
 .hero-btn-secondary{display:inline-flex;align-items:center;gap:8px;background:white;color:#111827!important;border:1.5px solid #D1D5DB;border-radius:50px;padding:18px 36px;font-size:1.05rem;font-weight:600;cursor:pointer;text-decoration:none;}
@@ -85,12 +102,12 @@ def card(bg, border, content):
     return f'<div style="background:{bg};border-radius:14px;padding:28px 24px;text-align:center;border:1.5px solid {border};">{content}</div>'
 
 def score_band_cards():
-    bands = [("#ECFDF5","#6EE7B7","#065F46","80–100","Excellent","Well optimized for AI citation"),
-             ("#EFF6FF","#93C5FD","#1E40AF","70–79","Good","Minor improvements recommended"),
-             ("#FFFBEB","#FCD34D","#92400E","45–69","Needs Work","Several issues to address"),
-             ("#FFF1F2","#FCA5A5","#991B1B","0–44","Poor","Major optimization needed")]
-    inner = "".join(card(bg,border,f'<div style="font-size:0.82rem;font-weight:700;color:{c};margin-bottom:6px;">{rng}</div><div style="font-size:1.6rem;font-weight:900;color:{c};margin-bottom:6px;">{label}</div><div style="font-size:0.82rem;color:{c};">{desc}</div>') for bg,border,c,rng,label,desc in bands)
-    return f'<div style="background:#F3F4F6;padding:40px 40px 32px 40px;"><div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:20px;">{inner}</div></div>'
+    bands=[("#ECFDF5","#6EE7B7","#065F46","80–100","Excellent","Well optimized for AI citation"),
+           ("#EFF6FF","#93C5FD","#1E40AF","70–79","Good","Minor improvements recommended"),
+           ("#FFFBEB","#FCD34D","#92400E","45–69","Needs Work","Several issues to address"),
+           ("#FFF1F2","#FCA5A5","#991B1B","0–44","Poor","Major optimization needed")]
+    inner="".join(card(bg,border,f'<div style="font-size:0.82rem;font-weight:700;color:{c};margin-bottom:6px;">{rng}</div><div style="font-size:1.6rem;font-weight:900;color:{c};margin-bottom:6px;">{label}</div><div style="font-size:0.82rem;color:{c};">{desc}</div>') for bg,border,c,rng,label,desc in bands)
+    return f'<div style="background:#F3F4F6;padding:40px 40px 32px;"><div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:20px;">{inner}</div></div>'
 
 def metric_card(label, val, sub, tip="", color="#7C3AED"):
     return f'<div style="background:white;border-radius:10px;padding:18px 16px;border:1px solid #E5E7EB;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">{label}<span class="metric-tooltip"><span class="tooltip-icon">?</span><span class="tooltip-text">{tip}</span></span></div><div style="font-size:1.8rem;font-weight:800;color:{color};line-height:1;">{val}</div><div style="font-size:0.75rem;color:#9CA3AF;margin-top:3px;">{sub}</div></div>'
@@ -113,9 +130,9 @@ def classify_domain(d):
 
 def fetch_page_content(url):
     try:
-        soup = BeautifulSoup(requests.get(url,headers={"User-Agent":"Mozilla/5.0"},timeout=15).text,"html.parser")
-        title = soup.title.string.strip() if soup.title else ""
-        meta_tag = soup.find("meta",attrs={"name":"description"})
+        soup=BeautifulSoup(requests.get(url,headers={"User-Agent":"Mozilla/5.0"},timeout=15).text,"html.parser")
+        title=soup.title.string.strip() if soup.title else ""
+        meta_tag=soup.find("meta",attrs={"name":"description"})
         headings=[h.get_text(strip=True) for h in soup.find_all(["h1","h2","h3"])[:20]]
         paragraphs=[p.get_text(strip=True) for p in soup.find_all("p") if len(p.get_text(strip=True))>60][:20]
         has_schema=bool(soup.find_all("script",attrs={"type":"application/ld+json"}))
@@ -137,7 +154,7 @@ def fetch_page_content(url):
         return {"ok":True,"url":url,"domain":domain,"title":title,"meta_desc":meta_tag.get("content","") if meta_tag else "","headings":headings,"paragraphs":paragraphs[:6],"has_schema":has_schema,"has_faq":len(faqs)>0 or any("faq" in h.lower() for h in headings),"has_author":has_author,"has_table":bool(soup.find("table")),"has_lists":len(soup.find_all(["ul","ol"]))>2,"external_links_count":len(ext_links),"word_count":len(soup.get_text().split()),"internal_links":ul[:10]}
     except Exception as e: return {"ok":False,"error":str(e)}
 
-def get_brand_position_in_response(txt, brand):
+def get_brand_position_in_response(txt,brand):
     bl=brand.lower(); tl=txt.lower()
     if bl not in tl: return 0
     before=txt[:tl.find(bl)]
@@ -167,12 +184,12 @@ def extract_brand_from_page(pd):
         if len(clean.split())<=3: return clean
     return dk.title()
 
-def get_citation_sources(brand, industry):
+def get_citation_sources(brand,industry):
     p=f'For "{brand}" in {industry}, list top 10 domains influencing AI knowledge. Estimate citation % (sum=100), classify as Social/Institution/Earned Media/Owned Media/Other, list top 3 page paths. Return ONLY valid JSON: [{{"rank":1,"domain":"x.com","category":"Earned Media","citation_share":25,"top_pages":["/a","/b","/c"]}}]. Exactly 10 items.'
     r=get_client().chat.completions.create(model="openai/gpt-5.4",messages=[{"role":"user","content":p}],temperature=0.1,max_tokens=800)
     return json.loads(re.sub(r"```json|```","",r.choices[0].message.content.strip()))
 
-def get_page_intelligence(links, brand, responses):
+def get_page_intelligence(links,brand,responses):
     bl=brand.lower(); results=[]
     for lk in links[:8]:
         path=lk.get("path",""); pl=path.lower().strip("/")
@@ -183,7 +200,7 @@ def get_page_intelligence(links, brand, responses):
         results.append({"label":lk.get("label","") or pl.title() or "Page","path":path,"url":lk.get("url",""),"cited":cited,"geo":round(vp*0.85),"citation_share":round(vp*0.6),"status":status,"color":col})
     return sorted(results,key=lambda x:x["geo"],reverse=True)
 
-def score_competitor_from_responses(name, responses):
+def score_competitor_from_responses(name,responses):
     nl=name.lower()
     aliases={"american express":["american express","amex"],"bank of america":["bank of america","bofa"],"wells fargo":["wells fargo"],"capital one":["capital one"]}
     terms=aliases.get(nl,[nl])
@@ -202,7 +219,7 @@ def score_competitor_from_responses(name, responses):
     vp=[p for p in pos if p>0]; avg=round(sum(vp)/len(vp)) if vp else 0
     return {"Brand":name,"GEO":geo,"Vis":cv,"Cit":cc,"Sen":cs,"Sov":csov,"Rank":f"#{avg}" if avg>0 else "N/A"}
 
-INDUSTRY_DATA = {
+INDUSTRY_DATA={
     "fin":{"name":"financial services / credit cards","kws":["capital","chase","amex","citi","discover","bank","credit","card","finance","fargo","visa","master","barclays","synchrony","usaa","wellsfargo"],"queries":[("General Consumer","What is the best credit card for travel rewards in 2025?"),("General Consumer","Which bank offers the best rewards checking account?"),("General Consumer","What credit card should I get for everyday cash back?"),("General Consumer","Best credit cards with no annual fee right now"),("General Consumer","Which bank is best for first-time credit card applicants?"),("Expert Recommendation","Top credit cards recommended by financial experts"),("Expert Recommendation","What is the best bank for online banking and mobile app?"),("Expert Recommendation","Which credit card has the best sign-up bonus?"),("Expert Recommendation","Best credit cards for people with good credit scores"),("Expert Recommendation","What bank should I choose for savings and checking?"),("Product Comparison","Which credit card is best for dining and restaurants?"),("Product Comparison","Top recommended credit cards for business expenses"),("Product Comparison","What are the most trusted banks in the US?"),("Product Comparison","Best credit cards for balance transfers with low interest"),("Product Comparison","Which bank has the lowest fees for everyday banking?"),("Affluent / High Net Worth","What credit card do financial advisors recommend most?"),("Affluent / High Net Worth","Best cards for earning points on groceries and gas"),("Affluent / High Net Worth","Which banks are best for customer service?"),("Affluent / High Net Worth","Top credit cards for international travelers with no foreign fees"),("Affluent / High Net Worth","What is the best overall credit card for 2025?")],"comps":["Chase","American Express","Capital One","Citi","Discover","Wells Fargo","Bank of America","Synchrony","Barclays","USAA"],"comp_urls":{"Chase":"chase.com","American Express":"americanexpress.com","Capital One":"capitalone.com","Citi":"citi.com","Discover":"discover.com","Wells Fargo":"wellsfargo.com","Bank of America":"bankofamerica.com","Synchrony":"synchrony.com","Barclays":"barclays.com","USAA":"usaa.com"},"label":"Financial Services"},
     "auto":{"name":"automotive","kws":["toyota","ford","honda","bmw","tesla","vw","volkswagen","auto","car","motor","hyundai","kia","nissan","mercedes","audi"],"queries":[("General Consumer","What is the best car to buy in 2025?"),("General Consumer","Which electric vehicle has the longest range?"),("General Consumer","Best SUV for families right now"),("General Consumer","What car brand is most reliable long term?"),("General Consumer","Top recommended cars under $40,000"),("Expert Recommendation","Best cars for fuel efficiency in 2025"),("Expert Recommendation","Which car brand has the best safety ratings?"),("Expert Recommendation","What is the best luxury car for the money?"),("Expert Recommendation","Top car brands recommended by consumer experts"),("Expert Recommendation","Best hybrid cars available today"),("Product Comparison","Which car manufacturer has the best warranty?"),("Product Comparison","What cars are best for first-time buyers?"),("Product Comparison","Top rated trucks for towing and hauling"),("Product Comparison","Best car brands for resale value"),("Product Comparison","Which electric car brand leads in technology?"),("Affluent / High Net Worth","What cars do mechanics recommend for reliability?"),("Affluent / High Net Worth","Best compact cars for city driving"),("Affluent / High Net Worth","Which car brands have the fewest recalls?"),("Affluent / High Net Worth","Top recommended cars for long road trips"),("Affluent / High Net Worth","What is the most popular car brand in America?")],"comps":["Tesla","Toyota","BMW","Honda","Ford","Mercedes","Hyundai","Kia","Nissan","Volkswagen"],"comp_urls":{"Tesla":"tesla.com","Toyota":"toyota.com","BMW":"bmw.com","Honda":"honda.com","Ford":"ford.com","Mercedes":"mercedes-benz.com","Hyundai":"hyundai.com","Kia":"kia.com","Nissan":"nissanusa.com","Volkswagen":"vw.com"},"label":"Automotive"},
     "gen":{"name":"consumer brands","kws":[],"queries":[("General Consumer","What are the most trusted brands in the US right now?"),("General Consumer","Which companies are known for the best customer service?"),("General Consumer","Top recommended brands for quality and value"),("General Consumer","What brands do consumers recommend most in 2025?"),("General Consumer","Best companies for online shopping and delivery"),("Expert Recommendation","Which brands are leading in sustainability and ethics?"),("Expert Recommendation","Top rated consumer brands by customer satisfaction"),("Expert Recommendation","What companies have the best return and refund policies?"),("Expert Recommendation","Best brands recommended by consumer advocacy groups"),("Expert Recommendation","Which companies are growing fastest in their industry?"),("Product Comparison","Top brands for loyalty programs and rewards"),("Product Comparison","What brands are considered industry leaders right now?"),("Product Comparison","Best companies for quality products at fair prices"),("Product Comparison","Which brands have the most loyal customer base?"),("Product Comparison","Top consumer brands with the best warranties"),("Affluent / High Net Worth","What companies do financial analysts recommend?"),("Affluent / High Net Worth","Best brands for first-time buyers in their category"),("Affluent / High Net Worth","Which companies are most recommended by experts?"),("Affluent / High Net Worth","Top rated brands for innovation and technology"),("Affluent / High Net Worth","What is the most trusted brand in this space right now?")],"comps":[],"comp_urls":{},"label":"General"}
@@ -255,19 +272,32 @@ else:
     slug=rm.get(st.session_state.nav,"")
     if st.query_params.get("p")!=slug: st.query_params["p"]=slug
 
-# ── NAVBAR ────────────────────────────────────────────────────
+# ── NAVBAR — NO type="primary", active state via CSS only ─────
 nav=st.session_state.nav
+
+# Inject active nav highlight via CSS based on current page
+active_styles = {
+    "Overview": "#nb_ov",
+    "GEO Hub": "#nb_gh",
+    "Get Support": "#nb_sp"
+}
+st.markdown(f"""<style>
+div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]:nth-child({"2" if nav=="Overview" else "3" if nav=="GEO Hub" else "4"}) button{{
+    background:#EDE9FE!important;color:#7C3AED!important;font-weight:700!important;
+    border:none!important;box-shadow:none!important;}}
+</style>""", unsafe_allow_html=True)
+
 nb_c,ov_c,gh_c,sp_c=st.columns([3,1,1,1.2])
 with nb_c:
     st.markdown('<div class="percepta-brand-wrap"><div class="percepta-icon"><svg width="16" height="16" viewBox="0 0 22 22" fill="none"><circle cx="9.5" cy="9.5" r="5.5" stroke="white" stroke-width="1.8" fill="none"/><line x1="13.5" y1="13.5" x2="18" y2="18" stroke="white" stroke-width="1.8" stroke-linecap="round"/><path d="M7 9.5 Q8.5 7 9.5 9.5 Q10.5 12 12 9.5" stroke="white" stroke-width="1.3" fill="none" stroke-linecap="round" opacity="0.9"/></svg></div><span class="percepta-title">Percepta</span></div>',unsafe_allow_html=True)
 with ov_c:
-    if st.button("Overview",key="nb_ov",type="primary" if nav=="Overview" else "secondary",use_container_width=True):
+    if st.button("Overview",key="nb_ov",use_container_width=True):
         st.session_state.nav="Overview"; st.query_params.clear(); st.rerun()
 with gh_c:
-    if st.button("GEO Hub",key="nb_gh",type="primary" if nav=="GEO Hub" else "secondary",use_container_width=True):
+    if st.button("GEO Hub",key="nb_gh",use_container_width=True):
         st.session_state.nav="GEO Hub"; st.query_params["p"]="geohub"; st.rerun()
 with sp_c:
-    if st.button("Get Support",key="nb_sp",type="primary" if nav=="Get Support" else "secondary",use_container_width=True):
+    if st.button("Get Support",key="nb_sp",use_container_width=True):
         st.session_state.nav="Get Support"; st.query_params["p"]="getsupport"; st.rerun()
 
 # ════════════════════════════════════════════════════════════
@@ -319,33 +349,34 @@ elif nav=="GEO Hub":
         <p style="font-size:1.05rem;color:rgba(255,255,255,0.88);margin:0;">Enter any brand URL · Discover your brand's AI presence</p>
     </div>""", unsafe_allow_html=True)
 
-    has_result = st.session_state.geo_result is not None
+    has_result=st.session_state.geo_result is not None
 
     if not has_result:
         st.markdown(score_band_cards(), unsafe_allow_html=True)
 
-        # Professional URL card
+        # ── BRAND URL SECTION ──────────────────────────────────
         st.markdown("""
-        <div style="background:#F3F4F6;padding:28px 40px 40px 40px;">
-          <div style="background:white;border-radius:16px;border:1px solid #E5E7EB;
-                      box-shadow:0 4px 20px rgba(124,58,237,0.08);padding:32px 36px;">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
-              <div style="width:8px;height:8px;border-radius:50%;background:#7C3AED;"></div>
+        <div style="background:#F3F4F6;padding:28px 40px 0 40px;">
+          <div style="background:white;border-radius:16px 16px 0 0;border:1px solid #E5E7EB;border-bottom:none;
+                      box-shadow:0 -2px 12px rgba(0,0,0,0.04);padding:28px 32px 20px 32px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+              <div style="width:7px;height:7px;border-radius:50%;background:#7C3AED;"></div>
               <span style="font-size:0.7rem;font-weight:700;letter-spacing:.14em;color:#9CA3AF;text-transform:uppercase;">Brand URL</span>
             </div>
-            <p style="font-size:0.88rem;color:#9CA3AF;margin:0 0 20px 18px;line-height:1.5;">
-              Paste your brand website to analyze AI visibility across ChatGPT, Gemini &amp; more
-            </p>
+            <p style="font-size:0.85rem;color:#9CA3AF;margin:0 0 0 15px;line-height:1.5;">Paste your brand website to analyze AI visibility across ChatGPT, Gemini &amp; more</p>
           </div>
         </div>
+        <div style="background:#F3F4F6;padding:0 40px;">
+          <div style="background:white;border-left:1px solid #E5E7EB;border-right:1px solid #E5E7EB;border-bottom:1px solid #E5E7EB;border-radius:0 0 16px 16px;padding:0 32px 28px 32px;box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+        </div></div>
         """, unsafe_allow_html=True)
 
-        col_input, col_btn = st.columns([3.5, 1])
-        with col_input:
-            brand_url = st.text_input("url", value=st.session_state.geo_url,
+        col_i, col_b = st.columns([3.5, 1])
+        with col_i:
+            brand_url=st.text_input("url", value=st.session_state.geo_url,
                 placeholder="https://www.capitalone.com/", label_visibility="collapsed")
-        with col_btn:
-            run = st.button("🔍  Run Live AI Analysis", use_container_width=True)
+        with col_b:
+            run=st.button("🔍  Run Live AI Analysis", use_container_width=True)
 
         st.markdown("<div style='background:#F3F4F6;height:40px;'></div>", unsafe_allow_html=True)
 
@@ -354,12 +385,12 @@ elif nav=="GEO Hub":
                 st.error("Please enter a valid URL starting with http:// or https://")
             else:
                 with st.spinner("Identifying brand from URL..."):
-                    page_data = fetch_page_content(brand_url)
+                    page_data=fetch_page_content(brand_url)
                 if not page_data["ok"]: st.error(f"Could not fetch URL: {page_data['error']}")
                 else:
                     with st.spinner("Running 20 live AI queries across 4 consumer categories..."):
                         try:
-                            result = analyze_geo_with_ai(page_data)
+                            result=analyze_geo_with_ai(page_data)
                             st.session_state.geo_result=result; st.session_state.geo_url=brand_url; st.session_state.geo_page_data=page_data
                             st.success("Analysis complete. Explore the tabs for your full GEO report."); st.rerun()
                         except Exception as e: st.error(f"Analysis failed: {e}")
@@ -398,9 +429,8 @@ elif nav=="GEO Hub":
                 gcol="#10B981" if gc2>=80 else "#F59E0B" if gc2>=60 else "#EF4444"
                 yb=' <span style="background:#EDE9FE;color:#7C3AED;border-radius:4px;padding:1px 6px;font-size:0.7rem;font-weight:700;">You</span>' if iy else ""
                 row_bg="#F5F3FF" if iy else ("white" if i%2==1 else "#FAFAFA")
-                row_bdr="border-left:3px solid #7C3AED;" if iy else ""
                 row_fw="700" if iy else "400"
-                rows+=f'<tr style="background:{row_bg};{row_bdr}"><td style="padding:10px 12px;font-size:0.8rem;color:#9CA3AF;font-weight:600;">{i}</td><td style="padding:10px 12px;"><div style="font-size:0.84rem;font-weight:{row_fw};color:#111827;">{c["Brand"]}{yb}</div><div style="font-size:0.72rem;color:#9CA3AF;">{c.get("URL","")}</div></td><td style="padding:10px 12px;font-size:0.88rem;font-weight:700;color:{gcol};">{gc2}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Vis"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Cit"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Sen"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c.get("Sov","")}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Rank"]}</td></tr>'
+                rows+=f'<tr style="background:{row_bg};{"border-left:3px solid #7C3AED;" if iy else ""}"><td style="padding:10px 12px;font-size:0.8rem;color:#9CA3AF;font-weight:600;">{i}</td><td style="padding:10px 12px;"><div style="font-size:0.84rem;font-weight:{row_fw};color:#111827;">{c["Brand"]}{yb}</div><div style="font-size:0.72rem;color:#9CA3AF;">{c.get("URL","")}</div></td><td style="padding:10px 12px;font-size:0.88rem;font-weight:700;color:{gcol};">{gc2}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Vis"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Cit"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Sen"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c.get("Sov","")}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Rank"]}</td></tr>'
             thead="".join(f'<th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">{h}</th>' for h in ["#","Brand","GEO","Visibility","Citation","Sentiment","Share of Voice","Avg Rank"])
             st.markdown(white_card(f'<div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">{bd} vs Competitors — {ind["label"]}</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Real-time GEO scores. Highlighted row is you.</div><table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:1px solid #E5E7EB;">{thead}</tr></thead><tbody>{rows}</tbody></table>'),unsafe_allow_html=True)
             st.markdown("</div></div>",unsafe_allow_html=True)
@@ -537,7 +567,6 @@ elif nav=="Get Support":
     acts="".join(f'<div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:18px;"><div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:12px;text-align:center;">Activities</div><ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;">{"".join(f"<li>{a}</li>" for a in d[4])}</ul></div>' for d in DELIVER)
     dlvs="".join(f'<div style="background:#EEEAF8;border:1px solid #DDD6FE;border-radius:8px;padding:18px;"><div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #DDD6FE;padding-bottom:8px;margin-bottom:12px;text-align:center;">Deliverables</div><ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;">{"".join(f"<li>{dl}</li>" for dl in d[5])}</ul></div>' for d in DELIVER)
     stat_cards="".join(f'<div style="border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:24px;"><div style="font-size:2.4rem;font-weight:900;color:white;">{v}</div><div style="font-size:0.85rem;font-weight:600;color:rgba(255,255,255,0.8);margin-top:5px;">{l}</div></div>' for v,l in [("10+","Successful Clients"),("4X","Higher Conversion"),("15%","Citation Growth"),("68%","Longer Sessions")])
-
     st.markdown(f"""
     <div style="background:white;padding:32px 40px 40px;border-bottom:1px solid #E5E7EB;">
         <div style="display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;gap:0;border-top:1px dashed #D1D5DB;padding-top:32px;">
