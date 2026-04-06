@@ -18,31 +18,44 @@ header[data-testid="stHeader"],#MainMenu,footer{display:none!important;visibilit
 section[data-testid="stSidebar"]{display:none!important;}
 div[data-testid="stTabs"] button{font-size:0.85rem!important;font-weight:600!important;padding:10px 20px!important;}
 div[data-testid="stTabs"] button[aria-selected="true"]{color:#7C3AED!important;border-bottom:2px solid #7C3AED!important;}
-/* All buttons: purple pill */
+/* ALL buttons: purple pill */
 section.main div[data-testid="stButton"]>button{
     background:#7C3AED!important;color:white!important;border:none!important;
     border-radius:50px!important;font-weight:700!important;font-size:1rem!important;
-    padding:14px 28px!important;box-shadow:0 4px 14px rgba(124,58,237,0.4)!important;transition:background 0.2s!important;}
+    padding:14px 28px!important;box-shadow:0 4px 14px rgba(124,58,237,0.4)!important;transition:all 0.2s!important;}
 section.main div[data-testid="stButton"]>button:hover{background:#6D28D9!important;}
-/* Navbar buttons: no border, no shadow, no red */
+/* NAVBAR: no border, no shadow, light purple hover only */
+div[data-testid="stHorizontalBlock"]:first-of-type{
+    background:white!important;border:none!important;border-bottom:none!important;
+    padding:14px 40px!important;margin:0!important;position:sticky!important;top:0!important;
+    z-index:999!important;align-items:center!important;
+    box-shadow:0 2px 8px rgba(0,0,0,0.06)!important;}
 div[data-testid="stAppViewBlockContainer"]>div>div>div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button{
     background:transparent!important;color:#6B7280!important;border:none!important;
     border-radius:8px!important;font-weight:500!important;font-size:0.88rem!important;
-    padding:7px 20px!important;box-shadow:none!important;width:100%!important;height:auto!important;}
+    padding:8px 20px!important;box-shadow:none!important;width:100%!important;height:auto!important;}
 div[data-testid="stAppViewBlockContainer"]>div>div>div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button:hover{
     background:#EDE9FE!important;color:#7C3AED!important;box-shadow:none!important;}
 div[data-testid="stAppViewBlockContainer"]>div>div>div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"] button[kind="primary"]{
     background:#EDE9FE!important;color:#7C3AED!important;font-weight:700!important;box-shadow:none!important;}
-/* Navbar bar — no bottom border */
-div[data-testid="stHorizontalBlock"]:first-of-type{background:white!important;border-bottom:none!important;padding:12px 40px!important;margin:0!important;position:sticky!important;top:0!important;z-index:999!important;align-items:center!important;box-shadow:0 1px 6px rgba(0,0,0,0.06)!important;}
-/* Input styling */
-div[data-testid="stTextInput"] input{border-radius:0!important;border:none!important;border-top:1px solid #E5E7EB!important;border-bottom:1px solid #E5E7EB!important;padding:14px 20px!important;font-size:0.95rem!important;height:52px!important;background:#FAFAFA!important;width:100%!important;}
-div[data-testid="stTextInput"] input:focus{border-color:#7C3AED!important;box-shadow:none!important;background:white!important;}
-/* URL row columns: transparent, no card */
-div[data-testid="stHorizontalBlock"]:not(:first-of-type){background:transparent!important;border:none!important;box-shadow:none!important;border-radius:0!important;padding:0!important;margin:0!important;}
-/* Run button purple pill */
-div[data-testid="stHorizontalBlock"]:not(:first-of-type) div[data-testid="stButton"]>button{background:#7C3AED!important;color:white!important;border:none!important;border-radius:50px!important;font-weight:700!important;font-size:1rem!important;height:52px!important;width:100%!important;box-shadow:0 4px 14px rgba(124,58,237,0.4)!important;padding:0 28px!important;}
-div[data-testid="stHorizontalBlock"]:not(:first-of-type) div[data-testid="stButton"]>button:hover{background:#6D28D9!important;}
+/* INPUT */
+div[data-testid="stTextInput"] input{
+    border-radius:12px!important;border:1.5px solid #DDD6FE!important;
+    padding:14px 18px!important;font-size:0.95rem!important;height:52px!important;background:#FAFAFE!important;}
+div[data-testid="stTextInput"] input:focus{
+    border-color:#7C3AED!important;box-shadow:0 0 0 3px rgba(124,58,237,0.12)!important;background:white!important;}
+/* URL ROW columns: transparent, no card */
+div[data-testid="stHorizontalBlock"]:not(:first-of-type){
+    background:transparent!important;border:none!important;box-shadow:none!important;
+    border-radius:0!important;padding:0!important;margin:0!important;}
+/* RUN button: solid purple pill */
+div[data-testid="stHorizontalBlock"]:not(:first-of-type) div[data-testid="stButton"]>button{
+    background:#7C3AED!important;color:white!important;border:none!important;
+    border-radius:12px!important;font-weight:700!important;font-size:0.95rem!important;
+    height:52px!important;width:100%!important;
+    box-shadow:0 4px 16px rgba(124,58,237,0.45)!important;padding:0 20px!important;}
+div[data-testid="stHorizontalBlock"]:not(:first-of-type) div[data-testid="stButton"]>button:hover{
+    background:#6D28D9!important;box-shadow:0 6px 20px rgba(124,58,237,0.55)!important;}
 .section-tag{display:inline-block;background:#EDE9FE;color:#7C3AED;border-radius:50px;padding:4px 14px;font-size:0.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;}
 .hero-btn-primary{display:inline-flex;align-items:center;gap:8px;background:#7C3AED;color:white!important;border:none;border-radius:50px;padding:18px 36px;font-size:1.05rem;font-weight:700;cursor:pointer;text-decoration:none;}
 .hero-btn-secondary{display:inline-flex;align-items:center;gap:8px;background:white;color:#111827!important;border:1.5px solid #D1D5DB;border-radius:50px;padding:18px 36px;font-size:1.05rem;font-weight:600;cursor:pointer;text-decoration:none;}
@@ -77,7 +90,7 @@ def score_band_cards():
              ("#FFFBEB","#FCD34D","#92400E","45–69","Needs Work","Several issues to address"),
              ("#FFF1F2","#FCA5A5","#991B1B","0–44","Poor","Major optimization needed")]
     inner = "".join(card(bg,border,f'<div style="font-size:0.82rem;font-weight:700;color:{c};margin-bottom:6px;">{rng}</div><div style="font-size:1.6rem;font-weight:900;color:{c};margin-bottom:6px;">{label}</div><div style="font-size:0.82rem;color:{c};">{desc}</div>') for bg,border,c,rng,label,desc in bands)
-    return f'<div style="background:#F3F4F6;padding:40px 20px 32px 20px;"><div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:20px;">{inner}</div></div>'
+    return f'<div style="background:#F3F4F6;padding:40px 40px 32px 40px;"><div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:20px;">{inner}</div></div>'
 
 def metric_card(label, val, sub, tip="", color="#7C3AED"):
     return f'<div style="background:white;border-radius:10px;padding:18px 16px;border:1px solid #E5E7EB;"><div style="font-size:0.7rem;font-weight:600;color:#9CA3AF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">{label}<span class="metric-tooltip"><span class="tooltip-icon">?</span><span class="tooltip-text">{tip}</span></span></div><div style="font-size:1.8rem;font-weight:800;color:{color};line-height:1;">{val}</div><div style="font-size:0.75rem;color:#9CA3AF;margin-top:3px;">{sub}</div></div>'
@@ -155,8 +168,7 @@ def extract_brand_from_page(pd):
     return dk.title()
 
 def get_citation_sources(brand, industry):
-    p=f"""For "{brand}" in {industry}, list top 10 domains influencing AI knowledge. Estimate citation % (sum=100), classify as Social/Institution/Earned Media/Owned Media/Other, list top 3 page paths.
-Return ONLY valid JSON: [{{"rank":1,"domain":"x.com","category":"Earned Media","citation_share":25,"top_pages":["/a","/b","/c"]}}]. Exactly 10 items."""
+    p=f'For "{brand}" in {industry}, list top 10 domains influencing AI knowledge. Estimate citation % (sum=100), classify as Social/Institution/Earned Media/Owned Media/Other, list top 3 page paths. Return ONLY valid JSON: [{{"rank":1,"domain":"x.com","category":"Earned Media","citation_share":25,"top_pages":["/a","/b","/c"]}}]. Exactly 10 items.'
     r=get_client().chat.completions.create(model="openai/gpt-5.4",messages=[{"role":"user","content":p}],temperature=0.1,max_tokens=800)
     return json.loads(re.sub(r"```json|```","",r.choices[0].message.content.strip()))
 
@@ -219,7 +231,7 @@ def analyze_geo_with_ai(page_data):
         sc={"citation_share":0,"sentiment":0,"prominence":0,"share_of_voice":0,"avg_rank":"N/A","strengths":["Brand not yet appearing in AI responses.","Baseline established, clear room to grow.","Competitors present, confirming category is AI-discoverable."],"improvements":["Not mentioned in 20 generic queries.","AI not associating brand with key questions.","No citation authority.","Competitors appearing instead.","Content not structured for AI discovery."],"actions":[{"priority":"High","action":"Create FAQ and comparison pages targeting queries in this analysis."},{"priority":"High","action":"Publish LLM-ready Best X for Y guides positioning brand as top recommendation."},{"priority":"Medium","action":"Add structured data (schema markup) to key pages."},{"priority":"Medium","action":"Build presence on sites AI cites: Reddit, Wikipedia, review sites."},{"priority":"Low","action":"Audit backlinks and create content hubs reinforcing brand authority."}]}
     else:
         appeared=[p for p in all_qa if bl in p["a"].lower()]
-        sp=f"""GEO analyst. Brand "{brand}" appeared in {mentions}/20 AI responses.\n{chr(10).join(f"Response: {p['a'][:300]}" for p in appeared)}\nReturn ONLY valid JSON: {{"citation_share":0,"sentiment":0,"prominence":0,"share_of_voice":0,"avg_rank":"N/A","strengths":["...","...","..."],"improvements":["...","...","...","...","..."],"actions":[{{"priority":"High","action":"..."}},{{"priority":"High","action":"..."}},{{"priority":"Medium","action":"..."}},{{"priority":"Medium","action":"..."}},{{"priority":"Low","action":"..."}}]}}"""
+        sp=f'GEO analyst. Brand "{brand}" appeared in {mentions}/20 AI responses.\n'+"\n".join(f"Response: {p['a'][:300]}" for p in appeared)+f'\nReturn ONLY valid JSON: {{"citation_share":0,"sentiment":0,"prominence":0,"share_of_voice":0,"avg_rank":"N/A","strengths":["...","...","..."],"improvements":["...","...","...","...","..."],"actions":[{{"priority":"High","action":"..."}},{{"priority":"High","action":"..."}},{{"priority":"Medium","action":"..."}},{{"priority":"Medium","action":"..."}},{{"priority":"Low","action":"..."}}]}}'
         raw=get_client().chat.completions.create(model="openai/gpt-5.4",messages=[{"role":"user","content":sp}],temperature=0.0,max_tokens=900).choices[0].message.content
         sc=json.loads(re.sub(r"```json|```","",raw.strip()))
     cit=sc.get("citation_share",0); sent=sc.get("sentiment",0); prom=sc.get("prominence",0); sov=sc.get("share_of_voice",0)
@@ -310,70 +322,29 @@ elif nav=="GEO Hub":
     has_result = st.session_state.geo_result is not None
 
     if not has_result:
-        # Score band cards
         st.markdown(score_band_cards(), unsafe_allow_html=True)
 
-        # Professional URL input section
+        # Professional URL card
         st.markdown("""
-        <div style="background:#F3F4F6;padding:32px 40px 40px 40px;">
-          <div style="background:white;border-radius:20px;border:1px solid #E5E7EB;
-                      box-shadow:0 4px 24px rgba(124,58,237,0.08);padding:36px 40px;">
-            <div style="margin-bottom:6px;">
-              <span style="font-size:0.7rem;font-weight:700;letter-spacing:.12em;color:#9CA3AF;text-transform:uppercase;">Brand URL</span>
+        <div style="background:#F3F4F6;padding:28px 40px 40px 40px;">
+          <div style="background:white;border-radius:16px;border:1px solid #E5E7EB;
+                      box-shadow:0 4px 20px rgba(124,58,237,0.08);padding:32px 36px;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#7C3AED;"></div>
+              <span style="font-size:0.7rem;font-weight:700;letter-spacing:.14em;color:#9CA3AF;text-transform:uppercase;">Brand URL</span>
             </div>
-            <p style="font-size:0.92rem;color:#6B7280;margin:0 0 20px 0;line-height:1.5;">
-              Enter your brand's website URL to analyze its AI visibility across ChatGPT, Gemini, and other major AI engines.
+            <p style="font-size:0.88rem;color:#9CA3AF;margin:0 0 20px 18px;line-height:1.5;">
+              Paste your brand website to analyze AI visibility across ChatGPT, Gemini &amp; more
             </p>
-        </div></div>
-        <style>
-        /* Override input inside card */
-        div[data-testid="stTextInput"] input {
-            border-radius: 12px !important;
-            border: 1.5px solid #DDD6FE !important;
-            padding: 14px 18px !important;
-            font-size: 0.95rem !important;
-            height: 52px !important;
-            background: #FAFAFE !important;
-        }
-        div[data-testid="stTextInput"] input:focus {
-            border-color: #7C3AED !important;
-            box-shadow: 0 0 0 3px rgba(124,58,237,0.12) !important;
-            background: white !important;
-        }
-        /* Columns row: transparent */
-        div[data-testid="stHorizontalBlock"]:not(:first-of-type) {
-            background: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
-            border-radius: 0 !important;
-            padding: 0 40px !important;
-            margin: -72px 0 0 0 !important;
-        }
-        /* Purple pill run button */
-        div[data-testid="stHorizontalBlock"]:not(:first-of-type) div[data-testid="stButton"]>button {
-            background: #7C3AED !important;
-            color: white !important;
-            border: none !important;
-            border-radius: 50px !important;
-            font-weight: 700 !important;
-            font-size: 0.95rem !important;
-            height: 52px !important;
-            width: 100% !important;
-            box-shadow: 0 4px 16px rgba(124,58,237,0.45) !important;
-            letter-spacing: 0.01em !important;
-        }
-        div[data-testid="stHorizontalBlock"]:not(:first-of-type) div[data-testid="stButton"]>button:hover {
-            background: #6D28D9 !important;
-            box-shadow: 0 6px 20px rgba(124,58,237,0.55) !important;
-        }
-        </style>
+          </div>
+        </div>
         """, unsafe_allow_html=True)
 
-        uc, bc = st.columns([3.5, 1])
-        with uc:
-            brand_url = st.text_input("u", value=st.session_state.geo_url,
+        col_input, col_btn = st.columns([3.5, 1])
+        with col_input:
+            brand_url = st.text_input("url", value=st.session_state.geo_url,
                 placeholder="https://www.capitalone.com/", label_visibility="collapsed")
-        with bc:
+        with col_btn:
             run = st.button("🔍  Run Live AI Analysis", use_container_width=True)
 
         st.markdown("<div style='background:#F3F4F6;height:40px;'></div>", unsafe_allow_html=True)
@@ -399,7 +370,6 @@ elif nav=="GEO Hub":
         vis=R.get("context",0); cit=R.get("reliability",0); sent=R.get("exclusivity",0); prom=R.get("organization",0); sov=R.get("share_of_voice",0)
         avg_rank="N/A" if vis==0 else R.get("avg_rank","N/A"); rd=R.get("responses_detail",[])
         ind=INDUSTRY_DATA[R.get("ind_key","gen")]
-
         tabs=st.tabs(["GEO Score","Competitors","Visibility","Sentiment","Citations","Prompts","Recommendations","Live Prompt"])
 
         with tabs[0]:
@@ -429,13 +399,10 @@ elif nav=="GEO Hub":
                 yb=' <span style="background:#EDE9FE;color:#7C3AED;border-radius:4px;padding:1px 6px;font-size:0.7rem;font-weight:700;">You</span>' if iy else ""
                 row_bg="#F5F3FF" if iy else ("white" if i%2==1 else "#FAFAFA")
                 row_bdr="border-left:3px solid #7C3AED;" if iy else ""
-                rows+=f'<tr style="background:{row_bg};{row_bdr}"><td style="padding:10px 12px;font-size:0.8rem;color:#9CA3AF;font-weight:600;">{i}</td><td style="padding:10px 12px;"><div style="font-size:0.84rem;font-weight:{"700" if iy else "400"};color:#111827;">{c["Brand"]}{yb}</div><div style="font-size:0.72rem;color:#9CA3AF;">{c.get("URL","")}</div></td><td style="padding:10px 12px;font-size:0.88rem;font-weight:700;color:{gcol};">{gc2}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Vis"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Cit"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Sen"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c.get("Sov","")}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Rank"]}</td></tr>'
-            th_cols=["#","Brand","GEO","Visibility","Citation","Sentiment","Share of Voice","Avg Rank"]
-            thead="".join(f'<th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">{h}</th>' for h in th_cols)
-            comp_html=(f'<div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">{bd} vs Competitors — {ind["label"]}</div>'
-                       f'<div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Real-time GEO scores. Highlighted row is you.</div>'
-                       f'<table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:1px solid #E5E7EB;">{thead}</tr></thead><tbody>{rows}</tbody></table>')
-            st.markdown(white_card(comp_html),unsafe_allow_html=True)
+                row_fw="700" if iy else "400"
+                rows+=f'<tr style="background:{row_bg};{row_bdr}"><td style="padding:10px 12px;font-size:0.8rem;color:#9CA3AF;font-weight:600;">{i}</td><td style="padding:10px 12px;"><div style="font-size:0.84rem;font-weight:{row_fw};color:#111827;">{c["Brand"]}{yb}</div><div style="font-size:0.72rem;color:#9CA3AF;">{c.get("URL","")}</div></td><td style="padding:10px 12px;font-size:0.88rem;font-weight:700;color:{gcol};">{gc2}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Vis"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Cit"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Sen"]}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c.get("Sov","")}</td><td style="padding:10px 12px;font-size:0.82rem;color:#374151;">{c["Rank"]}</td></tr>'
+            thead="".join(f'<th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">{h}</th>' for h in ["#","Brand","GEO","Visibility","Citation","Sentiment","Share of Voice","Avg Rank"])
+            st.markdown(white_card(f'<div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">{bd} vs Competitors — {ind["label"]}</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Real-time GEO scores. Highlighted row is you.</div><table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:1px solid #E5E7EB;">{thead}</tr></thead><tbody>{rows}</tbody></table>'),unsafe_allow_html=True)
             st.markdown("</div></div>",unsafe_allow_html=True)
 
         with tabs[1]:
@@ -451,12 +418,8 @@ elif nav=="GEO Hub":
                     gc2=p["geo"]; gcol="#10B981" if gc2>=60 else "#F59E0B" if gc2>=30 else "#EF4444"
                     cb=f'<span style="background:#D1FAE5;color:#065F46;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">Cited {p["cited"]}x</span>' if p["cited"]>0 else '<span style="background:#F3F4F6;color:#9CA3AF;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">Not Cited</span>'
                     rows+=f'<tr style="border-bottom:1px solid #F3F4F6;"><td style="padding:10px 14px;"><div style="font-size:0.84rem;font-weight:600;color:#111827;">{p["label"]}</div><div style="font-size:0.72rem;color:#9CA3AF;">{p["path"]}</div></td><td style="padding:10px 14px;">{cb}</td><td style="padding:10px 14px;font-size:0.88rem;font-weight:700;color:{gcol};">{gc2}</td><td style="padding:10px 14px;font-size:0.82rem;color:#7C3AED;font-weight:600;">{p["citation_share"]}%</td><td style="padding:10px 14px;font-size:0.84rem;color:{p["color"]};font-weight:600;">{p["status"]}</td></tr>'
-                th2=["Page","AI Citations","GEO Score","Citation Share","Status"]
-                thead2="".join(f'<th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">{h}</th>' for h in th2)
-                pg_html=(f'<div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Page Intelligence</div>'
-                         f'<div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Which pages of {bd} are being cited by AI.</div>'
-                         f'<table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:2px solid #E5E7EB;background:#FAFAFA;">{thead2}</tr></thead><tbody>{rows}</tbody></table>')
-                st.markdown(white_card(pg_html),unsafe_allow_html=True)
+                thead2="".join(f'<th style="padding:8px 14px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">{h}</th>' for h in ["Page","AI Citations","GEO Score","Citation Share","Status"])
+                st.markdown(white_card(f'<div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Page Intelligence</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Which pages of {bd} are being cited by AI.</div><table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:2px solid #E5E7EB;background:#FAFAFA;">{thead2}</tr></thead><tbody>{rows}</tbody></table>'),unsafe_allow_html=True)
             st.markdown("</div>",unsafe_allow_html=True)
 
         with tabs[3]:
@@ -502,12 +465,8 @@ elif nav=="GEO Hub":
                 ab='<span style="background:#D1FAE5;color:#065F46;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">Appeared</span>' if m else '<span style="background:#F3F4F6;color:#9CA3AF;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:700;">Not Mentioned</span>'
                 cb2=f'<span style="background:#EDE9FE;color:#5B21B6;border-radius:4px;padding:1px 7px;font-size:0.7rem;font-weight:600;">{item.get("category","")}</span>'
                 qrows+=f'<tr style="background:{"#F5F3FF" if m else "white"};border-bottom:1px solid #F3F4F6;"><td style="padding:10px 12px;font-size:0.78rem;color:#9CA3AF;font-weight:600;">{i+1}</td><td style="padding:10px 14px;"><div style="display:flex;gap:6px;align-items:center;margin-bottom:5px;">{cb2}{ab}</div><div style="font-size:0.83rem;color:#374151;">{item.get("query","")}</div></td><td style="padding:10px 16px;text-align:center;"><div style="font-size:1.1rem;font-weight:800;color:{rc};">{rd2}</div><div style="font-size:0.68rem;color:#9CA3AF;">Rank</div></td></tr>'
-            th3=["#","Query","Rank"]
-            thead3="".join(f'<th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">{h}</th>' for h in th3)
-            pr_html=(f'<div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Top 10 Prompts</div>'
-                     f'<div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Generic consumer questions. No brand name used.</div>'
-                     f'<table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:2px solid #E5E7EB;background:#FAFAFA;">{thead3}</tr></thead><tbody>{qrows}</tbody></table>')
-            st.markdown(white_card(pr_html),unsafe_allow_html=True)
+            thead3="".join(f'<th style="padding:8px 12px;text-align:left;font-size:0.72rem;color:#9CA3AF;font-weight:600;">{h}</th>' for h in ["#","Query","Rank"])
+            st.markdown(white_card(f'<div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:4px;">Top 10 Prompts</div><div style="font-size:0.78rem;color:#9CA3AF;margin-bottom:16px;">Generic consumer questions. No brand name used.</div><table style="width:100%;border-collapse:collapse;"><thead><tr style="border-bottom:2px solid #E5E7EB;background:#FAFAFA;">{thead3}</tr></thead><tbody>{qrows}</tbody></table>'),unsafe_allow_html=True)
             st.markdown("</div>",unsafe_allow_html=True)
 
         with tabs[6]:
@@ -577,7 +536,6 @@ elif nav=="Get Support":
     hdrs="".join(f'<div style="background:{d[1]};padding:20px {"20px 20px 20px 28px" if i>0 else "18px"};{d[3]};clip-path:{d[2]};"><div style="font-size:0.7rem;font-weight:600;color:rgba(255,255,255,0.65);margin-bottom:6px;text-transform:uppercase;letter-spacing:.07em;">Workstream 0{i+1}</div><div style="font-size:0.9rem;font-weight:700;color:white;line-height:1.35;">{d[0]}</div></div>' for i,d in enumerate(DELIVER))
     acts="".join(f'<div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:18px;"><div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:12px;text-align:center;">Activities</div><ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;">{"".join(f"<li>{a}</li>" for a in d[4])}</ul></div>' for d in DELIVER)
     dlvs="".join(f'<div style="background:#EEEAF8;border:1px solid #DDD6FE;border-radius:8px;padding:18px;"><div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #DDD6FE;padding-bottom:8px;margin-bottom:12px;text-align:center;">Deliverables</div><ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;">{"".join(f"<li>{dl}</li>" for dl in d[5])}</ul></div>' for d in DELIVER)
-
     stat_cards="".join(f'<div style="border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:24px;"><div style="font-size:2.4rem;font-weight:900;color:white;">{v}</div><div style="font-size:0.85rem;font-weight:600;color:rgba(255,255,255,0.8);margin-top:5px;">{l}</div></div>' for v,l in [("10+","Successful Clients"),("4X","Higher Conversion"),("15%","Citation Growth"),("68%","Longer Sessions")])
 
     st.markdown(f"""
