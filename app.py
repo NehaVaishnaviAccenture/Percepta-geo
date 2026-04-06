@@ -286,7 +286,7 @@ if nav=="Overview":
     <span style="color:#111827;">Your Brand's </span><span style="color:#7C3AED;">GEO</span><span style="color:#111827;"> Score</span>
   </div>
 
-  <p style="font-size:1.05rem;color:#6B7280;max-width:680px;margin:0 auto 36px;line-height:1.7;">The Percepta GEO Score is a single 0–100 number that measures how often and how favorably your brand is cited in AI-generated responses — across ChatGPT, Gemini, and other major AI engines.</p>
+  <p style="font-size:1.05rem;color:#6B7280;max-width:860px;margin:0 auto 36px;line-height:1.7;">The Percepta GEO Score is a single 0–100 number that measures how often and how favorably your brand<br>is cited in AI-generated responses — across ChatGPT, Gemini, and other major AI engines.</p>
 
   <div style="display:flex;gap:16px;justify-content:center;align-items:center;flex-wrap:wrap;">
     <a href="?goto=geohub" class="hero-btn-primary" target="_self">Get Your GEO Score &nbsp;→</a>
@@ -399,7 +399,7 @@ if nav=="Overview":
   <div style="background:linear-gradient(135deg,#F8F5FF 0%,#EDE9FE 45%,#F3EEFF 100%);border:1.5px solid #C4B5FD;border-radius:28px;padding:52px 60px;text-align:center;">
     <h2 style="font-size:3rem;font-weight:900;color:#111827;margin:0 0 4px;line-height:1.1;">Ready to Discover Your</h2>
     <h2 style="font-size:3rem;font-weight:900;color:#7C3AED;margin:0 0 28px;line-height:1.1;">GEO Score?</h2>
-    <p style="font-size:1rem;color:#6B7280;line-height:1.7;margin:0 auto;max-width:520px;">Join forward-thinking brands optimizing for the new era of generative search. Get your Percepta GEO Score today — backed by Accenture.</p>
+    <p style="font-size:1rem;color:#6B7280;line-height:1.7;margin:0 auto;max-width:600px;">Join forward-thinking brands optimizing for the new era of generative search.<br>Get your Percepta GEO Score today — backed by Accenture.</p>
     <div style="margin-top:40px;">
       <a href="?goto=geohub" class="cta-btn" target="_self">Launch Percepta &nbsp;→</a>
     </div>
