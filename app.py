@@ -21,26 +21,48 @@ header[data-testid="stHeader"]{display:none!important;}
 footer{visibility:hidden;}
 .block-container{padding-top:0!important;padding-left:0!important;padding-right:0!important;max-width:100%!important;}
 section[data-testid="stSidebar"]{display:none!important;}
+
+/* ── TABS ── */
 div[data-testid="stTabs"] button{font-size:0.85rem!important;font-weight:600!important;padding:10px 20px!important;}
 div[data-testid="stTabs"] button[aria-selected="true"]{color:#7C3AED!important;border-bottom:2px solid #7C3AED!important;}
+
+/* ── ALL BUTTONS: solid purple pill ── */
 section.main div[data-testid="stButton"]>button{
     background:#7C3AED!important;color:white!important;border:none!important;
     border-radius:50px!important;font-weight:700!important;font-size:1rem!important;
-    padding:14px 28px!important;box-shadow:0 4px 14px rgba(124,58,237,0.4)!important;
-    transition:background 0.2s!important;width:100%!important;
+    padding:14px 28px!important;
+    box-shadow:0 4px 14px rgba(124,58,237,0.4)!important;
+    transition:background 0.2s!important;
 }
 section.main div[data-testid="stButton"]>button:hover{background:#6D28D9!important;}
-div[data-testid="stHorizontalBlock"]:first-of-type button{
-    box-shadow:none!important;padding:7px 16px!important;font-size:0.88rem!important;
-    border-radius:8px!important;font-weight:500!important;width:auto!important;
+
+/* ── NAVBAR BUTTONS: override to small unstyled ── */
+div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button{
+    background:transparent!important;color:#6B7280!important;
+    border:1px solid #E5E7EB!important;border-radius:8px!important;
+    font-weight:500!important;font-size:0.88rem!important;
+    padding:7px 16px!important;box-shadow:none!important;
+    width:100%!important;
 }
-div[data-testid="stHorizontalBlock"]:first-of-type button[kind="secondary"]{background:transparent!important;color:#6B7280!important;}
-div[data-testid="stHorizontalBlock"]:first-of-type button[kind="primary"]{background:#EDE9FE!important;color:#7C3AED!important;font-weight:700!important;}
+div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"]>button:hover{
+    background:#F5F3FF!important;color:#7C3AED!important;border-color:#7C3AED!important;
+}
+/* active nav button */
+div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="stButton"] button[kind="primary"]{
+    background:#EDE9FE!important;color:#7C3AED!important;
+    border:1px solid #DDD6FE!important;font-weight:700!important;
+}
+
+/* ── INPUT ── */
 div[data-testid="stTextInput"] input{
     border-radius:10px!important;border:1.5px solid #C4B5FD!important;
     padding:14px 16px!important;font-size:0.95rem!important;height:52px!important;
 }
-div[data-testid="stTextInput"] input:focus{border-color:#7C3AED!important;box-shadow:0 0 0 3px rgba(124,58,237,0.15)!important;}
+div[data-testid="stTextInput"] input:focus{
+    border-color:#7C3AED!important;box-shadow:0 0 0 3px rgba(124,58,237,0.15)!important;
+}
+
+/* ── URL CARD (st.container border) ── */
 div[data-testid="stVerticalBlockBorderWrapper"]{
     background:white!important;border-radius:16px!important;
     border:1.5px solid #E5E7EB!important;
@@ -48,11 +70,7 @@ div[data-testid="stVerticalBlockBorderWrapper"]{
     padding:20px 28px 24px 28px!important;
     margin:0 40px 40px 40px!important;
 }
-.metric-tooltip{position:relative;display:inline-block;cursor:help;}
-.metric-tooltip .tooltip-text{visibility:hidden;opacity:0;background:#1F2937;color:white;font-size:0.75rem;line-height:1.5;border-radius:8px;padding:10px 14px;position:absolute;z-index:9999;bottom:130%;left:50%;transform:translateX(-50%);width:220px;text-align:left;box-shadow:0 4px 12px rgba(0,0,0,0.2);transition:opacity 0.2s;pointer-events:none;}
-.metric-tooltip .tooltip-text::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#1F2937;}
-.metric-tooltip:hover .tooltip-text{visibility:visible;opacity:1;}
-.tooltip-icon{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:#E5E7EB;color:#6B7280;font-size:0.65rem;font-weight:700;margin-left:5px;vertical-align:middle;cursor:help;}
+
 .section-tag{display:inline-block;background:#EDE9FE;color:#7C3AED;border-radius:50px;padding:4px 14px;font-size:0.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;}
 .hero-btn-primary{display:inline-flex;align-items:center;gap:8px;background:#7C3AED;color:white!important;border:none;border-radius:50px;padding:18px 36px;font-size:1.05rem;font-weight:700;cursor:pointer;text-decoration:none;transition:background 0.2s;}
 .hero-btn-primary:hover{background:#6D28D9;}
@@ -60,6 +78,9 @@ div[data-testid="stVerticalBlockBorderWrapper"]{
 .hero-btn-secondary:hover{border-color:#7C3AED;color:#7C3AED!important;}
 .cta-btn{display:inline-flex;align-items:center;gap:8px;background:#7C3AED;color:white!important;border:none;border-radius:50px;padding:18px 44px;font-size:1.05rem;font-weight:700;cursor:pointer;text-decoration:none;transition:background 0.2s;margin-top:36px;}
 .cta-btn:hover{background:#6D28D9;}
+.percepta-brand-wrap{display:flex;align-items:center;gap:10px;padding:4px 0;}
+.percepta-icon{width:30px;height:30px;border-radius:7px;background:#7C3AED;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.percepta-title{font-size:1rem;font-weight:800;color:#111827;letter-spacing:-0.3px;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -277,25 +298,34 @@ else:
 # ── NAVBAR ──────────────────────────────────────────────────
 st.markdown("""
 <style>
-div[data-testid="stHorizontalBlock"]:first-of-type{background:white!important;border-bottom:1px solid #E5E7EB!important;padding:12px 40px!important;margin:0!important;position:sticky!important;top:0!important;z-index:999!important;align-items:center!important;box-shadow:0 1px 3px rgba(0,0,0,0.06)!important;}
-.percepta-brand-wrap{display:flex;align-items:center;gap:10px;padding:4px 0;}
-.percepta-icon{width:30px;height:30px;border-radius:7px;background:#7C3AED;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.percepta-title{font-size:1rem;font-weight:800;color:#111827;letter-spacing:-0.3px;}
+div[data-testid="stHorizontalBlock"]:first-of-type{
+    background:white!important;border-bottom:1px solid #E5E7EB!important;
+    padding:12px 40px!important;margin:0!important;position:sticky!important;
+    top:0!important;z-index:999!important;align-items:center!important;
+    box-shadow:0 1px 3px rgba(0,0,0,0.06)!important;
+}
 </style>
 """, unsafe_allow_html=True)
 
 nav = st.session_state.nav
-nb_c,ov_c,gh_c,sp_c = st.columns([3,1,1,1.2])
+nb_c, ov_c, gh_c, sp_c = st.columns([3, 1, 1, 1.2])
 with nb_c:
-    st.markdown("""<div class="percepta-brand-wrap"><div class="percepta-icon"><svg width="16" height="16" viewBox="0 0 22 22" fill="none"><circle cx="9.5" cy="9.5" r="5.5" stroke="white" stroke-width="1.8" fill="none"/><line x1="13.5" y1="13.5" x2="18" y2="18" stroke="white" stroke-width="1.8" stroke-linecap="round"/><path d="M7 9.5 Q8.5 7 9.5 9.5 Q10.5 12 12 9.5" stroke="white" stroke-width="1.3" fill="none" stroke-linecap="round" opacity="0.9"/></svg></div><span class="percepta-title">Percepta</span></div>""",unsafe_allow_html=True)
+    st.markdown("""<div class="percepta-brand-wrap">
+        <div class="percepta-icon"><svg width="16" height="16" viewBox="0 0 22 22" fill="none">
+        <circle cx="9.5" cy="9.5" r="5.5" stroke="white" stroke-width="1.8" fill="none"/>
+        <line x1="13.5" y1="13.5" x2="18" y2="18" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M7 9.5 Q8.5 7 9.5 9.5 Q10.5 12 12 9.5" stroke="white" stroke-width="1.3" fill="none" stroke-linecap="round" opacity="0.9"/>
+        </svg></div>
+        <span class="percepta-title">Percepta</span>
+    </div>""", unsafe_allow_html=True)
 with ov_c:
-    if st.button("Overview",key="nb_ov",type="primary" if nav=="Overview" else "secondary",use_container_width=True):
+    if st.button("Overview", key="nb_ov", type="primary" if nav=="Overview" else "secondary", use_container_width=True):
         st.session_state.nav="Overview"; st.query_params.clear(); st.rerun()
 with gh_c:
-    if st.button("GEO Hub",key="nb_gh",type="primary" if nav=="GEO Hub" else "secondary",use_container_width=True):
+    if st.button("GEO Hub", key="nb_gh", type="primary" if nav=="GEO Hub" else "secondary", use_container_width=True):
         st.session_state.nav="GEO Hub"; st.query_params["p"]="geohub"; st.rerun()
 with sp_c:
-    if st.button("Get Support",key="nb_sp",type="primary" if nav=="Get Support" else "secondary",use_container_width=True):
+    if st.button("Get Support", key="nb_sp", type="primary" if nav=="Get Support" else "secondary", use_container_width=True):
         st.session_state.nav="Get Support"; st.query_params["p"]="getsupport"; st.rerun()
 
 # ════════════════════════════════════════════════════════════
@@ -303,28 +333,20 @@ with sp_c:
 # ════════════════════════════════════════════════════════════
 if nav=="Overview":
     if st.query_params.get("p") == "geohub":
-        st.session_state.nav = "GEO Hub"; st.query_params["p"] = "geohub"; st.rerun()
+        st.session_state.nav="GEO Hub"; st.query_params["p"]="geohub"; st.rerun()
 
     st.markdown("""
-<div style="background:linear-gradient(170deg,#ffffff 55%,#F3EEFF 100%);padding:52px 40px 40px 40px;text-align:center;">
-  <div style="display:inline-flex;align-items:center;gap:8px;border:1px solid #DDD6FE;border-radius:50px;padding:8px 22px;font-size:0.72rem;font-weight:700;letter-spacing:.1em;color:#7C3AED;text-transform:uppercase;margin-bottom:44px;background:rgba(255,255,255,0.9);">
-    ✦ &nbsp;AI-Powered Brand Intelligence &nbsp;·&nbsp; Powered by Accenture
-  </div>
-  <div style="font-size:4.6rem;font-weight:900;line-height:1.0;letter-spacing:-3px;margin-bottom:28px;">
-    <span style="color:#111827;">Your Brand's </span><span style="color:#7C3AED;">GEO</span><span style="color:#111827;"> Score</span>
-  </div>
-  <p style="font-size:1.05rem;color:#6B7280;max-width:860px;margin:0 auto 36px;line-height:1.7;">The Percepta GEO Score is a single 0–100 number that measures how often and how favorably your brand<br>is cited in AI-generated responses — across ChatGPT, Gemini, and other major AI engines.</p>
+<div style="background:linear-gradient(170deg,#ffffff 55%,#F3EEFF 100%);padding:52px 40px 40px;text-align:center;">
+  <div style="display:inline-flex;align-items:center;gap:8px;border:1px solid #DDD6FE;border-radius:50px;padding:8px 22px;font-size:0.72rem;font-weight:700;letter-spacing:.1em;color:#7C3AED;text-transform:uppercase;margin-bottom:44px;background:rgba(255,255,255,0.9);">✦ &nbsp;AI-Powered Brand Intelligence &nbsp;·&nbsp; Powered by Accenture</div>
+  <div style="font-size:4.6rem;font-weight:900;line-height:1.0;letter-spacing:-3px;margin-bottom:28px;"><span style="color:#111827;">Your Brand's </span><span style="color:#7C3AED;">GEO</span><span style="color:#111827;"> Score</span></div>
+  <p style="font-size:1.05rem;color:#6B7280;max-width:860px;margin:0 auto 36px;line-height:1.7;">The Percepta GEO Score is a single 0–100 number that measures how often and how favorably your brand is cited in AI-generated responses — across ChatGPT, Gemini, and other major AI engines.</p>
   <div style="display:flex;gap:16px;justify-content:center;align-items:center;flex-wrap:wrap;">
     <a href="?p=geohub" class="hero-btn-primary" target="_self">Get Your GEO Score &nbsp;→</a>
     <a href="#process-section" class="hero-btn-secondary">See How It Works</a>
   </div>
 </div>
 <div id="process-section" style="background:#F9F9FC;padding:80px 40px;border-top:1px solid #E5E7EB;">
-  <div style="text-align:center;margin-bottom:64px;">
-    <div class="section-tag">Process</div>
-    <h2 style="font-size:2.2rem;font-weight:900;color:#111827;margin:10px 0 14px;">How Percepta Works</h2>
-    <p style="font-size:0.97rem;color:#6B7280;margin:0 auto;line-height:1.75;">From brand input to actionable GEO insights — in four simple steps.</p>
-  </div>
+  <div style="text-align:center;margin-bottom:64px;"><div class="section-tag">Process</div><h2 style="font-size:2.2rem;font-weight:900;color:#111827;margin:10px 0 14px;">How Percepta Works</h2><p style="font-size:0.97rem;color:#6B7280;margin:0 auto;line-height:1.75;">From brand input to actionable GEO insights — in four simple steps.</p></div>
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:40px;position:relative;">
     <div style="position:absolute;top:22px;left:calc(25% + 20px);width:calc(75% - 40px);height:1px;background:#E5E7EB;z-index:0;"></div>
     <div style="position:relative;z-index:1;"><div style="font-size:3.2rem;font-weight:900;color:#EDE9FE;line-height:1;margin-bottom:24px;">01</div><div style="font-size:1rem;font-weight:800;color:#111827;margin-bottom:8px;">Enter Your Brand</div><div style="font-size:0.84rem;color:#6B7280;line-height:1.7;">Input your brand name, target keywords, and competitor list into the Percepta platform.</div></div>
@@ -356,10 +378,7 @@ if nav=="Overview":
   </div>
 </div>
 <div style="background:#F9F9FC;padding:80px 40px;border-top:1px solid #E5E7EB;">
-  <div style="text-align:center;margin-bottom:52px;">
-    <div class="section-tag">What You Gain</div>
-    <h2 style="font-size:2.2rem;font-weight:900;color:#111827;margin:10px 0 14px;line-height:1.2;">Others Give You Data.<br>We Give You a Solution.</h2>
-  </div>
+  <div style="text-align:center;margin-bottom:52px;"><div class="section-tag">What You Gain</div><h2 style="font-size:2.2rem;font-weight:900;color:#111827;margin:10px 0 14px;line-height:1.2;">Others Give You Data.<br>We Give You a Solution.</h2></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;">
     <div style="border:1px solid #E5E7EB;border-radius:16px;padding:36px 32px;background:white;">
       <div style="font-size:0.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9CA3AF;margin-bottom:20px;">Competitors</div>
@@ -392,7 +411,6 @@ if nav=="Overview":
 # ════════════════════════════════════════════════════════════
 elif nav=="GEO Hub":
 
-    # ── BANNER ──
     st.markdown("""
     <div style="background:linear-gradient(135deg,#5B21B6 0%,#7C3AED 50%,#9333EA 100%);padding:64px 40px 56px;text-align:center;">
         <div style="display:inline-flex;align-items:center;gap:8px;border:1.5px solid rgba(255,255,255,0.5);border-radius:50px;padding:8px 24px;font-size:0.78rem;font-weight:700;color:white;margin-bottom:28px;background:rgba(255,255,255,0.15);">
@@ -406,7 +424,7 @@ elif nav=="GEO Hub":
 
     if not has_result:
 
-        # ── SCORE BAND CARDS ──
+        # Score band cards
         st.markdown("""
         <div style="background:#F3F4F6;padding:32px 40px 24px 40px;">
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;">
@@ -432,10 +450,10 @@ elif nav=="GEO Hub":
             </div>
           </div>
         </div>
+        <div style="background:#F3F4F6;padding:16px 40px 0 40px;"></div>
         """, unsafe_allow_html=True)
 
-        # ── URL INPUT CARD using st.container ──
-        st.markdown("<div style='background:#F3F4F6;padding:0 40px 40px 40px;'>", unsafe_allow_html=True)
+        # URL card — use st.container so widgets are truly inside
         with st.container(border=True):
             st.markdown('<p style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:#9CA3AF;text-transform:uppercase;margin:0 0 8px 0;">BRAND URL</p>', unsafe_allow_html=True)
             url_col, btn_col = st.columns([3.5, 1])
@@ -444,7 +462,8 @@ elif nav=="GEO Hub":
                     placeholder="https://www.capitalone.com/", label_visibility="collapsed")
             with btn_col:
                 run_analysis = st.button("🔍  Run Live AI Analysis", use_container_width=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+
+        st.markdown("<div style='background:#F3F4F6;height:40px;'></div>", unsafe_allow_html=True)
 
         if run_analysis:
             if not brand_url.strip() or not brand_url.startswith("http"):
@@ -518,15 +537,13 @@ elif nav=="GEO Hub":
             fin_kws2 = ["capital","chase","amex","citi","discover","bank","credit","card","finance","fargo"]
             auto_kws2 = ["vw","volkswagen","toyota","ford","honda","bmw","tesla","auto","car","motor"]
             if any(x in domain_lower2 for x in fin_kws2):
-                top10_title = "Financial Services"
-                competitor_brands = ["Chase","American Express","Capital One","Citi","Discover","Wells Fargo","Bank of America","Synchrony","Barclays","USAA"]
-                comp_urls = {"Chase":"chase.com","American Express":"americanexpress.com","Capital One":"capitalone.com","Citi":"citi.com","Discover":"discover.com","Wells Fargo":"wellsfargo.com","Bank of America":"bankofamerica.com","Synchrony":"synchrony.com","Barclays":"barclays.com","USAA":"usaa.com"}
+                top10_title="Financial Services"; competitor_brands=["Chase","American Express","Capital One","Citi","Discover","Wells Fargo","Bank of America","Synchrony","Barclays","USAA"]
+                comp_urls={"Chase":"chase.com","American Express":"americanexpress.com","Capital One":"capitalone.com","Citi":"citi.com","Discover":"discover.com","Wells Fargo":"wellsfargo.com","Bank of America":"bankofamerica.com","Synchrony":"synchrony.com","Barclays":"barclays.com","USAA":"usaa.com"}
             elif any(x in domain_lower2 for x in auto_kws2):
-                top10_title = "Automotive"
-                competitor_brands = ["Tesla","Toyota","BMW","Honda","Ford","Mercedes","Hyundai","Kia","Nissan","Volkswagen"]
-                comp_urls = {"Tesla":"tesla.com","Toyota":"toyota.com","BMW":"bmw.com","Honda":"honda.com","Ford":"ford.com","Mercedes":"mercedes-benz.com","Hyundai":"hyundai.com","Kia":"kia.com","Nissan":"nissanusa.com","Volkswagen":"vw.com"}
+                top10_title="Automotive"; competitor_brands=["Tesla","Toyota","BMW","Honda","Ford","Mercedes","Hyundai","Kia","Nissan","Volkswagen"]
+                comp_urls={"Tesla":"tesla.com","Toyota":"toyota.com","BMW":"bmw.com","Honda":"honda.com","Ford":"ford.com","Mercedes":"mercedes-benz.com","Hyundai":"hyundai.com","Kia":"kia.com","Nissan":"nissanusa.com","Volkswagen":"vw.com"}
             else:
-                top10_title = "General"; competitor_brands = []; comp_urls = {}
+                top10_title="General"; competitor_brands=[]; comp_urls={}
             top10 = [{"Brand":brand,"URL":brand_domain,"GEO":geo,"Vis":vis,"Cit":cit,"Sen":sent,"Sov":sov,"Rank":avg_rank}]
             for comp in competitor_brands:
                 if comp.lower() != brand.lower():
@@ -547,9 +564,7 @@ elif nav=="GEO Hub":
             st.markdown("</div></div>", unsafe_allow_html=True)
 
         with tabs[1]:
-            st.markdown("<div style='padding:24px 40px;'>", unsafe_allow_html=True)
             st.info("Competitor breakdown is shown in the GEO Score tab above.")
-            st.markdown("</div>", unsafe_allow_html=True)
 
         with tabs[2]:
             st.markdown("<div style='padding:24px 40px;max-width:900px;margin:0 auto;'>", unsafe_allow_html=True)
@@ -643,7 +658,7 @@ elif nav=="GEO Hub":
                 <h3 style="font-size:1.1rem;font-weight:800;color:white;margin:0 0 6px 0;">Live AI Prompt Lab</h3>
                 <p style="font-size:0.88rem;color:rgba(255,255,255,0.85);margin:0;">Type any prompt and see exactly how GPT-5.4 responds in real time.</p>
             </div>""", unsafe_allow_html=True)
-            query = st.text_input("Enter a prompt","", placeholder="e.g. What is the best travel credit card for high net worth individuals?", label_visibility="collapsed")
+            query = st.text_input("Enter a prompt", "", placeholder="e.g. What is the best travel credit card for high net worth individuals?", label_visibility="collapsed")
             if st.button("Run Prompt"):
                 if not query.strip(): st.warning("Please enter a prompt.")
                 else:
@@ -666,21 +681,16 @@ elif nav=="GEO Hub":
 # ════════════════════════════════════════════════════════════
 elif nav=="Get Support":
     st.markdown("""
-    <div style="background:#7C3AED;padding:56px 40px;">
-        <div style="text-align:center;">
-            <div style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:rgba(255,255,255,0.65);text-transform:uppercase;margin-bottom:10px;">Accenture GEO Services</div>
-            <h1 style="font-size:2.8rem;font-weight:900;color:white;margin:0 0 14px 0;letter-spacing:-1px;">We've Got You Covered</h1>
-            <p style="font-size:1rem;color:rgba(255,255,255,0.82);max-width:500px;margin:0 auto;line-height:1.8;">From GEO diagnostic to full optimization. Accenture's team handles everything, end to end.</p>
-        </div>
+    <div style="background:#7C3AED;padding:56px 40px;text-align:center;">
+        <div style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:rgba(255,255,255,0.65);text-transform:uppercase;margin-bottom:10px;">Accenture GEO Services</div>
+        <h1 style="font-size:2.8rem;font-weight:900;color:white;margin:0 0 14px;letter-spacing:-1px;">We've Got You Covered</h1>
+        <p style="font-size:1rem;color:rgba(255,255,255,0.82);max-width:500px;margin:0 auto;line-height:1.8;">From GEO diagnostic to full optimization. Accenture's team handles everything, end to end.</p>
     </div>""", unsafe_allow_html=True)
 
-    st.markdown("""
-    <div style="background:white;padding:56px 40px 0 40px;">
-        <div style="margin-bottom:40px;text-align:center;">
-            <div class="section-tag">Our Approach</div>
-            <h2 style="font-size:2.4rem;font-weight:900;color:#111827;margin:10px 0 10px 0;">GEO is No Longer Optional</h2>
-            <p style="font-size:0.92rem;color:#6B7280;margin:0 auto;max-width:680px;line-height:1.7;">While search spend continues to rise, its impact is fading as AI agents increasingly shape the decisions search used to influence.</p>
-        </div>
+    st.markdown("""<div style="background:white;padding:56px 40px 0 40px;text-align:center;margin-bottom:0;">
+        <div class="section-tag">Our Approach</div>
+        <h2 style="font-size:2.4rem;font-weight:900;color:#111827;margin:10px 0 10px;">GEO is No Longer Optional</h2>
+        <p style="font-size:0.92rem;color:#6B7280;margin:0 auto 40px;max-width:680px;line-height:1.7;">While search spend continues to rise, its impact is fading as AI agents increasingly shape the decisions search used to influence.</p>
     </div>""", unsafe_allow_html=True)
 
     col_l, col_mid, col_r = st.columns([1, 1.1, 1])
@@ -698,7 +708,7 @@ elif nav=="Get Support":
         </div>""", unsafe_allow_html=True)
 
     st.markdown("""
-    <div style="background:white;padding:32px 40px 40px 40px;border-bottom:1px solid #E5E7EB;">
+    <div style="background:white;padding:32px 40px 40px;border-bottom:1px solid #E5E7EB;">
         <div style="display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;gap:0;border-top:1px dashed #D1D5DB;padding-top:32px;">
             <div style="text-align:center;padding:0 20px;"><div style="font-size:3.2rem;font-weight:900;color:#111827;line-height:1;">6</div><div style="font-size:1rem;font-weight:700;color:#111827;margin-top:6px;">Week Engagement</div><div style="font-size:0.8rem;color:#9CA3AF;margin-top:3px;">Phase 1</div></div>
             <div style="background:#E5E7EB;"></div>
@@ -706,9 +716,7 @@ elif nav=="Get Support":
             <div style="background:#E5E7EB;"></div>
             <div style="text-align:center;padding:0 20px;"><div style="font-size:3.2rem;font-weight:900;color:#111827;line-height:1;">4</div><div style="font-size:1rem;font-weight:700;color:#111827;margin-top:6px;">Workstreams</div><div style="font-size:0.8rem;color:#9CA3AF;margin-top:3px;">End to end coverage</div></div>
         </div>
-    </div>""", unsafe_allow_html=True)
-
-    st.markdown("""
+    </div>
     <div style="background:#F9F9FC;padding:48px 40px;border-bottom:1px solid #E5E7EB;">
         <div style="text-align:center;margin-bottom:32px;"><div class="section-tag">Deliverables</div><h2 style="font-size:1.8rem;font-weight:800;color:#111827;margin:8px 0 0 0;">Activities and What We Deliver</h2></div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:3px;margin-bottom:12px;">
@@ -718,10 +726,10 @@ elif nav=="Get Support":
             <div style="background:#5B21B6;padding:20px 20px 20px 28px;border-radius:0 8px 0 0;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,7% 50%);"><div style="font-size:0.7rem;font-weight:600;color:rgba(255,255,255,0.65);margin-bottom:6px;text-transform:uppercase;letter-spacing:.07em;">Workstream 04</div><div style="font-size:0.9rem;font-weight:700;color:white;line-height:1.35;">Impact Measurement (Re-Diagnostic)</div></div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:12px;">
-            <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:18px;"><div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:12px;text-align:center;">Activities</div><ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;"><li>Develop representative prompts across key personas</li><li>Execute multi-run stability testing across ChatGPT and Perplexity</li><li>Extract agent-generated rankings of brands and attributes</li><li>Perform power distribution modeling</li><li>Build competitor adjacency maps and Evidence Graphs</li></ul></div>
-            <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:18px;"><div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:12px;text-align:center;">Activities</div><ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;"><li>Develop LLM-ready content assets including FAQs, Top 10 lists, Buying guides</li><li>Strengthen associations between products and target attributes</li><li>Optimize content structure for agent ingestion</li><li>Create a Content Influence Blueprint</li></ul></div>
-            <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:18px;"><div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:12px;text-align:center;">Activities</div><ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;"><li>Audit tagging, metadata, and taxonomy consistency</li><li>Identify weak or missing structured data</li><li>Recommend improvements to backlink structure</li><li>Identify dormant URLs and propose redirects</li><li>Audit schema markup</li></ul></div>
-            <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:18px;"><div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:12px;text-align:center;">Activities</div><ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;"><li>Re-test all prompts across ChatGPT and Perplexity</li><li>Measure semantic drift and ranking changes</li><li>Recompute AXO Score</li></ul></div>
+            <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:18px;"><div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:12px;text-align:center;">Activities</div><ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;"><li>Develop representative prompts across key personas</li><li>Execute multi-run stability testing</li><li>Extract agent-generated rankings</li><li>Perform power distribution modeling</li><li>Build competitor adjacency maps</li></ul></div>
+            <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:18px;"><div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:12px;text-align:center;">Activities</div><ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;"><li>Develop LLM-ready content assets</li><li>Strengthen product-attribute associations</li><li>Optimize content for agent ingestion</li><li>Create Content Influence Blueprint</li></ul></div>
+            <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:18px;"><div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:12px;text-align:center;">Activities</div><ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;"><li>Audit tagging and metadata</li><li>Identify missing structured data</li><li>Improve backlink structure</li><li>Identify dormant URLs</li><li>Audit schema markup</li></ul></div>
+            <div style="background:white;border:1px solid #E5E7EB;border-radius:8px;padding:18px;"><div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #F3F4F6;padding-bottom:8px;margin-bottom:12px;text-align:center;">Activities</div><ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;"><li>Re-test all prompts</li><li>Measure semantic drift and ranking changes</li><li>Recompute AXO Score</li></ul></div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;">
             <div style="background:#EEEAF8;border:1px solid #DDD6FE;border-radius:8px;padding:18px;"><div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #DDD6FE;padding-bottom:8px;margin-bottom:12px;text-align:center;">Deliverables</div><ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;"><li>AXO Baseline Report</li><li>Brand &amp; Product Ranking Index</li><li>Power Curve Analysis</li><li>Competitor Adjacency Analysis</li><li>AXO Baseline Score (v1.0)</li></ul></div>
@@ -729,22 +737,18 @@ elif nav=="Get Support":
             <div style="background:#EEEAF8;border:1px solid #DDD6FE;border-radius:8px;padding:18px;"><div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #DDD6FE;padding-bottom:8px;margin-bottom:12px;text-align:center;">Deliverables</div><ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;"><li>Distribution &amp; Technical Influence Report</li><li>Metadata Remediation Plan</li><li>Backlink &amp; Redirect Strategy</li><li>Schema Optimization Guide</li></ul></div>
             <div style="background:#EEEAF8;border:1px solid #DDD6FE;border-radius:8px;padding:18px;"><div style="font-size:0.82rem;font-weight:700;color:#111827;border-bottom:1px solid #DDD6FE;padding-bottom:8px;margin-bottom:12px;text-align:center;">Deliverables</div><ul style="list-style:disc;padding-left:16px;margin:0;font-size:0.78rem;color:#374151;line-height:1.75;"><li>AXO Impact Report</li><li>Before/After Ranking Comparison</li><li>Updated AXO Score (v2.0)</li><li>Recommendations for ongoing improvement</li></ul></div>
         </div>
-    </div>""", unsafe_allow_html=True)
-
-    st.markdown("""
+    </div>
     <div style="background:white;padding:48px 40px;border-bottom:1px solid #E5E7EB;">
-        <div style="text-align:center;margin-bottom:36px;"><div class="section-tag">Explore Offers</div><h2 style="font-size:1.8rem;font-weight:800;color:#111827;margin:8px 0 6px 0;">Choose Your Pilot Program</h2><p style="font-size:0.88rem;color:#6B7280;max-width:420px;margin:0 auto;">Start with what fits your timeline. Scale as you see results.</p></div>
+        <div style="text-align:center;margin-bottom:36px;"><div class="section-tag">Explore Offers</div><h2 style="font-size:1.8rem;font-weight:800;color:#111827;margin:8px 0 6px;">Choose Your Pilot Program</h2><p style="font-size:0.88rem;color:#6B7280;max-width:420px;margin:0 auto;">Start with what fits your timeline. Scale as you see results.</p></div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px;">
             <div style="border:1px solid #E5E7EB;border-radius:16px;padding:36px 32px;"><div style="font-size:0.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9CA3AF;margin-bottom:10px;">Option 1</div><div style="font-size:3rem;font-weight:900;color:#111827;line-height:1;margin-bottom:2px;">6</div><div style="font-size:0.95rem;font-weight:600;color:#374151;margin-bottom:28px;">Week Engagement</div><div style="height:1px;background:#F3F4F6;margin-bottom:24px;"></div><div style="display:flex;flex-direction:column;gap:12px;"><div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Agent Ranking Diagnostic (ARD)</div><div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Agent Optimization Plan (AOP)</div></div></div>
             <div style="border:2px solid #7C3AED;border-radius:16px;padding:36px 32px;position:relative;background:#FAFBFF;"><div style="position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#7C3AED;color:white;border-radius:50px;padding:3px 16px;font-size:0.72rem;font-weight:700;white-space:nowrap;">Recommended</div><div style="font-size:0.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#7C3AED;margin-bottom:10px;">Option 2</div><div style="font-size:3rem;font-weight:900;color:#111827;line-height:1;margin-bottom:2px;">7</div><div style="font-size:0.95rem;font-weight:600;color:#374151;margin-bottom:28px;">Week Engagement</div><div style="height:1px;background:#E5E7EB;margin-bottom:24px;"></div><div style="display:flex;flex-direction:column;gap:12px;"><div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Agent Ranking Diagnostic (ARD)</div><div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Agent Optimization Plan (AOP)</div><div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Impact Measurement (Re-Diagnostic)</div></div></div>
             <div style="border:1px solid #E5E7EB;border-radius:16px;padding:36px 32px;"><div style="font-size:0.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9CA3AF;margin-bottom:10px;">Option 3</div><div style="font-size:3rem;font-weight:900;color:#111827;line-height:1;margin-bottom:2px;">7</div><div style="font-size:0.95rem;font-weight:600;color:#374151;margin-bottom:28px;">Week Engagement</div><div style="height:1px;background:#F3F4F6;margin-bottom:24px;"></div><div style="display:flex;flex-direction:column;gap:12px;"><div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Agent Ranking Diagnostic (ARD)</div><div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Agent Optimization Plan (AOP)</div><div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Distribution and Technical Influence (DTI)</div><div style="display:flex;gap:10px;font-size:0.86rem;color:#374151;"><span style="color:#7C3AED;font-weight:700;">+</span>Impact Measurement (Re-Diagnostic)</div></div></div>
         </div>
-    </div>""", unsafe_allow_html=True)
-
-    st.markdown("""
+    </div>
     <div style="background:#7C3AED;padding:56px 40px;">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;">
-            <div><div style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:rgba(255,255,255,0.6);text-transform:uppercase;margin-bottom:10px;">Proven Results</div><h2 style="font-size:2rem;font-weight:800;color:white;margin:0 0 14px 0;line-height:1.25;">Validated Impact Across<br>10+ Client Engagements</h2><p style="font-size:0.92rem;color:rgba(255,255,255,0.8);line-height:1.8;margin:0;">Across retail, travel, financial services, and hospitality, Percepta has consistently delivered measurable improvements in AI brand visibility.</p></div>
+            <div><div style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;color:rgba(255,255,255,0.6);text-transform:uppercase;margin-bottom:10px;">Proven Results</div><h2 style="font-size:2rem;font-weight:800;color:white;margin:0 0 14px;line-height:1.25;">Validated Impact Across<br>10+ Client Engagements</h2><p style="font-size:0.92rem;color:rgba(255,255,255,0.8);line-height:1.8;margin:0;">Across retail, travel, financial services, and hospitality, Percepta has consistently delivered measurable improvements in AI brand visibility.</p></div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
                 <div style="border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:24px;"><div style="font-size:2.4rem;font-weight:900;color:white;">10+</div><div style="font-size:0.85rem;font-weight:600;color:rgba(255,255,255,0.8);margin-top:5px;">Successful Clients</div></div>
                 <div style="border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:24px;"><div style="font-size:2.4rem;font-weight:900;color:white;">4X</div><div style="font-size:0.85rem;font-weight:600;color:rgba(255,255,255,0.8);margin-top:5px;">Higher Conversion</div></div>
@@ -752,4 +756,5 @@ elif nav=="Get Support":
                 <div style="border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:24px;"><div style="font-size:2.4rem;font-weight:900;color:white;">68%</div><div style="font-size:0.85rem;font-weight:600;color:rgba(255,255,255,0.8);margin-top:5px;">Longer Sessions</div></div>
             </div>
         </div>
-    </div>""", unsafe_allow_html=True)
+    </div>
+    """, unsafe_allow_html=True)
