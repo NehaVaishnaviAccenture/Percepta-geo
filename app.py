@@ -238,6 +238,20 @@ Return ONLY valid JSON:
 for k,v in [("nav","Overview"),("geo_result",None),("geo_url",""),("geo_page_data",None),("ai_history",[])]:
     if k not in st.session_state: st.session_state[k] = v
 
+# ── URL ROUTING ────────────────────────────────────────────
+page_map = {"overview":"Overview","geohub":"GEO Hub","support":"Get Support"}
+reverse_map = {"Overview":"overview","GEO Hub":"geohub","Get Support":"support"}
+
+# Read page from URL on first load
+url_page = st.query_params.get("page","overview")
+if url_page in page_map and st.session_state.nav != page_map[url_page]:
+    st.session_state.nav = page_map[url_page]
+
+# Sync URL to match current nav
+current_slug = reverse_map.get(st.session_state.nav,"overview")
+if st.query_params.get("page") != current_slug:
+    st.query_params["page"] = current_slug
+
 # ── NAVBAR ────────────────────────────────────────────────────
 st.markdown("""
 <style>
@@ -257,11 +271,14 @@ nb_c,ov_c,gh_c,sp_c = st.columns([3,1,1,1.2])
 with nb_c:
     st.markdown("""<div class="percepta-brand-wrap"><div class="percepta-icon"><svg width="16" height="16" viewBox="0 0 22 22" fill="none"><circle cx="9.5" cy="9.5" r="5.5" stroke="white" stroke-width="1.8" fill="none"/><line x1="13.5" y1="13.5" x2="18" y2="18" stroke="white" stroke-width="1.8" stroke-linecap="round"/><path d="M7 9.5 Q8.5 7 9.5 9.5 Q10.5 12 12 9.5" stroke="white" stroke-width="1.3" fill="none" stroke-linecap="round" opacity="0.9"/></svg></div><span class="percepta-title">Percepta</span></div>""",unsafe_allow_html=True)
 with ov_c:
-    if st.button("Overview",key="nb_ov",type="primary" if nav=="Overview" else "secondary",use_container_width=True): st.session_state.nav="Overview"; st.rerun()
+    if st.button("Overview",key="nb_ov",type="primary" if nav=="Overview" else "secondary",use_container_width=True):
+        st.session_state.nav="Overview"; st.query_params["page"]="overview"; st.rerun()
 with gh_c:
-    if st.button("GEO Hub",key="nb_gh",type="primary" if nav=="GEO Hub" else "secondary",use_container_width=True): st.session_state.nav="GEO Hub"; st.rerun()
+    if st.button("GEO Hub",key="nb_gh",type="primary" if nav=="GEO Hub" else "secondary",use_container_width=True):
+        st.session_state.nav="GEO Hub"; st.query_params["page"]="geohub"; st.rerun()
 with sp_c:
-    if st.button("Get Support",key="nb_sp",type="primary" if nav=="Get Support" else "secondary",use_container_width=True): st.session_state.nav="Get Support"; st.rerun()
+    if st.button("Get Support",key="nb_sp",type="primary" if nav=="Get Support" else "secondary",use_container_width=True):
+        st.session_state.nav="Get Support"; st.query_params["page"]="support"; st.rerun()
 
 # ════════════════════════════════════════════════════════════
 # PAGE 1: OVERVIEW
@@ -272,6 +289,7 @@ if nav=="Overview":
     if st.query_params.get("goto") == "geohub":
         st.session_state.nav = "GEO Hub"
         st.query_params.clear()
+        st.query_params["page"] = "geohub"
         st.rerun()
 
     st.markdown("""
