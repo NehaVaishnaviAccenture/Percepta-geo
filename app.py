@@ -359,20 +359,37 @@ elif nav=="GEO Hub":
     if not has_result:
         st.markdown(score_band_cards(), unsafe_allow_html=True)
 
-        # URL card label (top half of card)
+        # Full-width label + input + button — no card wrapper
         st.markdown("""
         <style>
-        /* Make the columns row look like the bottom of the white card */
-        div[data-testid="stHorizontalBlock"]:not(:first-of-type) {
-            background: white !important;
-            border-radius: 0 0 16px 16px !important;
-            padding: 4px 28px 28px 28px !important;
-            margin: 0 40px 0 40px !important;
-            border: 1.5px solid #E5E7EB !important;
-            border-top: none !important;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.07) !important;
+        /* Full width input */
+        div[data-testid="stTextInput"] { padding: 0 !important; }
+        div[data-testid="stTextInput"] input {
+            border-radius: 0 !important;
+            border: none !important;
+            border-top: 1px solid #E5E7EB !important;
+            border-bottom: 1px solid #E5E7EB !important;
+            padding: 14px 20px !important;
+            font-size:0.95rem !important;
+            height: 52px !important;
+            background: #FAFAFA !important;
+            width: 100% !important;
         }
-        /* Purple pill button for run analysis */
+        div[data-testid="stTextInput"] input:focus {
+            border-color: #7C3AED !important;
+            box-shadow: none !important;
+            background: white !important;
+        }
+        /* Hide the columns wrapper styling for this section */
+        div[data-testid="stHorizontalBlock"]:not(:first-of-type) {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        /* Purple pill run button centered */
         div[data-testid="stHorizontalBlock"]:not(:first-of-type) div[data-testid="stButton"]>button {
             background: #7C3AED !important;
             color: white !important;
@@ -383,46 +400,47 @@ elif nav=="GEO Hub":
             height: 52px !important;
             width: 100% !important;
             box-shadow: 0 4px 14px rgba(124,58,237,0.4) !important;
-            padding: 0 20px !important;
+            padding: 0 28px !important;
         }
         div[data-testid="stHorizontalBlock"]:not(:first-of-type) div[data-testid="stButton"]>button:hover {
             background: #6D28D9 !important;
         }
         </style>
-        <div style="background:white;border-radius:16px 16px 0 0;border:1.5px solid #E5E7EB;
-                    border-bottom:none;padding:24px 28px 12px 28px;margin:0 40px;
-                    box-shadow:0 2px 12px rgba(0,0,0,0.07);">
-            <p style="font-size:0.72rem;font-weight:700;letter-spacing:.12em;
-                      color:#9CA3AF;text-transform:uppercase;margin:0;">BRAND URL</p>
+        <div style="background:#F3F4F6;padding:24px 20px 8px 20px;">
+          <p style="font-size:0.78rem;font-weight:600;letter-spacing:.08em;color:#9CA3AF;
+                    text-transform:uppercase;margin:0 0 8px 0;">Brand URL</p>
         </div>
         """, unsafe_allow_html=True)
 
-        uc, bc = st.columns([3.5, 1])
-        with uc: brand_url = st.text_input("u", value=st.session_state.geo_url, placeholder="https://www.capitalone.com/", label_visibility="collapsed")
-        with bc: run = st.button("🔍  Run Live AI Analysis", use_container_width=True)
+        uc, bc = st.columns([4.5, 1])
+        with uc:
+            brand_url = st.text_input("u", value=st.session_state.geo_url,
+                placeholder="https://www.capitalone.com/", label_visibility="collapsed")
+        with bc:
+            run = st.button("🔍  Run Live AI Analysis", use_container_width=True)
 
         st.markdown("""
-        <div style="background:#F3F4F6;padding:24px 40px 40px 40px;">
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:20px;">
-            <div style="background:white;border-radius:14px;border:1px solid #E5E7EB;padding:28px 24px;">
-              <div style="width:36px;height:36px;background:#F3F0FF;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:14px;">📊</div>
-              <div style="font-size:0.95rem;font-weight:700;color:#111827;margin-bottom:6px;">Real-Time AI Analysis</div>
-              <div style="font-size:0.82rem;color:#6B7280;line-height:1.6;">Live data, not cached — results as AI sees them now</div>
+        <div style="background:#F3F4F6;padding:32px 20px 40px 20px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;">
+            <div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px 20px;">
+              <div style="width:36px;height:36px;background:#F3F0FF;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:12px;">📊</div>
+              <div style="font-size:0.92rem;font-weight:700;color:#111827;margin-bottom:5px;">Real-Time AI Analysis</div>
+              <div style="font-size:0.8rem;color:#6B7280;line-height:1.6;">Live data, not cached — results as AI sees them now</div>
             </div>
-            <div style="background:white;border-radius:14px;border:1px solid #E5E7EB;padding:28px 24px;">
-              <div style="width:36px;height:36px;background:#FFF7ED;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:14px;">⚡</div>
-              <div style="font-size:0.95rem;font-weight:700;color:#111827;margin-bottom:6px;">Unified GEO Score</div>
-              <div style="font-size:0.82rem;color:#6B7280;line-height:1.6;">One number connecting visibility, citations &amp; sentiment</div>
+            <div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px 20px;">
+              <div style="width:36px;height:36px;background:#FFF7ED;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:12px;">⚡</div>
+              <div style="font-size:0.92rem;font-weight:700;color:#111827;margin-bottom:5px;">Unified GEO Score</div>
+              <div style="font-size:0.8rem;color:#6B7280;line-height:1.6;">One number connecting visibility, citations &amp; sentiment</div>
             </div>
-            <div style="background:white;border-radius:14px;border:1px solid #E5E7EB;padding:28px 24px;">
-              <div style="width:36px;height:36px;background:#EEF2FF;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:14px;">👥</div>
-              <div style="font-size:0.95rem;font-weight:700;color:#111827;margin-bottom:6px;">Competitor Benchmarking</div>
-              <div style="font-size:0.82rem;color:#6B7280;line-height:1.6;">See exactly where you stand vs. industry peers</div>
+            <div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px 20px;">
+              <div style="width:36px;height:36px;background:#EEF2FF;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:12px;">👥</div>
+              <div style="font-size:0.92rem;font-weight:700;color:#111827;margin-bottom:5px;">Competitor Benchmarking</div>
+              <div style="font-size:0.8rem;color:#6B7280;line-height:1.6;">See exactly where you stand vs. industry peers</div>
             </div>
-            <div style="background:white;border-radius:14px;border:1px solid #E5E7EB;padding:28px 24px;">
-              <div style="width:36px;height:36px;background:#F0FDF4;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:14px;">✅</div>
-              <div style="font-size:0.95rem;font-weight:700;color:#111827;margin-bottom:6px;">Actionable Strategy</div>
-              <div style="font-size:0.82rem;color:#6B7280;line-height:1.6;">Recommendations backed by Accenture consultants</div>
+            <div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:24px 20px;">
+              <div style="width:36px;height:36px;background:#F0FDF4;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:12px;">✅</div>
+              <div style="font-size:0.92rem;font-weight:700;color:#111827;margin-bottom:5px;">Actionable Strategy</div>
+              <div style="font-size:0.8rem;color:#6B7280;line-height:1.6;">Recommendations backed by Accenture consultants</div>
             </div>
           </div>
         </div>
